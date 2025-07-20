@@ -1,0 +1,847 @@
+.landing-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #FCFCEC;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* ✅ This disables sideways scroll */
+}
+
+.main-content {
+    display: flex;
+    width: 100vw;
+    /* height: 550px; */
+    margin: 0;
+}
+
+/* TEXT SECTION */
+.text-section {
+    flex: 1;
+    max-height: 400px;
+    min-width: 600px;
+    margin-left: 0;
+    padding-top: 40px;
+    padding-left: 80px;
+    padding-right: 0;
+    position: relative;
+    z-index: 10;
+}
+
+.text-section h1 {
+    font-size: 5rem;
+    color: #A75B2A;
+    font-weight: 1000;
+    /* margin-bottom: 15px; */
+    min-width: 500px;
+    padding-bottom: 10px;
+}
+
+.text-section p {
+    font-size: 1.2rem;
+    color: #D0AA96;
+    padding-bottom: 5px;
+    font-weight: 500;
+    padding-right: 50px;
+}
+
+.text-section button {
+    background-color: #A75B2A;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+}
+
+.canvas-section {
+    width: 1600px;
+    height: 490px;
+    margin-top: -55px;
+    /* position: relative; */
+    margin-left: -490px;
+    /* padding-left: -10px; */
+    padding-right: 10px;
+    position: relative;
+}
+
+/* CAROUSEL */
+.carousel-section {
+    padding-top: 0;
+}
+
+@media (max-width: 1150px) {
+    .text-section {
+        flex: 1;
+        max-height: 400px;
+        min-width: 450px;
+        margin-left: 0;
+        padding-top: 50px;
+        padding-left: 50px;
+        padding-right: 30px;
+    }
+
+    .text-section h1 {
+        font-size: 2.4rem;
+        color: #A75B2A;
+        font-weight: 800;
+        margin-bottom: 10px;
+        min-width: 300px;
+    }
+
+
+    .text-section p {
+        font-size: 1rem;
+        color: #D0AA96;
+        margin-bottom: 25px;
+        font-weight: 500;
+        padding-right: 50px;
+    }
+
+    .text-section h1 {
+        min-width: 300px;
+    }
+
+    .canvas-section {
+        /* width: 100%; */
+        /* height: 400px; */
+        margin-left: -270px;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 990px) {
+    .main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .canvas-section {
+
+        /* width: 100px;
+        margin: 20px 0;
+        padding: 0 20px;
+        justify-content: center;
+        align-items: center; */
+
+        min-width: 200px;
+        min-height: 0px;
+        /* margin-left: -270px; */
+        padding-right: -100px;
+        margin-left: 10px;
+
+    }
+
+    .text-section {
+        width: 100%;
+        padding: 30px 20px;
+        min-width: auto;
+        max-height: unset;
+    }
+
+    .text-section h1 {
+        min-width: unset;
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .text-section p {
+        padding: 0 20px;
+        text-align: center;
+    }
+
+    .text-section button {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .carousel-section {
+        padding-top: 20px;
+    }
+}
+
+@media (max-width: 640px) {
+    .text-section {
+        padding: 20px 15px;
+    }
+
+    .text-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .text-section p {
+        font-size: 1.1rem;
+        padding: 0 10px;
+    }
+
+    .canvas-section {
+        padding: 0 10px;
+        max-height: 300px;
+    }
+}
+
+.landing-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #FCFCEC;
+    overflow-y: auto;
+}
+
+.main-content {
+    display: flex;
+    width: 100vw;
+    /* height: 550px; */
+    margin: 0;
+}
+
+/* TEXT SECTION */
+.text-section {
+    flex: 1;
+    max-height: 400px;
+    min-width: 600px;
+    margin-left: 0;
+    padding-top: 50px;
+    padding-left: 80px;
+    padding-right: 0;
+}
+
+.text-section h1 {
+    font-size: 2.5rem;
+    color: #A75B2A;
+    font-weight: 800;
+    margin-bottom: 10px;
+    min-width: 500px;
+}
+
+.text-section p {
+    font-size: 1.2rem;
+    color: #D0AA96;
+    margin-bottom: 25px;
+    font-weight: 500;
+    padding-right: 50px;
+}
+
+.text-section button {
+    background-color: #A75B2A;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    /* z-index: 100px; */
+}
+
+/* CANVAS SECTION */
+.canvas-section {
+    width: 1600px;
+    height: 490px;
+    margin-top: -15px;
+    /* position: relative; */
+    margin-left: -470px;
+    padding-right: 10px;
+}
+
+/* CAROUSEL */
+.carousel-section {
+    padding-top: 0;
+}
+
+@media (max-width: 1150px) {
+    .text-section {
+        flex: 1;
+        max-height: 400px;
+        min-width: 450px;
+        margin-left: 0;
+        padding-top: 50px;
+        padding-left: 50px;
+        padding-right: 30px;
+    }
+
+    .text-section h1 {
+        font-size: 2.4rem;
+        color: #A75B2A;
+        font-weight: 800;
+        margin-bottom: 10px;
+        min-width: 300px;
+    }
+
+
+    .text-section p {
+        font-size: 1rem;
+        color: #D0AA96;
+        margin-bottom: 25px;
+        font-weight: 500;
+        padding-right: 50px;
+    }
+
+    .text-section h1 {
+        min-width: 300px;
+    }
+
+    .canvas-section {
+        /* width: 100%; */
+        /* height: 400px; */
+        margin-left: -270px;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 990px) {
+    .main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .canvas-section {
+
+        /* width: 100px;
+        margin: 20px 0;
+        padding: 0 20px;
+        justify-content: center;
+        align-items: center; */
+
+        min-width: 200px;
+        min-height: 0px;
+        /* margin-left: -270px; */
+        padding-right: -100px;
+        margin-left: 10px;
+
+    }
+
+    .text-section {
+        width: 100%;
+        padding: 30px 20px;
+        min-width: auto;
+        max-height: unset;
+    }
+
+    .text-section h1 {
+        min-width: unset;
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .text-section p {
+        padding: 0 20px;
+        text-align: center;
+    }
+
+    .text-section button {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .carousel-section {
+        padding-top: 20px;
+    }
+}
+
+@media (max-width: 640px) {
+    .text-section {
+        padding: 20px 15px;
+    }
+
+    .text-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .text-section p {
+        font-size: 1.1rem;
+        padding: 0 10px;
+    }
+
+    .canvas-section {
+        padding: 0 10px;
+        max-height: 300px;
+    }
+}
+
+/* HOW IT WORKS SECTION */
+.how-it-works-section {
+    padding: 0px 40px;
+    background-color: #FCFCEC;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.how-it-works-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #A75B2A;
+    font-weight: 700;
+    margin-bottom: 25px;
+    letter-spacing: -0.5px;
+}
+
+.steps-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Central dotted line */
+.central-line {
+    position: absolute;
+    left: 50%;
+    top: 180px;
+    bottom: 300px;
+    width: 2px;
+    background: repeating-linear-gradient(to bottom,
+            #D0AA96 0,
+            #D0AA96 8px,
+            transparent 8px,
+            transparent 16px);
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+/* Step wrapper - full width layout */
+.step-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 100px;
+    min-height: 300px;
+    z-index: 2;
+}
+
+.step-1 {
+    margin-top: -20px;
+    margin-bottom: 50px;
+}
+
+.step-3 {
+    margin-top: -80px;
+}
+
+/* Content sides */
+.step-content-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.step-image-side {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.left-side {
+    padding-right: 60px;
+}
+
+.right-side {
+    padding-left: 60px;
+}
+
+/* Step numbers positioned on the central line */
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: #A75B2A;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: 0 6px 20px rgba(167, 91, 42, 0.3);
+    border: 4px solid #FCFCEC;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    transition: all 0.15s ease;
+}
+
+/* ANIMATION STYLES */
+.step-icon {
+    max-height: 470px;
+    min-width: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    transition: all 0.2s ease;
+    transform: scale(0.9);
+    /* opacity: 0.7; */
+}
+
+/* .step-icon.animate {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0s;
+} */
+
+.text-content {
+    max-width: 450px;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+    transform: translateY(20px);
+}
+
+.text-content.animate {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.6s ease;
+    transition-delay: 0.2s;
+}
+
+.step-number.animate {
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow: 0 8px 30px rgba(167, 91, 42, 0.4);
+    background: linear-gradient(135deg, #A75B2A 0%, #D4772A 100%);
+    transition: all 0.6s ease;
+    transition-delay: 0.4s;
+}
+
+.step-wrapper.active .description-box {
+    background: #ffffff;
+    box-shadow: 0 12px 35px rgba(167, 91, 42, 0.15);
+    border: 1px solid rgba(167, 91, 42, 0.2);
+    transform: translateY(-5px);
+    transition: all 0.6s ease;
+    transition-delay: 0.3s;
+}
+
+/* Text content */
+.text-content h3 {
+    font-size: 1.4rem;
+    color: #A75B2A;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+}
+
+.description-box {
+    background: #fffff6;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(167, 91, 42, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(167, 91, 42, 0.15);
+    transition: all 0.6s ease;
+}
+
+.description-box p {
+    font-size: 1.1rem;
+    color: #A75B2A;
+    line-height: 1.6;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Step 1 & 3: Text on left, adjust positioning */
+.step-1 .text-content,
+.step-3 .text-content {
+    margin-left: auto;
+    text-align: right;
+}
+
+.step-1 .description-box,
+.step-3 .description-box {
+    text-align: left;
+}
+
+/* Step 2: Text on right, adjust positioning */
+.step-2 .text-content {
+    margin-right: auto;
+    text-align: left;
+}
+
+/* Step 4 - Centered layout */
+.step-4 {
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.step-content-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 600px;
+    position: relative;
+}
+
+.step-4 .text-content {
+    text-align: center;
+    max-width: 500px;
+}
+
+.step-4 .step-number {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin-bottom: 30px;
+    transition: all 0.15s ease;
+}
+
+.step-4 .step-number.animate {
+    transform: scale(1.2);
+    transition: all 0.6s ease;
+}
+
+/* Illustrations */
+.step-illustration {
+    width: auto;
+    /* height: 240px; */
+    border-radius: 20px;
+    overflow: hidden;
+    /* box-shadow: 0 10px 30px rgba(167, 91, 42, 0.15); */
+}
+
+.illustration-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    position: relative;
+}
+
+.step1-bg {
+    background: linear-gradient(135deg, #FFF5E6 0%, #F0E6D2 100%);
+    border: 2px solid #E8D5C4;
+}
+
+.step2-bg {
+    background: linear-gradient(135deg, #E6F3FF 0%, #D2E7F0 100%);
+    border: 2px solid #C4D5E8;
+}
+
+.step3-bg {
+    background: linear-gradient(135deg, #F0E6FF 0%, #E2D2F0 100%);
+    border: 2px solid #D5C4E8;
+}
+
+.step4-bg {
+    background: linear-gradient(135deg, #E6FFE6 0%, #D2F0D2 100%);
+    border: 2px solid #C4E8C4;
+}
+
+.step-content h3 {
+    font-size: 1.4rem;
+    color: #A75B2A;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+}
+
+.step-content p {
+    font-size: 1rem;
+    color: #8B6B4A;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.delivered-text {
+    color: #D4772A;
+    font-weight: 800;
+}
+
+/* FINAL SHOWCASE */
+.final-showcase {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.showcase-image {
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(167, 91, 42, 0.15);
+}
+
+.room-showcase {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #A75B2A 0%, #8B4513 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.showcase-placeholder {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 20px;
+}
+
+@media (max-width: 1150px) {
+    .how-it-works-section {
+        padding: 50px 30px;
+    }
+
+    .step-wrapper {
+        margin-bottom: 80px;
+        min-height: 250px;
+    }
+
+    .step-1 {
+        margin-bottom: 40px;
+    }
+
+    .step-3 {
+        margin-top: -60px;
+    }
+
+    .step-content-side,
+    .step-image-side {
+        padding: 0 30px;
+    }
+
+    .left-side {
+        padding-right: 45px;
+    }
+
+    .right-side {
+        padding-left: 45px;
+    }
+
+    .step-number {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+
+    .text-content {
+        max-width: 380px;
+    }
+
+    .text-content h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .description-box {
+        padding: 20px;
+    }
+
+    .description-box p {
+        font-size: 1rem;
+    }
+
+    .step-icon {
+        max-height: 300px;
+        min-width: auto;
+    }
+
+    .central-line {
+        top: 150px;
+        bottom: 600px;
+    }
+}
+
+@media (max-width: 990px) {
+    .how-it-works-section {
+        padding: 40px 5px;
+    }
+
+    .how-it-works-title {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+
+    .step-wrapper {
+        margin-bottom: 60px;
+        min-height: 200px;
+    }
+
+    .step-1 {
+        margin-bottom: 50px;
+    }
+
+    .step-2 {
+        margin-bottom: 80px;
+    }
+
+    .step-3 {
+        margin-top: -40px;
+    }
+
+    .step-content-side {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding: 0 40px;
+    }
+
+    .step-image-side {
+        flex: 1;
+        width: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 40px;
+    }
+
+    .left-side {
+        padding-right: 30px;
+    }
+
+    .right-side {
+        padding-left: 30px;
+    }
+
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .text-content {
+        max-width: 320px;
+    }
+
+    .text-content h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+
+    .description-box {
+        padding: 18px;
+    }
+
+    .description-box p {
+        font-size: 0.9rem;
+    }
+
+    .step-icon {
+        max-height: 300px;
+        min-width: 290px;
+        min-height: auto;
+    }
+
+    .central-line {
+        top: 150px;
+        bottom: 520px;
+    }
+
+    .step-4 .text-content {
+        max-width: 400px;
+    }
+
+    .showcase-image {
+        height: 300px;
+    }
+}

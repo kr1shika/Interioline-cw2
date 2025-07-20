@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+.match-page {
+    font-family: 'Roboto', sans-serif;
+    background-color: #FCFCEC;
+    color: #B86A45;
+    min-height: 100vh;
+}
+
+.match-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem 2rem;
+    flex-wrap: wrap;
+}
+
+.hero-left {
+    background-color: #ECDFCE;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.hero-left h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.hero-left p {
+    font-size: 1rem;
+    margin-top: 0rem;
+}
+
+.style-analysis {
+    font-style: italic;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #a66e58;
+}
+
+.hero-right {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hero-right img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+
+}
+
+.designer-info {
+    background: #FFFFF6;
+    padding: 1rem;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.designer-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.designer-meta img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+}
+
+.select-btn {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #B86A45;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.select-btn:hover {
+    background-color: #a0583b;
+}
+
+.suggestions {
+    padding: 2rem;
+}
+
+.suggestions h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.suggestion-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+
+.suggestion-card {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+    background-color: #FFFFF6;
+}
+
+.suggestion-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.suggestion-info {
+    padding: 1rem;
+}
+
+.suggestion-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.suggestion-meta img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.match-score {
+    color: #B86A45;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.match-footer {
+    background-color: #F5E8E0;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    border-top: 1px solid #ddd;
+}

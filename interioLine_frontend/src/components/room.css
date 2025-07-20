@@ -1,0 +1,100 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/* Remove problematic body styles that affect the whole page */
+body {
+    /* overflow: hidden; - REMOVED to allow page scrolling */
+    background-color: #FFFFFD;
+    /* cursor: grab; - REMOVED to allow normal page interactions */
+}
+
+/* Container for the canvas to properly contain it */
+.webgl-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.webgl {
+    display: block;
+    margin: 0 auto;
+    cursor: grab;
+    /* Only the canvas has grab cursor */
+    user-select: none;
+    /* Prevent text selection while dragging */
+}
+
+.webgl:active {
+    cursor: grabbing;
+}
+
+/* Large screens - your desktop layout */
+@media (min-width: 1401px) {
+    .webgl {
+        width: 1800px;
+        /* height: 524px; */
+        min-width: 1900px;
+        min-height: 560px;
+        margin-top: -38px;
+        margin-left: -80px;
+    }
+}
+
+@media (max-width: 1400px) and (min-width: 1101px) {
+    .webgl {
+        min-width: 1800px;
+        min-height: 434px;
+        width: 1800px;
+        height: 524px;
+    }
+}
+
+/* Medium screens */
+@media (max-width: 1100px) and (min-width: 991px) {
+    .webgl {
+        min-width: 1000px;
+        min-height: 504px;
+        width: 1000px;
+        height: 504px;
+    }
+}
+
+/* Small screens - tablets and mobile */
+@media (max-width: 990px) {
+    .webgl {
+        min-width: 800px;
+        min-height: 294px;
+        width: 800px;
+        height: 294px;
+    }
+}
+
+/* Very small screens - mobile phones */
+@media (max-width: 640px) {
+    .webgl {
+        width: 100%;
+        max-width: 500px;
+        height: 300px;
+        min-width: auto;
+        min-height: auto;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .webgl {
+        width: 100%;
+        max-width: 400px;
+        height: 250px;
+        min-width: auto;
+        min-height: auto;
+        cursor: default;
+        /* No interaction on very small screens */
+    }
+}

@@ -1,0 +1,107 @@
+.landnavbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #A75B2A;
+  min-height: 0rem !important;
+  position: relative;
+  z-index: 10;
+}
+
+.landnavbar-title {
+  font-size: 1.1rem;
+}
+
+.landnavbar-title a {
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  color: inherit;
+}
+
+.landnavbar-left {
+  flex: 1;
+  padding: 0px 20px;
+}
+
+.landnavbar-right {
+  display: flex;
+  align-items: center;
+  gap: 29px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border-left: 1px solid #d6956a;
+  border-bottom: 1px solid #d6956a;
+  border-radius: 0px 0px 0px 16px;
+  padding: 15px 18px;
+  padding-right: 40px;
+}
+
+.get-started-button {
+  background-color: #a75b2a;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.get-started-button:hover {
+  background-color: #8b4d24;
+}
+
+/* Search bar container in header */
+.header-search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: width 0.4s ease;
+  overflow: hidden;
+  width: 0;
+}
+
+.header-search-container.active {
+  width: 170px;
+  margin-right: -22px;
+  /* expands */
+}
+
+/* The search input itself */
+.header-search-input {
+  padding: 6px 10px;
+  border: 1px solid rgba(167, 91, 42, 0.3);
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+  background: rgba(252, 252, 236, 0.6);
+  color: #A75B2A;
+  width: 100%;
+  transition: all 0.3s ease;
+
+}
+
+.header-search-input:focus {
+  border-color: #A75B2A;
+  box-shadow: 0 0 0 3px rgba(167, 91, 42, 0.1);
+}
+
+/* Icon animation */
+.search-toggle-button {
+  background: #A75B2A;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  transition: transform 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFF6;
+  /* margin-left: -2px; */
+}
+
+.search-toggle-button.spin {
+  transform: rotate(180deg);
+}

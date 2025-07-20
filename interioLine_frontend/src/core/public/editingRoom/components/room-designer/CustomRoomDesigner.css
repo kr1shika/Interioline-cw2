@@ -1,0 +1,620 @@
+/* CustomRoomDesigner.css */
+
+.room-designer-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    margin: 0 auto;
+    background-color: #FCFCEC;
+}
+
+/* Loading Screen Styles */
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-screen-content {
+    text-align: center;
+}
+
+.loading-spinner {
+    margin-bottom: 24px;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+    border-radius: 50%;
+    height: 48px;
+    width: 48px;
+    border: 2px solid transparent;
+    border-bottom: 2px solid #B86A45;
+    margin: 0 auto;
+}
+
+.loading-screen h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #B86A45;
+    margin-bottom: 8px;
+}
+
+.loading-screen p {
+    color: #4b5563;
+    margin-bottom: 16px;
+}
+
+.loading-progress-container {
+    width: 320px;
+    margin: 0 auto;
+}
+
+.loading-progress-bar-container {
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.loading-progress-bar {
+    background-color: #B86A45;
+    height: 100%;
+    transition: all 0.5s ease-out;
+}
+
+.loading-percentage {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 8px;
+}
+
+.loading-items-info {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+/* Project Section Styles */
+.project-section {
+    background-color: #FFFFF6;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    margin: 8px 24px;
+}
+
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+}
+
+.project-info h1 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #B86A45;
+}
+
+.project-info p {
+    color: #B86A45;
+    font-size: 0.875rem;
+}
+
+.project-status-text {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    color: #4b5563;
+}
+
+.status-loaded {
+    color: #16a34a;
+}
+
+.status-available {
+    color: #16a34a;
+}
+
+.status-none {
+    color: #2563eb;
+}
+
+.project-buttons {
+    display: flex;
+    gap: 8px;
+    color: black;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-load-project {
+    background-color: #16a34a;
+    color: white;
+}
+
+.btn-load-project:hover {
+    background-color: #15803d;
+}
+
+.btn-save {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: #2563eb;
+}
+
+.btn-export {
+    background-color: #c19557;
+    color: white;
+}
+
+.btn-export:hover {
+    background-color: #a67c47;
+}
+
+.btn-load-models {
+    background-color: #f59e0b;
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.btn-load-models:hover {
+    background-color: #d97706;
+}
+
+.btn-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Main Content Layout */
+.main-content {
+    display: flex;
+    gap: 24px;
+    flex: 1;
+    height: 32px;
+}
+
+@media (max-width: 1024px) {
+    .main-content {
+        flex-direction: column;
+    }
+}
+
+/* 3D View Container */
+.three-d-view-container {
+    margin-top: 8px;
+    flex: 1;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-right: 24px;
+    min-width: 0;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.three-d-view-header {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 10px;
+}
+
+.project-title-small {
+    font-size: 0.875rem;
+    font-weight: normal;
+    color: #4b5563;
+    margin-left: 8px;
+}
+
+.three-d-viewport {
+    position: relative;
+    width: 100%;
+    height: 518px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #eff6ff, #f3f4f6);
+}
+
+.viewport-loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 10;
+    border-radius: 12px;
+}
+
+.viewport-loading-text {
+    color: #1f2937;
+    font-size: 1.125rem;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+.viewport-progress-bar {
+    width: 256px;
+    height: 12px;
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.viewport-progress-fill {
+    height: 100%;
+    background-color: #3b82f6;
+    transition: all 0.3s ease-out;
+    border-radius: 9999px;
+}
+
+.viewport-progress-text {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-top: 8px;
+}
+
+/* Status Section */
+.status-section {
+    margin-top: 16px;
+    padding: 16px;
+    background-color: #f9fafb;
+    border-radius: 12px;
+}
+
+.status-content {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.status-content strong {
+    font-weight: 600;
+}
+
+.status-doors {
+    color: #16a34a;
+    font-weight: 500;
+}
+
+.status-windows {
+    color: #2563eb;
+    font-weight: 500;
+}
+
+.status-models {
+    color: #7c3aed;
+    font-weight: 500;
+}
+
+.status-loading {
+    color: #f59e0b;
+    font-weight: 500;
+}
+
+.status-project {
+    color: #6366f1;
+    font-weight: 500;
+}
+
+/* Modal Styles */
+.modal-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.modal-body {
+    padding: 16px 0;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.modal-description {
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.modal-description p {
+    margin-bottom: 8px;
+}
+
+.modal-description ul {
+    list-style: disc;
+    list-style-position: inside;
+    margin-top: 8px;
+}
+
+.modal-description li {
+    margin-bottom: 4px;
+}
+
+.project-linked {
+    color: #2563eb;
+}
+
+/* Saved Rooms List */
+.saved-rooms-container {
+    max-height: 384px;
+    overflow-y: auto;
+}
+
+.saved-rooms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saved-room-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.saved-room-info {
+    flex: 1;
+}
+
+.saved-room-title {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.saved-room-details {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-bottom: 4px;
+}
+
+.saved-room-meta {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.glb-support {
+    margin-left: 8px;
+    color: #16a34a;
+    font-size: 0.75rem;
+}
+
+.project-info-small {
+    margin-left: 8px;
+    color: #2563eb;
+    font-size: 0.75rem;
+}
+
+.saved-room-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-small {
+    padding: 4px 12px;
+    font-size: 0.875rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-load {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-load:hover {
+    background-color: #2563eb;
+}
+
+.btn-delete {
+    background-color: transparent;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+}
+
+.btn-delete:hover {
+    background-color: #fef2f2;
+}
+
+.delete-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 32px 0;
+}
+
+.empty-state-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    color: #9ca3af;
+}
+
+.empty-state-text {
+    color: #4b5563;
+}
+
+/* Note Section */
+.note-section {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+}
+
+.note-text {
+    font-size: 0.875rem;
+    color: #1e40af;
+}
+
+.note-text strong {
+    font-weight: 600;
+}
+
+/* Modal Buttons */
+.btn-cancel {
+    background-color: transparent;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+}
+
+.btn-cancel:hover {
+    background-color: #fef2f2;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-close {
+    background-color: transparent;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+}
+
+.btn-close:hover {
+    background-color: #fef2f2;
+}
+
+/* Animations */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .room-designer-container {
+        width: 100%;
+    }
+
+    .project-section {
+        margin: 8px 12px;
+    }
+
+    .project-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .project-buttons {
+        width: 100%;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .three-d-view-container {
+        margin-right: 12px;
+        margin-left: 12px;
+    }
+
+    .main-content {
+        gap: 12px;
+    }
+
+    .three-d-viewport {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn {
+        justify-content: center;
+    }
+
+    .three-d-viewport {
+        height: 250px;
+    }
+
+    .three-d-view-container {
+        height: auto;
+    }
+
+    .loading-progress-container {
+        width: 280px;
+    }
+
+    .saved-room-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .saved-room-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+/* Save Modal Specific Styles - Add these to your CustomRoomDesigner.css */
+
+/* Save Modal Container */
