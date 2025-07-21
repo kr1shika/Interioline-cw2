@@ -6,87 +6,43 @@ const User = require("../model/user");
 const loginAttempts = new Map();
 const requestLimits = new Map();
 const blacklistedTokens = new Set();
+const Session = require("../model/Session");
 
-// 🔐 JWT Token verification middleware
 const authenticateToken = async (req, res, next) => {
     try {
-        // Get token from cookie or Authorization header
         let token = req.cookies?.interio_token;
-        // console.log("🔒 Cookies received:", req.cookies);
 
-        // if (!token) return res.status(401).json({ errors: ["No token"] });
-
-        if (!token && req.headers.authorization) {
-            const authHeader = req.headers.authorization;
-            if (authHeader.startsWith('Bearer ')) {
-                token = authHeader.substring(7);
-            }
+        if (!token && req.headers.authorization?.startsWith("Bearer ")) {
+            token = req.headers.authorization.split(" ")[1];
         }
 
         if (!token) {
-            return res.status(401).json({
-                errors: ["Access denied. No token provided."]
-            });
+            return res.status(401).json({ errors: ["Access denied. No token provided."] });
         }
 
-        // Check if token is blacklisted
-        if (blacklistedTokens.has(token)) {
-            return res.status(401).json({
-                errors: ["Token has been invalidated. Please login again."]
-            });
-        }
-
-        // Verify JWT token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // Fetch fresh user data to ensure account is still valid
-        const user = await User.findById(decoded.userId).select('-password -passwordHistory');
-
-        if (!user) {
-            return res.status(401).json({
-                errors: ["Invalid token. User not found."]
-            });
+        const session = await Session.findOne({ sessionId: decoded.sessionId, valid: true });
+        if (!session) {
+            return res.status(401).json({ errors: ["Session invalid or expired."] });
         }
 
-        // Check if user account is active
-        if (user.isActive === false) {
-            return res.status(401).json({
-                errors: ["Account deactivated."]
-            });
-        }
+        const user = await User.findById(decoded.userId).select("-password -passwordHistory");
 
-        // Check if account is locked
-        if (user.accountLocked) {
-            return res.status(423).json({
-                errors: ["Account is locked. Please contact support."]
-            });
-        }
 
-        // Add user info to request object
         req.user = user;
         req.userId = user._id.toString();
         req.token = token;
+        req.sessionId = decoded.sessionId;
+        console.log("🔍 Session validated:", session);
 
-        // Update last activity (optional)
-        user.lastActivity = new Date();
-        await user.save();
 
         next();
-    } catch (error) {
-        if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({
-                errors: ["Token expired. Please login again."]
-            });
-        } else if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({
-                errors: ["Invalid token."]
-            });
-        }
-
-        console.error("❌ Auth middleware error:", error);
-        res.status(500).json({ errors: ["Internal server error"] });
+    } catch (err) {
+        return res.status(401).json({ errors: ["Invalid or expired token"] });
     }
 };
+
 
 // 🔐 Role-based authorization middleware
 const authorizeRole = (allowedRoles) => {
@@ -199,53 +155,6 @@ const checkAccountLock = (email) => {
     return null;
 };
 
-// 🔐 Token blacklisting (for logout)
-const blacklistToken = (token) => {
-    blacklistedTokens.add(token);
-
-    // Clean up expired tokens periodically
-    try {
-        const decoded = jwt.decode(token);
-        if (decoded && decoded.exp) {
-            setTimeout(() => {
-                blacklistedTokens.delete(token);
-            }, (decoded.exp * 1000) - Date.now());
-        }
-    } catch (error) {
-        console.error("Error scheduling token cleanup:", error);
-    }
-};
-
-const requireRecentAuth = (maxAgeMinutes = 30) => {
-    return async (req, res, next) => {
-        const token = req.token;
-        if (!token) {
-            return res.status(401).json({
-                errors: ["Recent authentication required."]
-            });
-        }
-
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const tokenAge = Date.now() - (decoded.iat * 1000);
-            const maxAge = maxAgeMinutes * 60 * 1000;
-
-            if (tokenAge > maxAge) {
-                return res.status(401).json({
-                    errors: [`Please re-authenticate within the last ${maxAgeMinutes} minutes for this action.`]
-                });
-            }
-
-            next();
-        } catch (error) {
-            return res.status(401).json({
-                errors: ["Invalid session."]
-            });
-        }
-    };
-};
-
-// 🔐 Activity logging middleware
 const logActivity = (action) => {
     return (req, res, next) => {
         const logData = {
@@ -257,22 +166,16 @@ const logActivity = (action) => {
             endpoint: req.originalUrl,
             method: req.method
         };
-
-
-
         next();
     };
 };
-
 module.exports = {
+    logActivity,
     authenticateToken,
     authorizeRole,
     verifyOwnership,
     bruteForceProtection,
     trackLoginAttempt,
     checkAccountLock,
-    blacklistToken,
-    requireRecentAuth,
-    logActivity,
 
 };

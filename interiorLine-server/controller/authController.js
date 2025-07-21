@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const { generateToken } = require("../config/util.js");
 const User = require("../model/user");
 const { trackLoginAttempt, checkAccountLock } = require("../middleware/authMiddleware");
+const jwt = require("jsonwebtoken");
 
 const signup = async (req, res) => {
     const { full_name, email, password, role } = req.body;
@@ -41,7 +42,6 @@ const signup = async (req, res) => {
             email: email.toLowerCase().trim(),
             password: hashedPassword,
             role,
-            isActive: true,
             createdAt: new Date(),
             lastLogin: null,
             loginAttempts: 0,
@@ -53,7 +53,7 @@ const signup = async (req, res) => {
         await newUser.save();
 
         // Generate token and set secure cookie
-        const token = generateToken(newUser._id, res);
+        const token = await generateToken(newUser._id, res, req);
 
         // Log activity (implement activity logging)
         console.log(`User registered: ${email} at ${new Date().toISOString()}`);
@@ -133,7 +133,7 @@ const verifyOtp = async (req, res) => {
     await user.save();
 
     // After successful OTP validation
-    generateToken(user._id, res);  // set secure HTTP-only cookie
+    await generateToken(user._id, res, req);
 
     res.status(200).json({
         message: "OTP verified successfully",
@@ -208,14 +208,39 @@ const changePassword = async (req, res) => {
     }
 };
 
-const logout = (req, res) => {
-    res.clearCookie("interio_token", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "Strict"
-    });
-    return res.status(200).json({ message: "Logged out" });
+const Session = require("../model/Session");
+
+
+
+const logout = async (req, res) => {
+    try {
+        const token = req.cookies?.interio_token;
+
+        if (token) {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            if (decoded?.sessionId) {
+                await Session.updateOne(
+                    { sessionId: decoded.sessionId },
+                    { valid: false }
+                );
+            }
+        }
+
+        res.clearCookie("interio_token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict"
+        });
+
+        res.status(200).json({ message: "Logged out" });
+
+    } catch (err) {
+        console.error("Logout error:", err.message);
+        res.clearCookie("interio_token");
+        res.status(200).json({ message: "Logged out (fallback)" });
+    }
 };
+
 
 
 module.exports = {
