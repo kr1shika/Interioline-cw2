@@ -31,8 +31,8 @@ export default function InitialProjectPage() {
 
         const fetchData = async () => {
             try {
-                const userRes = await axios.get(`http://localhost:2005/api/user/${userId}`);
-                const designerRes = await axios.get(`http://localhost:2005/api/user/${designerId}`);
+                const userRes = await axios.get(`https://localhost:2005/api/user/${userId}`);
+                const designerRes = await axios.get(`https://localhost:2005/api/user/${designerId}`);
 
                 const quizAnswer1 = userRes.data?.style_quiz?.["1"];
                 setPlaceholder(quizAnswer1 || "Untitled Project");
@@ -47,7 +47,7 @@ export default function InitialProjectPage() {
 
     const handleConfirm = async () => {
         try {
-            const res = await axios.post("http://localhost:2005/api/project/createProject", {
+            const res = await axios.post("https://localhost:2005/api/project/createProject", {
                 title: title || placeholder,
                 client: userId,
                 designer: designerId,
@@ -115,7 +115,7 @@ export default function InitialProjectPage() {
                     className="designer-avatar"
                     src={
                         designer.profilepic
-                            ? `http://localhost:2005${designer.profilepic}`
+                            ? `https://localhost:2005${designer.profilepic}`
                             : "/assets/default-avatar.png"
                     }
                     alt="designer avatar"

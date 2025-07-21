@@ -4,10 +4,10 @@ import { FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import AddPortfolioModal from "../../../components/addPost.jsx";
 import ConfirmationModal from "../../../components/ConfirmationModal.jsx"; // Add this import
+import Footer from "../../../components/footer.jsx";
 import Header from "../../../components/header.jsx";
 import PortfolioPostViewer from "../../../components/PortfolioPostViewer.jsx";
 import { useAuth } from "../../../provider/authcontext";
-import Footer from "../../../components/footer.jsx";
 import "../../style/profile.css";
 import EditProfileForm from "./EditProfileForm.jsx";
 
@@ -40,7 +40,7 @@ export default function ProfilePage() {
                 })
             };
 
-            const res = await axios.get(`http://localhost:2005/api/review/designer/${userId}`, config);
+            const res = await axios.get(`https://localhost:2005/api/review/designer/${userId}`, config);
             setReviews(res.data.reviews || []);
             setAverageRating(res.data.averageRating || 0);
             console.log("✅ Reviews loaded:", res.data.reviews?.length || 0);
@@ -85,7 +85,7 @@ export default function ProfilePage() {
                     })
                 };
 
-                const res = await axios.get(`http://localhost:2005/api/user/${userId}`, config);
+                const res = await axios.get(`https://localhost:2005/api/user/${userId}`, config);
                 setDesigner(res.data);
                 console.log("✅ Designer profile loaded:", res.data.full_name);
             } catch (err) {
@@ -112,7 +112,7 @@ export default function ProfilePage() {
                     })
                 };
 
-                const res = await axios.get(`http://localhost:2005/api/portfolio/posts/${userId}`, config);
+                const res = await axios.get(`https://localhost:2005/api/portfolio/posts/${userId}`, config);
                 setPortfolioPosts(res.data.posts || []);
                 console.log("✅ Portfolio posts loaded:", res.data.posts?.length || 0);
             } catch (err) {
@@ -145,7 +145,7 @@ export default function ProfilePage() {
                 })
             };
 
-            const res = await axios.get(`http://localhost:2005/api/user/${userId}`, config);
+            const res = await axios.get(`https://localhost:2005/api/user/${userId}`, config);
             setDesigner(res.data);
             console.log("✅ Profile refreshed after update");
         } catch (err) {
@@ -169,7 +169,7 @@ export default function ProfilePage() {
                 headers: { Authorization: `Bearer ${token}` }
             };
 
-            await axios.delete(`http://localhost:2005/api/portfolio/posts/${postToDelete}`, config);
+            await axios.delete(`https://localhost:2005/api/portfolio/posts/${postToDelete}`, config);
 
             setPortfolioPosts(prevPosts => prevPosts.filter(post => post._id !== postToDelete));
 
@@ -283,7 +283,7 @@ export default function ProfilePage() {
                         <img
                             src={
                                 designer.profilepic
-                                    ? `http://localhost:2005${designer.profilepic}`
+                                    ? `https://localhost:2005${designer.profilepic}`
                                     : "/assets/default-avatar.png"
                             }
                             alt={designer.full_name}
@@ -327,7 +327,7 @@ export default function ProfilePage() {
                                         onClick={() => setActivePost(post)}
                                     >
                                         <img
-                                            src={`http://localhost:2005${primaryImage.url}`}
+                                            src={`https://localhost:2005${primaryImage.url}`}
                                             alt={primaryImage.caption || post.title}
                                         />
                                         <div className="post-overlay">
@@ -360,7 +360,7 @@ export default function ProfilePage() {
                                     <img
                                         src={
                                             review.client?.profilepic
-                                                ? `http://localhost:2005${review.client.profilepic}`
+                                                ? `https://localhost:2005${review.client.profilepic}`
                                                 : "/assets/default-avatar.png"
                                         }
                                         alt={review.client?.full_name || "Anonymous"}

@@ -61,7 +61,7 @@ const AddReviewModal = ({ isOpen, onClose, projectInfo, onSubmitSuccess }) => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:2005/api/review', {
+            const response = await fetch('https://localhost:2005/api/review', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

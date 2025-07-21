@@ -24,7 +24,7 @@ export default function PublicProfilePage() {
     useEffect(() => {
         const fetchDesigner = async () => {
             try {
-                const res = await axios.get(`http://localhost:2005/api/user/${designerId}`);
+                const res = await axios.get(`https://localhost:2005/api/user/${designerId}`);
                 setDesigner(res.data);
             } catch (err) {
                 console.error("Error fetching designer profile", err);
@@ -35,7 +35,7 @@ export default function PublicProfilePage() {
 
         const fetchPortfolioPosts = async () => {
             try {
-                const res = await axios.get(`http://localhost:2005/api/portfolio/posts/${designerId}`);
+                const res = await axios.get(`https://localhost:2005/api/portfolio/posts/${designerId}`);
                 setPortfolioPosts(res.data.posts || []);
             } catch (err) {
                 console.error("Error fetching portfolio posts", err);
@@ -44,7 +44,7 @@ export default function PublicProfilePage() {
 
         const fetchReviews = async () => {
             try {
-                const res = await axios.get(`http://localhost:2005/api/review/designer/${designerId}`);
+                const res = await axios.get(`https://localhost:2005/api/review/designer/${designerId}`);
                 setReviews(res.data.reviews || []);
                 setAverageRating(res.data.averageRating || 0);
             } catch (err) {
@@ -86,7 +86,7 @@ export default function PublicProfilePage() {
                         <img
                             src={
                                 designer.profilepic
-                                    ? `http://localhost:2005${designer.profilepic}`
+                                    ? `https://localhost:2005${designer.profilepic}`
                                     : "/assets/default-avatar.png"
                             }
                             alt={designer.full_name}
@@ -154,7 +154,7 @@ export default function PublicProfilePage() {
                                         onClick={() => setActivePost(post)}
                                     >
                                         <img
-                                            src={`http://localhost:2005${primaryImage.url}`}
+                                            src={`https://localhost:2005${primaryImage.url}`}
                                             alt={primaryImage.caption || post.title}
                                         />
                                         <div className="post-overlay">
@@ -179,7 +179,7 @@ export default function PublicProfilePage() {
                                 <div key={index} className="review-card">
                                     <img
                                         src={review.client?.profilepic
-                                            ? `http://localhost:2005${review.client.profilepic}`
+                                            ? `https://localhost:2005${review.client.profilepic}`
                                             : "/assets/default-avatar.png"
                                         }
                                         alt={review.client?.full_name || "Anonymous"}

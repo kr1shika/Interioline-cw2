@@ -28,7 +28,7 @@ const chatRoomSchema = new mongoose.Schema({
         ref: "User"
     }],
 }, {
-    timestamp: true
+    timestamps: true
 });
 const Chatroom = mongoose.model("Chatroom", chatRoomSchema);
 module.exports = Chatroom;

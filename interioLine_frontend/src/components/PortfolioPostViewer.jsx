@@ -105,7 +105,7 @@ export default function PortfolioPostViewer({ post, onClose }) {
                             }}
                         >
                             <img
-                                src={`http://localhost:2005${img.url}`}
+                                src={`https://localhost:2005${img.url}`}
                                 alt={img.caption || ""}
                                 style={{
                                     height: '21rem',

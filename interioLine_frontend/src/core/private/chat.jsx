@@ -17,109 +17,57 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const { userId, isLoggedIn, isUserIdAvailable, getToken } = useAuth();
+  const { user, isLoggedIn } = useAuth();
+  const userId = user?._id;
 
   const getProfilePicture = (user) => {
     if (user?.profilePicture) {
-      if (user.profilePicture.startsWith('http')) {
-        return user.profilePicture;
-      }
-      return `http://localhost:2005${user.profilePicture}`;
+      return user.profilePicture.startsWith("http")
+        ? user.profilePicture
+        : `http://localhost:2005${user.profilePicture}`;
     }
     return defaultProfileImg;
   };
 
   const getOtherUser = (room) => {
-    if (!room.participants || room.participants.length === 0) return null;
-
-    return room.participants.find(participant =>
-      participant._id?.toString() !== userId
-    );
+    return room.participants?.find((p) => p._id !== userId);
   };
 
-  useEffect(() => {
-    const fetchChatRooms = async () => {
-      if (!isLoggedIn || !isUserIdAvailable()) {
-        setChatRooms([]);
-        return;
-      }
+  const fetchChatRooms = async () => {
+    if (!isLoggedIn || !userId) return;
 
-      setLoading(true);
-      try {
-        const token = getToken();
-        const config = {
-          ...(token && {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-        };
-
-        const res = await axios.get(`http://localhost:2005/api/project/user/${userId}`, config);
-        setChatRooms(Array.isArray(res.data) ? res.data : []);
-        console.log("✅ Chat rooms loaded:", res.data?.length || 0);
-        setError("");
-      } catch (err) {
-        console.error("❌ Error fetching chat rooms:", err);
-
-        if (err.response?.status === 401) {
-          setError("Session expired. Please log in again.");
-        } else {
-          setError("Failed to load chat rooms.");
-        }
-        setChatRooms([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchChatRooms();
-  }, [userId, isLoggedIn, isUserIdAvailable, getToken]);
+    setLoading(true);
+    try {
+      const res = await axios.get(`/api/chat`, { withCredentials: true });
+      setChatRooms(Array.isArray(res.data) ? res.data : []);
+      setError("");
+    } catch (err) {
+      console.error("❌ Error fetching chat rooms:", err);
+      setError("Failed to load chat rooms.");
+      setChatRooms([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openChatRoom = async (roomId) => {
-    if (!isUserIdAvailable()) {
-      setError("Authentication required to access chat.");
-      return;
-    }
+    if (!userId) return;
 
     try {
       setSelectedRoomId(roomId);
       setLoading(true);
-
-      const token = getToken();
-      const config = {
-        ...(token && {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-      };
-
-      const res = await axios.get(`http://localhost:2005/api/chat/${roomId}`, config);
+      const res = await axios.get(`/api/chat/${roomId}`, { withCredentials: true });
       setMessages(Array.isArray(res.data) ? res.data : []);
-      setError("");
-
-      setTimeout(() => {
-        if (messagesEndRef.current) {
-          messagesEndRef.current.scrollIntoView({ behavior: "auto" });
-        }
-      }, 100);
     } catch (err) {
       console.error("❌ Error fetching messages:", err);
-
-      if (err.response?.status === 401) {
-        setError("Session expired. Please log in again.");
-      } else {
-        setError("Failed to load messages.");
-      }
+      setError("Failed to load messages.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleSend = async () => {
-    if (!text.trim() && images.length === 0) return;
-
-    if (!isUserIdAvailable()) {
-      setError("Authentication required to send messages.");
-      return;
-    }
+    if (!text.trim() && images.length === 0 || !userId) return;
 
     const firstMsg = messages.find((m) => m.senderId?._id || m.receiverId?._id);
     const receiverId =
@@ -133,46 +81,30 @@ export default function ChatWidget() {
     }
 
     const formData = new FormData();
-    formData.append("senderId", userId);
-    formData.append("receiverId", receiverId);
     formData.append("text", text);
     images.forEach((img) => formData.append("attachments", img));
 
     try {
       setLoading(true);
-
-      const token = getToken();
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          ...(token && { Authorization: `Bearer ${token}` })
-        },
-      };
-
-      const res = await axios.post(
-        `http://localhost:2005/api/chat/${selectedRoomId}`,
-        formData,
-        config
-      );
+      const res = await axios.post(`/api/chat/${selectedRoomId}`, formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" }
+      });
 
       setMessages((prev) => [...prev, res.data]);
       setText("");
       setImages([]);
-      setError("");
-
-      console.log("✅ Message sent successfully");
     } catch (err) {
       console.error("❌ Error sending message:", err);
-
-      if (err.response?.status === 401) {
-        setError("Session expired. Please log in again.");
-      } else {
-        setError("Failed to send message. Please try again.");
-      }
+      setError("Failed to send message.");
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchChatRooms();
+  }, [userId, isLoggedIn]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -180,24 +112,18 @@ export default function ChatWidget() {
     }
   }, [messages]);
 
-  if (!isLoggedIn || !isUserIdAvailable()) {
+  if (!isLoggedIn || !userId) {
     return (
       <div className="chat-widget">
         <div className="chat-header">🔒 Authentication Required</div>
-        <div style={{
-          padding: '20px',
-          textAlign: 'center',
-          fontSize: '14px',
-          color: '#666'
-        }}>
-          <p>Please log in to access chat features.</p>
+        <div style={{ padding: "20px", textAlign: "center", fontSize: "14px", color: "#666" }}>
+          Please log in to access chat features.
         </div>
       </div>
     );
   }
 
-  const currentRoom = chatRooms.find(r => r._id === selectedRoomId);
-
+  const currentRoom = chatRooms.find((r) => r._id === selectedRoomId);
   return (
     <div className="chat-widget">
       {/* Header */}
@@ -287,7 +213,7 @@ export default function ChatWidget() {
                         marginRight: '12px'
                       }}
                     />
-                    <span>{room.title || otherUser?.name || "Untitled Project"}</span>
+                    <span>{room.project?.title || otherUser?.name || "Untitled Project"}</span>
                   </div>
                 </div>
               );
@@ -330,7 +256,7 @@ export default function ChatWidget() {
                       {msg.attachments?.map((imgUrl, idx) => (
                         <div key={idx} className="chat-image-wrapper">
                           <img
-                            src={`http://localhost:2005${imgUrl}`}
+                            src={`https://localhost:2005${imgUrl}`}
                             alt="attachment"
                             className="chat-image"
                             style={isImageOnly ? {

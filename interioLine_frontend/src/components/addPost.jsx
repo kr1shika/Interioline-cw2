@@ -1,9 +1,9 @@
 import axios from "axios";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useAuth } from "../provider/authcontext";
 import "./addpost.css";
 import Toast from "./toastMessage.jsx";
-import { AnimatePresence } from "framer-motion"; 
 export default function AddPortfolioModal({ onClose }) {
     const [toast, setToast] = useState(null);
 
@@ -20,7 +20,7 @@ export default function AddPortfolioModal({ onClose }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const { userId, isUserIdAvailable, getToken } = useAuth();
+    const { userId, getToken } = useAuth();
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
@@ -108,7 +108,7 @@ export default function AddPortfolioModal({ onClose }) {
         e.preventDefault();
         setError("");
 
-        if (!isUserIdAvailable()) {
+        if (!isLoggedIn || !userId) {
             setError("Authentication error. Please log in again.");
             return;
         }
@@ -144,9 +144,9 @@ export default function AddPortfolioModal({ onClose }) {
                 }
             };
 
-            await axios.post("http://localhost:2005/api/portfolio/create", formData, config);
+            await axios.post("https://localhost:2005/api/portfolio/create", formData, config);
 
-           setToast({ message: "Post uploaded successfully!", type: "success" });
+            setToast({ message: "Post uploaded successfully!", type: "success" });
 
             onClose();
         } catch (error) {
@@ -163,7 +163,7 @@ export default function AddPortfolioModal({ onClose }) {
             setLoading(false);
         }
     };
-    if (!isUserIdAvailable()) {
+    if (!isLoggedIn || !userId) {
         return (
             <div className="portfolio-overlay">
                 <div className="portfolio-modal">
@@ -369,8 +369,8 @@ export default function AddPortfolioModal({ onClose }) {
                 </form>
             </div>
             <AnimatePresence>
-    {toast && <Toast message={toast.message} type={toast.type} />}
-</AnimatePresence>
+                {toast && <Toast message={toast.message} type={toast.type} />}
+            </AnimatePresence>
 
         </div>
     );

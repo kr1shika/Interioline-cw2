@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import bannerArt from "../../assets/images/art.png";
 import profile from "../../assets/images/profile.jpg";
 import room from "../../assets/images/room.png";
+import Footer from "../../components/footer.jsx";
 import Header from "../../components/header.jsx";
 import Toast from "../../components/toastMessage.jsx";
 import { useAuth } from "../../provider/authcontext";
@@ -12,7 +13,6 @@ import EditProfileForm from "../private/designer/EditProfileForm.jsx";
 import "../style/myprj.css";
 import { getRoomConfigurationByProjectId } from "./editingRoom/components/room-designer/furniture-Catalog";
 import PaymentPage from "./PaymentPage.jsx";
-import Footer from "../../components/footer.jsx";
 
 export default function MyProjectsPage() {
     const [projects, setProjects] = useState([]);
@@ -63,7 +63,7 @@ export default function MyProjectsPage() {
                     })
                 };
 
-                const res = await axios.get(`http://localhost:2005/api/project/user/${userId}`, config);
+                const res = await axios.get(`https://localhost:2005/api/project/user/${userId}`, config);
                 const projectsData = res.data || [];
                 setProjects(projectsData);
                 console.log("✅ Projects loaded:", projectsData?.length || 0);
@@ -100,7 +100,7 @@ export default function MyProjectsPage() {
                     })
                 };
 
-                const res = await axios.get(`http://localhost:2005/api/user/${userId}`, config);
+                const res = await axios.get(`https://localhost:2005/api/user/${userId}`, config);
                 setUserProfile(res.data);
                 console.log("✅ User profile loaded:", res.data.full_name);
             } catch (err) {
@@ -124,7 +124,7 @@ export default function MyProjectsPage() {
                 };
 
                 // Fetch designer statistics from the project controller
-                const statsRes = await axios.get(`http://localhost:2005/api/project/designer/stats/${userId}`, config);
+                const statsRes = await axios.get(`https://localhost:2005/api/project/designer/stats/${userId}`, config);
                 if (statsRes.data) {
                     setDashboardStats(prev => ({
                         ...prev,
@@ -206,7 +206,7 @@ export default function MyProjectsPage() {
                 })
             };
 
-            await axios.patch(`http://localhost:2005/api/project/${projectId}/status`,
+            await axios.patch(`https://localhost:2005/api/project/${projectId}/status`,
                 { status: newStatus },
                 config
             );
@@ -277,7 +277,7 @@ export default function MyProjectsPage() {
                 })
             };
 
-            const res = await axios.get(`http://localhost:2005/api/user/${userId}`, config);
+            const res = await axios.get(`https://localhost:2005/api/user/${userId}`, config);
             setUserProfile(res.data);
         } catch (err) {
             console.error("❌ Error fetching user profile:", err);
@@ -352,7 +352,7 @@ export default function MyProjectsPage() {
 
     const checkProjectPayments = async (projectId) => {
         try {
-            const response = await axios.get(`http://localhost:2005/api/payment/history?projectId=${projectId}`);
+            const response = await axios.get(`https://localhost:2005/api/payment/history?projectId=${projectId}`);
             if (response.data.success) {
                 const payments = response.data.payments.filter(p => p.status === 'succeeded');
                 return payments;
@@ -619,7 +619,7 @@ export default function MyProjectsPage() {
                         <div className="profile-content">
                             <div className="profile-avatar">
                                 <img
-                                    src={userProfile.profilepic ? `http://localhost:2005${userProfile.profilepic}` : profile}
+                                    src={userProfile.profilepic ? `https://localhost:2005${userProfile.profilepic}` : profile}
                                     alt="Profile"
                                     className="profile-image"
                                 />
@@ -867,7 +867,7 @@ export default function MyProjectsPage() {
                     />
                 </div>
             )}
-                <Footer />
+            <Footer />
 
         </div>
     );

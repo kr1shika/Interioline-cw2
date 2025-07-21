@@ -1,8 +1,8 @@
 import axios from "axios";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import "./addpost.css";
 import Toast from "./toastMessage.jsx";
-import { AnimatePresence } from "framer-motion";
 
 export default function UploadRoomDataModal({ onClose, projectId }) {
     const [roomData, setRoomData] = useState({
@@ -16,7 +16,7 @@ export default function UploadRoomDataModal({ onClose, projectId }) {
     const [dragActive, setDragActive] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [toastMessage, setToastMessage] = useState(null);
-const [toastType, setToastType] = useState("success");
+    const [toastType, setToastType] = useState("success");
 
 
     const handleInputChange = (field, value) => {
@@ -128,18 +128,18 @@ const [toastType, setToastType] = useState("success");
 
         try {
             await axios.patch(
-                `http://localhost:2005/api/project/${projectId}/room-details`,
+                `https://localhost:2005/api/project/${projectId}/room-details`,
                 formData,
                 {
                     headers: { "Content-Type": "multipart/form-data" },
                 }
             );
-setToastType("success");
-setToastMessage("Project initialized and details have been saved");
-setTimeout(() => {
-    setToastMessage(null);
-    onClose();
-}, 2500);
+            setToastType("success");
+            setToastMessage("Project initialized and details have been saved");
+            setTimeout(() => {
+                setToastMessage(null);
+                onClose();
+            }, 2500);
 
         } catch (error) {
             console.error("Upload failed:", error);
@@ -283,7 +283,7 @@ setTimeout(() => {
                     {/* Information Notice */}
                     <div className="primary-info" style={{ marginTop: '-15px', }}>
                         <span className="primary-label">
-                         Tip: Upload current room photos to help your designer understand the space better
+                            Tip: Upload current room photos to help your designer understand the space better
                         </span>
                     </div>
 
@@ -308,10 +308,10 @@ setTimeout(() => {
                 </form>
             </div>
             <AnimatePresence>
-    {toastMessage && (
-        <Toast message={toastMessage} type={toastType} />
-    )}
-</AnimatePresence>
+                {toastMessage && (
+                    <Toast message={toastMessage} type={toastType} />
+                )}
+            </AnimatePresence>
 
         </div>
     );

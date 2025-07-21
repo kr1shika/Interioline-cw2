@@ -22,7 +22,7 @@ export default function MatchResultPage() {
 
         const fetchSuggestions = async () => {
             try {
-                const res = await fetch("http://localhost:2005/api/user/getAllDesigners");
+                const res = await fetch("https://localhost:2005/api/user/getAllDesigners");
                 const data = await res.json();
 
                 const filtered = data.filter(d => d._id !== match._id);
@@ -30,7 +30,7 @@ export default function MatchResultPage() {
                 const enhanced = await Promise.all(
                     filtered.map(async (designer) => {
                         try {
-                            const postRes = await fetch(`http://localhost:2005/api/portfolio/posts/${designer._id}`);
+                            const postRes = await fetch(`https://localhost:2005/api/portfolio/posts/${designer._id}`);
                             const postData = await postRes.json();
                             const post = postData.posts[0];
                             const image =
@@ -52,7 +52,7 @@ export default function MatchResultPage() {
 
         const fetchMatchPost = async () => {
             try {
-                const res = await fetch(`http://localhost:2005/api/portfolio/posts/${match._id}`);
+                const res = await fetch(`https://localhost:2005/api/portfolio/posts/${match._id}`);
                 const data = await res.json();
                 const post = data.posts[0];
                 const image =
@@ -111,7 +111,7 @@ export default function MatchResultPage() {
                     <img
                         src={
                             match?.primaryImage
-                                ? `http://localhost:2005${match.primaryImage}`
+                                ? `https://localhost:2005${match.primaryImage}`
                                 : "/assets/rooms/sample1.jpg"
                         }
                         alt="room"
@@ -122,7 +122,7 @@ export default function MatchResultPage() {
                             <img
                                 src={
                                     match?.profilepic
-                                        ? `http://localhost:2005${match.profilepic}`
+                                        ? `https://localhost:2005${match.profilepic}`
                                         : "/assets/default-avatar.png"
                                 }
                                 alt="profile"
@@ -151,7 +151,7 @@ export default function MatchResultPage() {
                             <img
                                 src={
                                     designer.primaryImage
-                                        ? `http://localhost:2005${designer.primaryImage}`
+                                        ? `https://localhost:2005${designer.primaryImage}`
                                         : "/sample2.jpg"
                                 }
                                 alt="room"
@@ -161,7 +161,7 @@ export default function MatchResultPage() {
                                     <img
                                         src={
                                             designer.profilepic
-                                                ? `http://localhost:2005${designer.profilepic}`
+                                                ? `https://localhost:2005${designer.profilepic}`
                                                 : "/default-avatar.png"
                                         }
                                         alt="profile"

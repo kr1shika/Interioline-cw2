@@ -1,28 +1,77 @@
-// routes/chatRoutes.js
+// ✅ chatRoomroute.js — Secured version
 const express = require("express");
 const router = express.Router();
-const { getMessagesByProject, sendMessageToRoom } = require("../controller/chatController");
-const upload = require("../config/uploads");
-const {
-    authenticateToken,
-    bruteForceProtection,
-    logActivity
-} = require("../middleware/authMiddleware");
+const { authenticateToken } = require("../middleware/authMiddleware");
+const multer = require("multer");
+const path = require("path");
+const chatController = require("../controller/chatController");
+const Chatroom = require("../model/chat-room");
+const uploadDir = "uploads/chatUploads";
+const fs = require("fs");
 
-// 🔐 Get chat messages - PROTECTED
-router.get("/:projectId",
-    authenticateToken,              // Verify JWT token
-    logActivity('view_chat'),       // Log chat access
-    getMessagesByProject
-);
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
-// 🔐 Send message - PROTECTED with rate limiting
-router.post("/:projectId",
-    authenticateToken,              // Verify JWT token
-    bruteForceProtection,           // Prevent message spam
-    upload.array("attachments", 5), // limit to 5 files
-    logActivity('send_message'),    // Log message sending
-    sendMessageToRoom
-);
+// 📁 File upload config
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "uploads/chatUploads/");
+    },
+    filename: function (req, file, cb) {
+        const ext = path.extname(file.originalname);
+        const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+        cb(null, unique);
+    },
+});
+const upload = multer({ storage });
+
+// ✅ Fetch all messages for a project
+router.get("/:projectId", authenticateToken, chatController.getMessagesByProject);
+
+// ✅ Send message to a project room (with attachments)
+router.post("/:projectId", authenticateToken, upload.array("attachments"), chatController.sendMessageToRoom);
+
+// ✅ Get all chatrooms the logged-in user is part of
+router.get("/", authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const rooms = await Chatroom.aggregate([
+            {
+                $match: {
+                    $or: [
+                        { senderId: userId },
+                        { receiverId: userId }
+                    ]
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
+            },
+            {
+                $group: {
+                    _id: "$projectId",
+                    latestMessage: { $first: "$text" },
+                    timestamp: { $first: "$createdAt" },
+                }
+            },
+            {
+                $lookup: {
+                    from: "projects",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "project"
+                }
+            },
+            { $unwind: "$project" }
+        ]);
+
+        res.status(200).json(rooms);
+    } catch (err) {
+        console.error("Error fetching chatrooms:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 module.exports = router;

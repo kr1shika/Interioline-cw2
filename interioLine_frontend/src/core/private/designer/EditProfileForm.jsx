@@ -78,7 +78,7 @@ export default function EditProfileForm({ designer, onClose }) {
 
     try {
       const token = getToken();
-      const response = await axios.put(`http://localhost:2005/api/user/${userId}`, data, {
+      const response = await axios.put(`https://localhost:2005/api/user/${userId}`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
           ...(token && { Authorization: `Bearer ${token}` })
@@ -154,7 +154,7 @@ export default function EditProfileForm({ designer, onClose }) {
                 {file ? (
                   <img src={URL.createObjectURL(file)} alt="Preview" className="profile-preview-large" />
                 ) : designer?.profilepic ? (
-                  <img src={`http://localhost:2005${designer.profilepic}`} alt="Current" className="profile-preview-large" />
+                  <img src={`https://localhost:2005${designer.profilepic}`} alt="Current" className="profile-preview-large" />
                 ) : (
                   <div className="pic-placeholder">
                     <span className="pic-icon">📷</span>

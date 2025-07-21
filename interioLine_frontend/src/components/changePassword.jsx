@@ -94,7 +94,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
         setSuccess('');
 
         try {
-            await axios.post('http://localhost:2005/api/password-change/request-otp', {
+            await axios.post('https://localhost:2005/api/password-change/request-otp', {
                 email: formData.email
             });
 
@@ -115,7 +115,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
         setSuccess('');
 
         try {
-            await axios.post('http://localhost:2005/api/password-change/resend-otp', {
+            await axios.post('https://localhost:2005/api/password-change/resend-otp', {
                 email: formData.email
             });
 
@@ -147,7 +147,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
 
         try {
             // Use the new verify-only endpoint
-            await axios.post('http://localhost:2005/api/password-change/verify-otp-only', {
+            await axios.post('https://localhost:2005/api/password-change/verify-otp-only', {
                 email: formData.email,
                 otp: formData.otp
             });
@@ -210,7 +210,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
 
         try {
             // Use the new change-password endpoint
-            await axios.post('http://localhost:2005/api/password-change/change-password', {
+            await axios.post('https://localhost:2005/api/password-change/change-password', {
                 email: formData.email,
                 otp: formData.otp,
                 newPassword
