@@ -122,6 +122,9 @@ app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
 // JSON parsing for all other routes
 app.use(express.json());
+const cookieParser = require("cookie-parser");
+app.use(cookieParser()); // <-- Add this after express.json()
+
 
 // Routes
 const portfolioRouter = require("./route/portfolioROute");

@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+
     const logout = useCallback(async () => {
         try {
             await axios.post("/api/auth/logout", {}, { withCredentials: true });
@@ -84,10 +85,22 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error("useAuth must be used within an AuthProvider");
-    }
-    return context;
-};
+// export const useAuth = () => {
+//     const { setUser } = useContext(AuthContext);
+
+//     const login = (email, role) => {
+//         if (!email || !role) {
+//             console.error("Missing email or role in login()");
+//             return;
+//         }
+
+//         setUser({
+//             email: email.toLowerCase(),
+//             role,
+//         });
+//     };
+
+//     return { login };
+// };
+
+export const useAuth = () => useContext(AuthContext);

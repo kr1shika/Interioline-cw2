@@ -2,8 +2,7 @@ const Notification = require("../model/user-notification.js");
 const mongoose = require("mongoose");
 
 const getUserNotifications = async (req, res) => {
-    const userId = req.params.userId;
-
+    const userId = req.userId;
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({
@@ -23,7 +22,7 @@ const getUserNotifications = async (req, res) => {
 
 const markNotificationAsRead = async (req, res) => {
     const { notificationId } = req.params;
-    const userId = req.user?.id || req.body.userId; // Assuming user ID comes from auth middleware or request body
+    const userId = req.userId;
 
     // Validate ObjectId formats
     if (!mongoose.Types.ObjectId.isValid(notificationId)) {
@@ -68,7 +67,7 @@ const markNotificationAsRead = async (req, res) => {
 };
 
 const markAllNotificationsAsRead = async (req, res) => {
-    const userId = req.params.userId;
+    const userId = req.userId;
 
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(userId)) {

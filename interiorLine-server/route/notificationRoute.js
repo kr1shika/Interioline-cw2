@@ -6,13 +6,10 @@ const {
     markAllNotificationsAsRead
 } = require("../controller/notificationController");
 
-// GET notifications for a specific user
-router.get("/:userId", getUserNotifications);
+const { authenticateToken } = require("../middleware/authMiddleware");
 
-// PATCH mark a specific notification as read
-router.patch("/:notificationId/read", markNotificationAsRead);
-
-// PATCH mark all notifications as read for a user
-router.patch("/user/:userId/read-all", markAllNotificationsAsRead);
+router.get("/", authenticateToken, getUserNotifications);
+router.patch("/:notificationId/read", authenticateToken, markNotificationAsRead);
+router.patch("/read-all", authenticateToken, markAllNotificationsAsRead);
 
 module.exports = router;

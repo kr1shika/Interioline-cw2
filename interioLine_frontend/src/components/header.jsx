@@ -10,10 +10,10 @@ import NotificationComponent from "./notification";
 import ProfileMenu from "./ProfileMenu";
 
 const Header = ({ onGetStartedClick }) => {
-    const { isLoggedIn, loading, userId, getToken } = useAuth();
+    const { isLoggedIn, loading, user, getToken } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
-
+    const userId = user?._id;
     const [searchActive, setSearchActive] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [hasProjects, setHasProjects] = useState(false);
@@ -128,7 +128,7 @@ const Header = ({ onGetStartedClick }) => {
 
                 {isLoggedIn ? (
                     <>
-                        <NotificationComponent userId={userId} />
+                        <NotificationComponent />
                         <ChatIconWithWidget />
                         <ProfileMenu />
                     </>

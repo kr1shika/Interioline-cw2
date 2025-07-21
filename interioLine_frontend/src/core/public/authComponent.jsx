@@ -61,6 +61,9 @@ const calculatePasswordStrength = (password) => {
 };
 
 export default function AuthPopup({ onClose }) {
+    const [otpSent, setOtpSent] = useState(false);
+    const [otp, setOtp] = useState("");
+
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -102,7 +105,6 @@ export default function AuthPopup({ onClose }) {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        // Validation
         if (!email || !password) {
             return showToast("Please fill in all fields", "error");
         }
@@ -120,24 +122,19 @@ export default function AuthPopup({ onClose }) {
             const data = await res.json();
 
             if (!res.ok) {
-                // Show specific error message from server or a generic one
                 throw new Error(data.errors ? data.errors[0] : "Login failed");
             }
 
-            // Successfully logged in - use auth context login method
-            login(data._id, data.role);
-
-            // Store token if provided
-            // if (data.token) {
-            //     localStorage.setItem('token', data.token);
-            // }
-
-            showToast(`Welcome back, ${data.full_name}!`, "success");
-
-            // Close popup after a brief delay to show success message
-            setTimeout(() => {
-                onClose();
-            }, 1500);
+            if (data.message && data.message.includes("OTP sent")) {
+                setOtpSent(true);
+                showToast(data.message, "info");
+            } else if (data.errors && Array.isArray(data.errors)) {
+                showToast(data.errors[0], "error");
+            } else if (data.message) {
+                showToast(data.message, "error");
+            } else {
+                showToast("Unexpected server response", "error");
+            }
 
         } catch (err) {
             console.error("Login error:", err);
@@ -146,6 +143,44 @@ export default function AuthPopup({ onClose }) {
             setLoading(false);
         }
     };
+
+    const handleOtpVerify = async (e) => {
+        e.preventDefault();
+
+        if (!otp || !email) {
+            return showToast("Enter the OTP", "error");
+        }
+
+        setLoading(true);
+        try {
+            const res = await fetch("https://localhost:2005/api/auth/verify-otp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ email, otp }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.errors ? data.errors[0] : "OTP verification failed");
+            }
+
+            login(data.user.email, data.user.role, data.user);
+            showToast(`Welcome back!`, "success");
+
+            setTimeout(() => {
+                onClose();
+            }, 1500);
+        } catch (err) {
+            console.error("OTP verify error:", err);
+            showToast(err.message || "An unexpected error occurred", "error");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -178,9 +213,7 @@ export default function AuthPopup({ onClose }) {
                     role: "client",
                 }),
             });
-
             const data = await res.json();
-
             if (!res.ok) {
                 throw new Error(data.errors ? data.errors[0] : "Signup failed");
             }
@@ -265,40 +298,62 @@ export default function AuthPopup({ onClose }) {
                                         exit={{ x: -100, opacity: 0 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <form onSubmit={handleLogin} className="flex flex-col gap-6 justify-center items-center">
+                                        <form onSubmit={handleLogin} className="flex flex-col gap-2 mt-2">
+                                            {/* Email Input */}
                                             <input
                                                 type="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
-                                                style={{ padding: "5px 12px", marginTop: "-30px", width: "290px" }}
-                                                placeholder="E-mail"
-                                                className="text-[#BE7B5D] rounded-md border border-gray-300 bg-[#f7f0e9]"
-                                                disabled={loading}
-                                            />
-                                            <input
                                                 style={{ padding: "5px 12px", width: "290px" }}
+                                                placeholder="Enter Email"
+                                                className="text-[#BE7B5D] rounded-md border border-gray-300 bg-[#f7f0e9]"
+                                                disabled={loading || otpSent}
+                                            />
+
+                                            {/* Password Input */}
+                                            <input
                                                 type="password"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                placeholder="Password"
-                                                className="text-[#BE7B5D] p-3 rounded-md border border-gray-300 bg-[#f7f0e9]"
-                                                disabled={loading}
+                                                style={{ padding: "5px 12px", width: "290px" }}
+                                                placeholder="Enter Password"
+                                                className="text-[#BE7B5D] rounded-md border border-gray-300 bg-[#f7f0e9]"
+                                                disabled={loading || otpSent}
                                             />
-                                            <button
-                                                style={{ padding: "4px 12px", width: "130px" }}
-                                                type="submit"
-                                                className="bg-[#C2805A] text-white py-2 rounded-md font-semibold disabled:opacity-50"
-                                                disabled={loading}
-                                            >
-                                                {loading ? "LOGGING IN..." : "LOGIN"}
-                                            </button>
-                                            <p
-                                                className="text-sm text-center mt-1 text-[#C2805A] cursor-pointer hover:underline transition-colors duration-200"
-                                                onClick={handleForgotPassword}
-                                            >
-                                                Forgot Password?
-                                            </p>
+
+                                            {/* OTP + Buttons */}
+                                            {otpSent ? (
+                                                <>
+                                                    <input
+                                                        type="text"
+                                                        value={otp}
+                                                        onChange={(e) => setOtp(e.target.value)}
+                                                        style={{ padding: "5px 12px", width: "290px" }}
+                                                        placeholder="Enter OTP"
+                                                        className="text-[#BE7B5D] rounded-md border border-gray-300 bg-[#f7f0e9]"
+                                                        disabled={loading}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        className="bg-[#C2805A] text-white py-2 px-4 rounded-md font-semibold disabled:opacity-50"
+                                                        disabled={loading}
+                                                        onClick={handleOtpVerify}
+                                                    >
+                                                        {loading ? "VERIFYING..." : "VERIFY OTP"}
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <button
+                                                    style={{ padding: "4px 12px", width: "130px" }}
+                                                    type="submit"
+                                                    className="bg-[#C2805A] text-white py-2 rounded-md font-semibold disabled:opacity-50"
+                                                    disabled={loading}
+                                                >
+                                                    {loading ? "LOGGING IN..." : "LOGIN"}
+                                                </button>
+                                            )}
                                         </form>
+
                                     </motion.div>
                                 ) : (
                                     <motion.div

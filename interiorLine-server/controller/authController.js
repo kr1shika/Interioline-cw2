@@ -74,94 +74,78 @@ const signup = async (req, res) => {
     }
 };
 
-const login = async (req, res) => {
+// add at top
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+// const User = require("../model/user");
+// const { generateToken } = require("../config/util");
+
+const loginRequest = async (req, res) => {
     const { email, password } = req.body;
 
-    try {
-        // Basic validation
-        if (!email || !password) {
-            return res.status(400).json({
-                errors: ["Email and password are required"]
-            });
+    const user = await User.findOne({ email });
+    if (!user || !(await user.matchPassword(password))) {
+        return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
+
+    user.otp = hashedOtp;
+    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // valid 10 mins
+    user.otpVerified = false;
+    await user.save();
+
+    // send OTP to email
+    const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
         }
+    });
 
-        const normalizedEmail = email.toLowerCase().trim();
+    await transporter.sendMail({
+        from: `"InterioLine" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: "Your OTP Code",
+        text: `Your OTP is: ${otp}`,
+    });
 
-        // Check account lock status
-        const lockMessage = checkAccountLock(normalizedEmail);
-        if (lockMessage) {
-            return res.status(423).json({ errors: [lockMessage] });
-        }
+    res.json({ message: "OTP sent to your email" });
+};
 
-        // Find user
-        const user = await User.findOne({ email: normalizedEmail });
-        if (!user) {
-            trackLoginAttempt(normalizedEmail, false);
-            return res.status(401).json({ errors: ["Invalid credentials"] });
-        }
+const verifyOtp = async (req, res) => {
+    const { email, otp } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ error: "User not found" });
 
-        // Check if account is active
-        if (user.isActive === false) {
-            return res.status(401).json({ errors: ["Account is deactivated"] });
-        }
+    const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
 
-        // Check if account is locked
-        if (user.accountLocked) {
-            return res.status(423).json({
-                errors: ["Account is locked. Please contact support"]
-            });
-        }
+    if (user.otp !== hashedOtp || user.otpExpiry < Date.now()) {
+        return res.status(400).json({ error: "Invalid or expired OTP" });
+    }
 
-        // Verify password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            trackLoginAttempt(normalizedEmail, false);
+    user.otpVerified = true;
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
 
-            // Increment failed login attempts in database
-            user.loginAttempts = (user.loginAttempts || 0) + 1;
-            if (user.loginAttempts >= 5) {
-                user.accountLocked = true;
-            }
-            await user.save();
+    // After successful OTP validation
+    generateToken(user._id, res);  // set secure HTTP-only cookie
 
-            return res.status(401).json({ errors: ["Invalid credentials"] });
-        }
-
-        // Successful login - reset attempts and update last login
-        trackLoginAttempt(normalizedEmail, true);
-        user.loginAttempts = 0;
-        user.lastLogin = new Date();
-        await user.save();
-
-        // Generate new token
-        const token = generateToken(user._id, res);
-        res.cookie("interio_token", token, {
-            httpOnly: true,
-            secure: true,             // only over HTTPS
-            sameSite: "Strict",       // or "Lax" if needed for subdomains
-            maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
-        });
-
-
-        // Log activity
-        console.log(`User logged in: ${email} at ${new Date().toISOString()}`);
-
-        res.status(200).json({
-            _id: user._id,
+    res.status(200).json({
+        message: "OTP verified successfully",
+        user: {
             full_name: user.full_name,
             email: user.email,
             role: user.role,
-            profile_picture: user.profile_picture,
-            token: token
-        });
+        },
+    });
 
-    } catch (error) {
-        console.error("Login error:", error);
-        res.status(500).json({ errors: ["Internal server error"] });
-    }
+
 };
-
-
 
 
 const changePassword = async (req, res) => {
@@ -225,17 +209,19 @@ const changePassword = async (req, res) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie("interio_token", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "Strict"
-  });
-  return res.status(200).json({ message: "Logged out" });
+    res.clearCookie("interio_token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict"
+    });
+    return res.status(200).json({ message: "Logged out" });
 };
 
 
 module.exports = {
     signup,
-    login,
-    changePassword, logout
+    loginRequest,
+    verifyOtp,
+    changePassword,
+    logout
 };

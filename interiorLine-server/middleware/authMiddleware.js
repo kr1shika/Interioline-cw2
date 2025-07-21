@@ -12,6 +12,9 @@ const authenticateToken = async (req, res, next) => {
     try {
         // Get token from cookie or Authorization header
         let token = req.cookies?.interio_token;
+        // console.log("🔒 Cookies received:", req.cookies);
+
+        // if (!token) return res.status(401).json({ errors: ["No token"] });
 
         if (!token && req.headers.authorization) {
             const authHeader = req.headers.authorization;
@@ -255,7 +258,7 @@ const logActivity = (action) => {
             method: req.method
         };
 
-      
+
 
         next();
     };
@@ -271,5 +274,5 @@ module.exports = {
     blacklistToken,
     requireRecentAuth,
     logActivity,
-    
+
 };

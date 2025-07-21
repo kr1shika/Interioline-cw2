@@ -3,13 +3,14 @@ const router = express.Router();
 const { authenticateToken } = require('../middleware/authMiddleware');
 
 const {
-    login,
+    loginRequest, verifyOtp,
     signup, logout
 } = require('../controller/authController.js');
 
 router.post('/signup', signup);
 
-router.post('/login', login);
+router.post('/login', loginRequest);
+router.post('/verify-otp', verifyOtp);
 
 router.get('/me', authenticateToken, (req, res) => {
     res.status(200).json(req.user);
