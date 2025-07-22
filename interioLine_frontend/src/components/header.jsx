@@ -39,10 +39,12 @@ const Header = ({ onGetStartedClick }) => {
 
     useEffect(() => {
         const fetchProjectCount = async () => {
-            if (!isLoggedIn || !userId) return;
+            if (!isLoggedIn) return;
 
             try {
-                const res = await axios.get(`https://localhost:2005/api/project/user/${userId}`);
+                const res = await axios.get("https://localhost:2005/api/project/my", {
+                    withCredentials: true,
+                });
                 const projects = res.data || [];
                 setHasProjects(projects.length > 0);
             } catch (err) {
@@ -51,7 +53,8 @@ const Header = ({ onGetStartedClick }) => {
         };
 
         fetchProjectCount();
-    }, [isLoggedIn, userId, getToken]);
+    }, [isLoggedIn]);
+
 
     if (loading) {
         return (

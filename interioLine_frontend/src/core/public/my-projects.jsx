@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FiCreditCard, FiEdit, FiEye, FiMoreHorizontal, FiStar, FiTrendingUp, FiUsers } from "react-icons/fi";
+import { FiCreditCard, FiEdit, FiEye, FiMoreHorizontal, FiStar, FiUsers } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import bannerArt from "../../assets/images/art.png";
 import profile from "../../assets/images/profile.jpg";
@@ -30,82 +30,45 @@ export default function MyProjectsPage() {
         activeProjects: 0,
         totalClients: 0,
         revenueThisMonth: 0,
-        averageRating: 0
+        averageRating: 0,
+        totalReviews: 0,
     });
 
     const navigate = useNavigate();
-    const {
-        userId,
-        userRole,
-        isLoggedIn,
-        isUserIdAvailable,
-        getToken,
-        loading: authLoading
-    } = useAuth();
+    const { user, userRole, isLoggedIn, loading: authLoading } = useAuth();
 
     useEffect(() => {
         // Wait for auth to finish loading
         if (authLoading) return;
 
         // 🔐 Security checks
-        if (!isLoggedIn || !isUserIdAvailable()) {
+        if (!isLoggedIn) {
             console.log("🔒 Not authenticated, redirecting to home");
             navigate('/');
             return;
         }
-
         const fetchProjects = async () => {
             try {
-                const token = getToken();
-                const config = {
-                    ...(token && {
-                        headers: { Authorization: `Bearer ${token}` }
-                    })
-                };
-
-                const res = await axios.get(`https://localhost:2005/api/project/user/${userId}`, config);
-                const projectsData = res.data || [];
-                setProjects(projectsData);
-                console.log("✅ Projects loaded:", projectsData?.length || 0);
-
-                // Fetch payment details for each project
-                const paymentDetails = {};
-                for (const project of projectsData) {
-                    const payments = await checkProjectPayments(project._id);
-                    paymentDetails[project._id] = payments;
-                }
-                setProjectPaymentDetails(paymentDetails);
-
-                // Calculate dashboard stats for designers
-                if (userRole === 'designer' && projectsData) {
-                    calculateDashboardStats(projectsData);
-                }
+                const res = await axios.get("https://localhost:2005/api/project/my", { withCredentials: true });
+                if (!Array.isArray(res.data)) throw new Error("Invalid response");
+                setProjects(res.data);
             } catch (err) {
                 console.error("❌ Error fetching projects:", err);
-
-                if (err.response?.status === 401) {
-                    setError("Session expired. Please log in again.");
-                } else {
-                    setError("Failed to load projects. Please try again.");
-                }
+                setError("Failed to load projects.");
             }
         };
 
+
         const fetchUserProfile = async () => {
             try {
-                const token = getToken();
-                const config = {
-                    ...(token && {
-                        headers: { Authorization: `Bearer ${token}` }
-                    })
-                };
+                const res = await axios.get("https://localhost:2005/api/user/me", {
+                    withCredentials: true
+                });
 
-                const res = await axios.get(`https://localhost:2005/api/user/${userId}`, config);
                 setUserProfile(res.data);
                 console.log("✅ User profile loaded:", res.data.full_name);
             } catch (err) {
                 console.error("❌ Error fetching user profile:", err);
-
                 if (err.response?.status === 401) {
                     console.log("🔒 Unauthorized access to profile");
                 }
@@ -113,54 +76,31 @@ export default function MyProjectsPage() {
         };
 
         const fetchDesignerStats = async () => {
-            if (userRole !== 'designer') return;
-
             try {
-                const token = getToken();
-                const config = {
-                    ...(token && {
-                        headers: { Authorization: `Bearer ${token}` }
-                    })
-                };
-
-                // Fetch designer statistics from the project controller
-                const statsRes = await axios.get(`https://localhost:2005/api/project/designer/stats/${userId}`, config);
-                if (statsRes.data) {
-                    setDashboardStats(prev => ({
-                        ...prev,
-                        totalClients: statsRes.data.totalClients || 0,
-                        revenueThisMonth: statsRes.data.revenueThisMonth || 0,
-                        averageRating: statsRes.data.averageRating || 4.5,
-                        totalReviews: statsRes.data.totalReviews || 0
-                    }));
-                    console.log("✅ Designer stats updated:", statsRes.data);
-                }
+                const res = await axios.get("https://localhost:2005/api/project/designer/stats", { withCredentials: true });
+                setDashboardStats(prev => ({
+                    ...prev,
+                    totalClients: res.data.totalClients || 0,
+                    revenueThisMonth: res.data.revenueThisMonth || 0,
+                    averageRating: res.data.averageRating || 4.5,
+                    totalReviews: res.data.totalReviews || 0
+                }));
             } catch (err) {
                 console.error("❌ Error fetching designer stats:", err);
-                // Don't show error for stats - it's not critical
             }
         };
 
         const loadData = async () => {
             setLoading(true);
-
             await fetchProjects();
-
-            // Only fetch profile if user is a client
-            if (userRole === 'client') {
-                await fetchUserProfile();
-            }
-
-            // Fetch additional stats for designers
-            if (userRole === 'designer') {
-                await fetchDesignerStats();
-            }
-
+            if (userRole === "client") await fetchUserProfile();
+            if (userRole === "designer") await fetchDesignerStats();
             setLoading(false);
         };
 
         loadData();
-    }, [userId, userRole, isLoggedIn, authLoading, navigate, isUserIdAvailable, getToken]);
+    }, [authLoading, isLoggedIn, userRole, navigate]);
+
 
     const calculateDashboardStats = (projectsData) => {
         const activeProjects = projectsData.filter(p =>
@@ -193,22 +133,11 @@ export default function MyProjectsPage() {
     const statusOptions = ["pending", "in_progress", "completed", "cancelled"];
 
     const updateProjectStatus = async (projectId, newStatus) => {
-        if (!isUserIdAvailable()) {
-            setError("Authentication required to update project status.");
-            return;
-        }
-
         try {
-            const token = getToken();
-            const config = {
-                ...(token && {
-                    headers: { Authorization: `Bearer ${token}` }
-                })
-            };
-
-            await axios.patch(`https://localhost:2005/api/project/${projectId}/status`,
+            await axios.patch(
+                `https://localhost:2005/api/project/${projectId}/status`,
                 { status: newStatus },
-                config
+                { withCredentials: true } // ✅ secure cookie-based auth
             );
 
             // Update local state
@@ -234,6 +163,8 @@ export default function MyProjectsPage() {
                 setError("Failed to update project status.");
             }
         }
+
+
     };
 
     const getStatusProgress = (status) => {
@@ -264,25 +195,17 @@ export default function MyProjectsPage() {
             fetchUserProfile();
         }
     };
-
-    // Function to fetch updated user profile
     const fetchUserProfile = async () => {
-        if (!isUserIdAvailable()) return;
-
         try {
-            const token = getToken();
-            const config = {
-                ...(token && {
-                    headers: { Authorization: `Bearer ${token}` }
-                })
-            };
-
-            const res = await axios.get(`https://localhost:2005/api/user/${userId}`, config);
+            const res = await axios.get("https://localhost:2005/api/user/me", {
+                withCredentials: true,
+            });
             setUserProfile(res.data);
         } catch (err) {
             console.error("❌ Error fetching user profile:", err);
         }
     };
+
 
     // Show toast message
     const showToast = (message, type = "info") => {
@@ -591,17 +514,6 @@ export default function MyProjectsPage() {
                                 <div className="stat-label">Total Clients</div>
                             </div>
                         </div>
-
-                        <div className="stat-card">
-                            <div className="stat-icon purple">
-                                <FiTrendingUp />
-                            </div>
-                            <div className="stat-content">
-                                <div className="stat-number">${dashboardStats.revenueThisMonth.toLocaleString()}</div>
-                                <div className="stat-label">Revenue This Month</div>
-                            </div>
-                        </div>
-
                         <div className="stat-card">
                             <div className="stat-icon yellow">
                                 <FiStar />
@@ -868,7 +780,6 @@ export default function MyProjectsPage() {
                 </div>
             )}
             <Footer />
-
         </div>
     );
 }

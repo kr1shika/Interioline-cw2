@@ -6,17 +6,17 @@ const multer = require("multer");
 const path = require("path");
 const chatController = require("../controller/chatController");
 const Chatroom = require("../model/chat-room");
-const uploadDir = "uploads/chatUploads";
+const uploadDir = "chatUploads";
 const fs = require("fs");
 
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 // 📁 File upload config
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "uploads/chatUploads/");
+        cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
         const ext = path.extname(file.originalname);

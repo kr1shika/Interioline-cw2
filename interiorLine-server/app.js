@@ -7,7 +7,7 @@ const authRouter = require("./route/authRoute");
 const chatRouter = require("./route/chatRoomroute");
 const userRouter = require("./route/userRoute");
 const quizRouter = require("./route/matchRoute");
-const paymentRouter = require("./route/paymentRoute"); 
+const paymentRouter = require("./route/paymentRoute");
 const path = require("path");
 
 const cors = require("cors");
@@ -33,8 +33,8 @@ dotenv.config({ path: "./config/config.env" });
 // Static file serving
 app.use("/profile_pics", express.static(path.join(__dirname, "profile_pics")));
 app.use("/portfolio_uploads", express.static(path.join(__dirname, "portfolio_uploads")));
-// app.use("/chatUploads", express.static("chatUploads"));
-app.use("/chatUploads", express.static(path.join(__dirname, "uploads/chatUploads")));
+app.use("/chatUploads", express.static("chatUploads"));
+// app.use("/chatUploads", express.static(path.join(__dirname, "uploads/chatUploads")));
 
 // CORS configuration
 app.use(cors({
