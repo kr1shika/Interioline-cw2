@@ -32,7 +32,8 @@ export default function EditProfileForm({ designer, onClose }) {
       setApproach(designer.approach || "Balanced");
 
       if (isDesigner) {
-        const hasQuizData = designer.preferredTones?.length > 0 ||
+        const hasQuizData =
+          designer.preferredTones?.length > 0 ||
           designer.approach !== "Balanced" ||
           designer.specialization;
         setQuizCompleted(hasQuizData);
@@ -46,18 +47,10 @@ export default function EditProfileForm({ designer, onClose }) {
     setSpecialization(quizData.specialization);
     setQuizCompleted(true);
     setShowQuiz(false);
-    setTimeout(() => {
-    }, 0);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!isUserIdAvailable()) {
-      setError("Authentication error. Please log in again.");
-      return;
-    }
-
     setLoading(true);
     setError("");
 
@@ -77,47 +70,26 @@ export default function EditProfileForm({ designer, onClose }) {
     if (file) data.append("profilepic", file);
 
     try {
-      const token = getToken();
-      const response = await axios.put(`https://localhost:2005/api/user/${userId}`, data, {
+      const response = await axios.put("/api/user/update", data, {
+        withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
-          ...(token && { Authorization: `Bearer ${token}` })
         },
       });
 
-      // Update auth context with new data
-      updateUserProfile(response.data);
-
-      console.log("✅ Profile updated successfully");
+      updateUserProfile(response.data.user); // context update
+      console.log("✅ Profile updated");
       onClose();
     } catch (err) {
-      console.error("❌ Error updating profile:", err);
-
-      if (err.response?.status === 401) {
-        setError("Session expired. Please log in again.");
-      } else if (err.response?.status === 403) {
-        setError("Access denied. You can only edit your own profile.");
-      } else {
-        setError(err.response?.data?.errors?.[0] || "Failed to update profile");
-      }
+      console.error("❌ Profile update failed:", err);
+      const code = err.response?.status;
+      if (code === 401) setError("Session expired. Please log in again.");
+      else if (code === 403) setError("Access denied.");
+      else setError(err.response?.data?.message || "Update failed.");
     } finally {
       setLoading(false);
     }
   };
-
-  if (!isUserIdAvailable()) {
-    return (
-      <div className="edit-profile-container">
-        <div className="profile-header">
-          <h2 style={{ color: "#dc3545" }}>Authentication Error</h2>
-          <p>Unable to access user information. Please log in again.</p>
-          <button onClick={onClose} className="btn btn-cancel-compact">
-            Close
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>

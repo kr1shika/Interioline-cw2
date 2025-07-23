@@ -18,15 +18,10 @@ const storage = multer.diskStorage({
     },
 });
 const upload = multer({ storage });
-
 router.post("/create", authenticateToken,upload.array("images", 10), createPortfolioPost);
-
 router.get("/posts/:designerId", getUserPortfolioPosts);
 router.delete("/posts/:postId", authenticateToken, deletePortfolioPost);
-
-
 router.get("/my", authenticateToken, getMyPortfolioPosts);
 router.delete("/:id", authenticateToken, deletePortfolioPost);
 
 module.exports = router;
-// 683f1a9fb2873d694e410705

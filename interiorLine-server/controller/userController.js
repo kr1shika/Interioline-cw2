@@ -63,64 +63,29 @@ const getUserById = async (req, res) => {
 
 const updateUserProfile = async (req, res) => {
     try {
-        const { id } = req.params;
-
-        const user = await User.findById(id);
-        if (!user) {
-            console.warn("⚠️ User not found:", id);
-            return res.status(404).json({ message: "User not found" });
-        }
+        const user = await User.findById(req.user._id);
+        if (!user) return res.status(404).json({ message: "User not found" });
 
         const { full_name, bio, specialization, experience, preferredTones, approach } = req.body;
 
         if (full_name) user.full_name = full_name;
         if (bio) user.bio = bio;
         if (specialization) user.specialization = specialization;
-        if (experience) {
-            const parsedExp = Number(experience);
-            if (isNaN(parsedExp)) {
-                console.warn("⚠️ Invalid experience:", experience);
-                return res.status(400).json({ message: "Experience must be a number" });
-            }
-            user.experience = parsedExp;
-        }
+        if (experience) user.experience = Number(experience);
+        if (approach) user.approach = approach;
 
         if (req.body.preferredTones) {
-            const tones = Array.isArray(req.body.preferredTones)
-                ? req.body.preferredTones
-                : [req.body.preferredTones]; // Handle single or multiple values
-            user.preferredTones = tones;
+            user.preferredTones = Array.isArray(preferredTones) ? preferredTones : [preferredTones];
         }
 
-        if (approach) {
-            user.approach = approach;
-        }
-
-        if (req.file) {
-            console.log("✅ File received:", req.file.filename);
-            user.profilepic = `/profile_pics/${req.file.filename}`;
-        }
+        if (req.file) user.profilepic = `/profile_pics/${req.file.filename}`;
 
         await user.save();
 
-        console.log("✅ User updated:", user._id);
-        return res.status(200).json({
-            message: "User profile updated successfully.",
-            user,
-        });
-
+        return res.status(200).json({ message: "Profile updated", user });
     } catch (error) {
-        console.error("🔥 ERROR updating user:");
-        console.error("Name:", error.name);
-        console.error("Message:", error.message);
-        console.error("Stack:", error.stack);
-
-        return res.status(500).json({
-            message: "Failed to update ",
-            errorType: error.name,
-            errorMessage: error.message,
-            stack: process.env.NODE_ENV !== "production" ? error.stack : undefined,
-        });
+        console.error("Update error:", error);
+        res.status(500).json({ message: "Failed to update profile" });
     }
 };
 

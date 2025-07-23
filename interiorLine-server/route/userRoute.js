@@ -34,6 +34,6 @@ router.put("/me", authenticateToken, updateDesignerProfile);
 router.get("/getAllDesigners", getAllDesigners);
 router.get("/style/:style", getDesignersByStyle); // New route for filtering by style
 router.get("/:id", getUserById);
-router.put("/:id", upload.single("profilepic"), updateUserProfile);
+router.put("/update", authenticateToken, upload.single("profilepic"), updateUserProfile);
 router.get("/search/:query", searchDesigners);
 module.exports = router;
