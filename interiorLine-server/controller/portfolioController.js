@@ -1,10 +1,15 @@
 const PortfolioPost = require("../model/portforlio-posts");
 const fs = require("fs");
 const path = require("path");
+
 const createPortfolioPost = async (req, res) => {
     try {
         const { title, tags, captions = [], primaryIndex = 0 } = req.body;
-        const designerId = req.userId || req.body.designer;
+        const designerId = req.user?._id;
+
+        if (!designerId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
 
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ message: "No images uploaded." });
@@ -24,9 +29,9 @@ const createPortfolioPost = async (req, res) => {
         });
 
         await post.save();
-        res.status(201).json({ message: "Portfolio post created", post });
+        res.status(201).json({ message: "Portfolio post created" });
     } catch (error) {
-        console.error("❌ Error creating portfolio post:", error); // <- this will help a lot
+        console.error("❌ Error creating portfolio post:", error);
         res.status(500).json({ message: "Failed to create portfolio post", error: error.message });
     }
 };
@@ -50,61 +55,33 @@ const getUserPortfolioPosts = async (req, res) => {
 
 const deletePortfolioPost = async (req, res) => {
     try {
-        const { postId } = req.params;
-        const designerId = req.userId;
-
-        console.log("Delete request - PostID:", postId, "DesignerID:", designerId);
-
-        if (!postId) {
-            return res.status(400).json({ message: "Post ID is required." });
-        }
-
-        if (!designerId) {
-            return res.status(401).json({ message: "Authentication required." });
-        }
-
-        // Find the post and check if it belongs to the authenticated user
-        const post = await PortfolioPost.findById(postId);
+        const post = await Portfolio.findOneAndDelete({
+            _id: req.params.id,
+            designer: req.user._id
+        });
 
         if (!post) {
-            return res.status(404).json({ message: "Portfolio post not found." });
+            return res.status(404).json({ message: "Post not found or unauthorized" });
         }
 
-        console.log("Found post - Designer:", post.designer, "Type:", typeof post.designer);
+        res.status(200).json({ message: "Post deleted successfully" });
+    } catch (err) {
+        console.error("❌ Error deleting portfolio post:", err);
+        res.status(500).json({ message: "Failed to delete post" });
+    }
+};
 
+const getMyPortfolioPosts = async (req, res) => {
+    try {
+        const posts = await PortfolioPost.find({ designer: req.user._id })
+            .sort({ createdAt: -1 });
 
-        const postDesignerId = post.designer ? post.designer.toString() : null;
-        const currentUserId = designerId ? designerId.toString() : null;
-
-        if (!postDesignerId || !currentUserId || postDesignerId !== currentUserId) {
-            return res.status(403).json({ message: "You can only delete your own posts." });
-        }
-
-        // Delete associated image files from the filesystem
-        if (post.images && post.images.length > 0) {
-            post.images.forEach(image => {
-                const imagePath = path.join(__dirname, '..', 'portfolio_uploads', path.basename(image.url));
-                if (fs.existsSync(imagePath)) {
-                    try {
-                        fs.unlinkSync(imagePath);
-                        console.log(`✅ Deleted image file: ${imagePath}`);
-                    } catch (fileError) {
-                        console.error(`❌ Error deleting image file: ${imagePath}`, fileError);
-                    }
-                }
-            });
-        }
-
-        // Delete the post from database
-        await PortfolioPost.findByIdAndDelete(postId);
-
-        console.log(`✅ Portfolio post deleted: ${postId}`);
-        res.status(200).json({ message: "Portfolio post deleted successfully." });
-    } catch (error) {
-        console.error("❌ Error deleting portfolio post:", error);
-        res.status(500).json({ message: "Failed to delete portfolio post.", error: error.message });
+        res.status(200).json(posts);
+    } catch (err) {
+        console.error("❌ Error fetching portfolio posts:", err);
+        res.status(500).json({ message: "Failed to fetch portfolio posts" });
     }
 };
 
 
-module.exports = { createPortfolioPost, getUserPortfolioPosts, deletePortfolioPost };
+module.exports = { createPortfolioPost, getUserPortfolioPosts, deletePortfolioPost, getMyPortfolioPosts };

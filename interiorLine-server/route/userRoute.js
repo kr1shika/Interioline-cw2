@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const { authenticateToken } = require("../middleware/authMiddleware");
+
 const multer = require("multer");
 const {
     getAllDesigners,
     getDesignersByStyle,
     getUserById,
-    updateUserProfile, searchDesigners
+    updateUserProfile, searchDesigners, getCurrentUserProfile, updateDesignerProfile
 } = require("../controller/userController");
 
 const path = require("path");
@@ -27,7 +29,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
+router.get("/me", authenticateToken, getCurrentUserProfile);
+router.put("/me", authenticateToken, updateDesignerProfile);
 router.get("/getAllDesigners", getAllDesigners);
 router.get("/style/:style", getDesignersByStyle); // New route for filtering by style
 router.get("/:id", getUserById);

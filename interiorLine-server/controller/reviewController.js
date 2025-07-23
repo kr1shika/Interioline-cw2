@@ -92,51 +92,17 @@ const createReview = async (req, res) => {
     }
 };
 
-const getDesignerReviews = async (req, res) => {
+const getMyReviews = async (req, res) => {
     try {
-        const { designerId } = req.params;
-        const { page = 1, limit = 10 } = req.query;
+        const designerId = req.user._id;
+        const reviews = await Review.find({ designer: designerId })
+            .populate("client", "full_name profile_img")
+            .sort({ createdAt: -1 });
 
-        // Validate designer exists
-        const designer = await User.findById(designerId);
-        if (!designer || designer.role !== 'designer') {
-            return res.status(404).json({ message: "Designer not found." });
-        }
-
-        const reviews = await Review.find({
-            designer: designerId,
-            status: 'active'
-        })
-            .populate('project', 'title room_type')
-            .populate('client', 'full_name profilepic')
-            .sort({ createdAt: -1 })
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
-            .exec();
-
-        const totalReviews = await Review.countDocuments({
-            designer: designerId,
-            status: 'active'
-        });
-
-        // Get designer's average ratings
-        const averageRatings = await Review.getDesignerAverageRating(designerId);
-
-        res.status(200).json({
-            reviews,
-            totalReviews,
-            currentPage: parseInt(page),
-            totalPages: Math.ceil(totalReviews / limit),
-            averageRating: averageRatings.averageRating,
-            totalReviewCount: averageRatings.totalReviews
-        });
-
-    } catch (error) {
-        console.error("❌ Error fetching designer reviews:", error);
-        res.status(500).json({
-            message: "Failed to fetch reviews.",
-            error: error.message
-        });
+        res.status(200).json(reviews);
+    } catch (err) {
+        console.error("❌ Error fetching reviews:", err);
+        res.status(500).json({ message: "Failed to fetch reviews" });
     }
 };
 
@@ -415,109 +381,13 @@ const updateReview = async (req, res) => {
     }
 };
 
-// Delete/Hide review
-const deleteReview = async (req, res) => {
-    try {
-        const { reviewId } = req.params;
-        const clientId = req.user?.id || req.body.client_id;
-
-        // Find the review and verify ownership
-        const review = await Review.findById(reviewId);
-        if (!review) {
-            return res.status(404).json({ message: "Review not found." });
-        }
-
-        if (review.client.toString() !== clientId) {
-            return res.status(403).json({
-                message: "You can only delete your own reviews."
-            });
-        }
-
-        // Instead of deleting, set status to hidden
-        const updatedReview = await Review.findByIdAndUpdate(
-            reviewId,
-            { status: 'hidden' },
-            { new: true }
-        );
-
-        // Create notification for the designer
-        const project = await Project.findById(review.project);
-        const client = await User.findById(clientId);
-
-        const notification = new Notification({
-            user: review.designer,
-            title: "Review Removed",
-            message: `${client.full_name} removed their review for project "${project.title}".`,
-            type: "review",
-            related_entity: {
-                entity_type: "review",
-                entity_id: reviewId
-            }
-        });
-
-        await notification.save();
-
-        console.log("✅ Review hidden successfully:", reviewId);
-
-        res.status(200).json({
-            message: "Review removed successfully!",
-            review: updatedReview
-        });
-
-    } catch (error) {
-        console.error("❌ Error deleting review:", error);
-        res.status(500).json({
-            message: "Failed to remove review.",
-            error: error.message
-        });
-    }
-};
-
-// Get client's review history
-const getClientReviews = async (req, res) => {
-    try {
-        const { clientId } = req.params;
-        const { page = 1, limit = 10 } = req.query;
-
-        const reviews = await Review.find({
-            client: clientId,
-            status: 'active'
-        })
-            .populate('project', 'title room_type')
-            .populate('designer', 'full_name profilepic specialization')
-            .sort({ createdAt: -1 })
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
-            .exec();
-
-        const totalReviews = await Review.countDocuments({
-            client: clientId,
-            status: 'active'
-        });
-
-        res.status(200).json({
-            reviews,
-            totalReviews,
-            currentPage: parseInt(page),
-            totalPages: Math.ceil(totalReviews / limit)
-        });
-
-    } catch (error) {
-        console.error("❌ Error fetching client reviews:", error);
-        res.status(500).json({
-            message: "Failed to fetch client reviews.",
-            error: error.message
-        });
-    }
-};
 
 module.exports = {
     createReview,
-    getDesignerReviews,
+    // getDesignerReviews,
     getProjectReview,
     getDesignerRatingAnalytics,
     getReviewableProjects,
     updateReview,
-    deleteReview,
-    getClientReviews
+    getMyReviews 
 };

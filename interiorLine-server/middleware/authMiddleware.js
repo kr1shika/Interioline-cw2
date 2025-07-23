@@ -34,7 +34,7 @@ const authenticateToken = async (req, res, next) => {
         req.userId = user._id.toString();
         req.token = token;
         req.sessionId = decoded.sessionId;
-        console.log("🔍 Session validated:", session);
+        // console.log("🔍 Session validated:", session);
 
 
         next();

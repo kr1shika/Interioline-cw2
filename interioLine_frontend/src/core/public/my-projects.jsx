@@ -49,14 +49,22 @@ export default function MyProjectsPage() {
         }
         const fetchProjects = async () => {
             try {
-                const res = await axios.get("https://localhost:2005/api/project/my", { withCredentials: true });
-                if (!Array.isArray(res.data)) throw new Error("Invalid response");
-                setProjects(res.data);
+                const res = await axios.get("https://localhost:2005/api/project/my", {
+                    withCredentials: true
+                });
+
+                const fetched = Array.isArray(res.data) ? res.data : [];
+                setProjects(fetched);
+
+                if (userRole === "designer") {
+                    calculateDashboardStats(fetched);
+                }
             } catch (err) {
                 console.error("❌ Error fetching projects:", err);
                 setError("Failed to load projects.");
             }
         };
+
 
 
         const fetchUserProfile = async () => {
@@ -103,14 +111,12 @@ export default function MyProjectsPage() {
 
 
     const calculateDashboardStats = (projectsData) => {
-        const activeProjects = projectsData.filter(p =>
-            p.status === 'pending' || p.status === 'in_progress'
+        const activeProjects = projectsData.filter(
+            (project) => project.status !== "completed"
         ).length;
 
-        // Get unique clients
         const uniqueClients = new Set(projectsData.map(p => p.client)).size;
 
-        // Calculate this month's revenue
         const currentMonth = new Date().getMonth();
         const currentYear = new Date().getFullYear();
         const thisMonthRevenue = projectsData
@@ -129,6 +135,7 @@ export default function MyProjectsPage() {
             revenueThisMonth: thisMonthRevenue
         }));
     };
+
 
     const statusOptions = ["pending", "in_progress", "completed", "cancelled"];
 
@@ -390,7 +397,6 @@ export default function MyProjectsPage() {
                 }
             });
         } else {
-            // For clients, check if room design exists first
             try {
                 console.log("Checking for room configuration for project:", project._id);
 
@@ -401,7 +407,6 @@ export default function MyProjectsPage() {
 
                 if (projectRoom) {
                     console.log("Room found, navigating to view-only mode with status:", project.status);
-                    // Navigate to view-only room designer with all project data including status
                     navigate('/room-view', {
                         state: {
                             projectId: project._id,

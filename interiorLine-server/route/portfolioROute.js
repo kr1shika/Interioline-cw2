@@ -3,7 +3,8 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const { createPortfolioPost, getUserPortfolioPosts, deletePortfolioPost } = require("../controller/portfolioController");
+const {   getMyPortfolioPosts,
+   createPortfolioPost, getUserPortfolioPosts, deletePortfolioPost } = require("../controller/portfolioController");
 const { authenticateToken } = require("../middleware/authMiddleware");
 
 const uploadDir = "portfolio_uploads";
@@ -18,10 +19,14 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-router.post("/create", upload.array("images", 10), createPortfolioPost);
+router.post("/create", authenticateToken,upload.array("images", 10), createPortfolioPost);
 
 router.get("/posts/:designerId", getUserPortfolioPosts);
 router.delete("/posts/:postId", authenticateToken, deletePortfolioPost);
+
+
+router.get("/my", authenticateToken, getMyPortfolioPosts);
+router.delete("/:id", authenticateToken, deletePortfolioPost);
 
 module.exports = router;
 // 683f1a9fb2873d694e410705

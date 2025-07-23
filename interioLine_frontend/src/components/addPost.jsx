@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useAuth } from "../provider/authcontext";
 import "./addpost.css";
 import Toast from "./toastMessage.jsx";
+
 export default function AddPortfolioModal({ onClose }) {
     const [toast, setToast] = useState(null);
-
     const [newPost, setNewPost] = useState({
         title: "",
         room_type: "",
@@ -14,23 +14,19 @@ export default function AddPortfolioModal({ onClose }) {
         captions: [""],
         primaryIndex: 0,
     });
-
     const [selectedImages, setSelectedImages] = useState([]);
     const [dragActive, setDragActive] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const { userId, getToken } = useAuth();
+    const { user } = useAuth();
+    const userId = user?._id;
+    const isLoggedIn = !!userId;
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
-        if (selectedImages.length === 0) {
-            // First time selecting images
-            processImages(files);
-        } else {
-            // Adding more images to existing ones
-            addMoreImages(files);
-        }
+        if (selectedImages.length === 0) processImages(files);
+        else addMoreImages(files);
     };
 
     const processImages = (files) => {
@@ -38,69 +34,56 @@ export default function AddPortfolioModal({ onClose }) {
         setNewPost((prev) => ({
             ...prev,
             captions: Array(files.length).fill(""),
-            primaryIndex: 0, // Reset to first image
+            primaryIndex: 0,
         }));
     };
 
     const addMoreImages = (newFiles) => {
-        const combinedImages = [...selectedImages, ...newFiles];
+        const combined = [...selectedImages, ...newFiles];
         const newCaptions = [...newPost.captions, ...Array(newFiles.length).fill("")];
-
-        setSelectedImages(combinedImages);
+        setSelectedImages(combined);
         setNewPost((prev) => ({
             ...prev,
-            captions: newCaptions
+            captions: newCaptions,
         }));
     };
 
     const handleDrag = (e) => {
         e.preventDefault();
-        e.stopPropagation();
-        if (e.type === "dragenter" || e.type === "dragover") {
-            setDragActive(true);
-        } else if (e.type === "dragleave") {
-            setDragActive(false);
-        }
+        if (e.type === "dragenter" || e.type === "dragover") setDragActive(true);
+        else if (e.type === "dragleave") setDragActive(false);
     };
 
     const handleDrop = (e) => {
         e.preventDefault();
-        e.stopPropagation();
         setDragActive(false);
-
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            const files = Array.from(e.dataTransfer.files).filter(file =>
-                file.type.startsWith('image/')
-            );
-            if (selectedImages.length === 0) {
-                processImages(files);
-            } else {
-                addMoreImages(files);
-            }
+        const files = Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith("image/"));
+        if (files.length > 0) {
+            if (selectedImages.length === 0) processImages(files);
+            else addMoreImages(files);
         }
     };
 
     const handleCaptionChange = (index, value) => {
-        const updatedCaptions = [...newPost.captions];
-        updatedCaptions[index] = value;
-        setNewPost((prev) => ({ ...prev, captions: updatedCaptions }));
+        const captions = [...newPost.captions];
+        captions[index] = value;
+        setNewPost((prev) => ({ ...prev, captions }));
     };
 
     const setPrimaryImage = (index) => {
         setNewPost((prev) => ({ ...prev, primaryIndex: index }));
     };
 
-    const removeImage = (indexToRemove) => {
-        const newImages = selectedImages.filter((_, index) => index !== indexToRemove);
-        const newCaptions = newPost.captions.filter((_, index) => index !== indexToRemove);
+    const removeImage = (index) => {
+        const updatedImages = selectedImages.filter((_, i) => i !== index);
+        const updatedCaptions = newPost.captions.filter((_, i) => i !== index);
+        const newPrimary = newPost.primaryIndex > index ? newPost.primaryIndex - 1 : newPost.primaryIndex;
 
-        setSelectedImages(newImages);
+        setSelectedImages(updatedImages);
         setNewPost((prev) => ({
             ...prev,
-            captions: newCaptions,
-            primaryIndex: prev.primaryIndex >= indexToRemove && prev.primaryIndex > 0
-                ? prev.primaryIndex - 1
-                : prev.primaryIndex
+            captions: updatedCaptions,
+            primaryIndex: newPrimary,
         }));
     };
 
@@ -108,8 +91,8 @@ export default function AddPortfolioModal({ onClose }) {
         e.preventDefault();
         setError("");
 
-        if (!isLoggedIn || !userId) {
-            setError("Authentication error. Please log in again.");
+        if (!isLoggedIn) {
+            setError("Please log in first.");
             return;
         }
 
@@ -119,51 +102,37 @@ export default function AddPortfolioModal({ onClose }) {
         }
 
         setLoading(true);
-
         const formData = new FormData();
         formData.append("title", newPost.title);
         formData.append("room_type", newPost.room_type);
         formData.append("tags", newPost.tags);
         formData.append("primaryIndex", newPost.primaryIndex);
-        formData.append("designer", userId); // 🔐 Use userId from auth context
+        // formData.append("designer", userId);
 
-        newPost.captions.forEach((caption, index) => {
-            formData.append(`captions[${index}]`, caption);
-        });
-
-        selectedImages.forEach((image) => {
-            formData.append("images", image);
-        });
+        newPost.captions.forEach((caption, idx) =>
+            formData.append(`captions[${idx}]`, caption)
+        );
+        selectedImages.forEach((img) => formData.append("images", img));
 
         try {
-            const token = getToken();
-            const config = {
+            await axios.post("https://localhost:2005/api/portfolio/create", formData, {
+                withCredentials: true,
                 headers: {
                     "Content-Type": "multipart/form-data",
-                    ...(token && { Authorization: `Bearer ${token}` })
-                }
-            };
-
-            await axios.post("https://localhost:2005/api/portfolio/create", formData, config);
+                },
+            });
 
             setToast({ message: "Post uploaded successfully!", type: "success" });
-
             onClose();
-        } catch (error) {
-            console.error("❌ Upload failed:", error);
-
-            if (error.response?.status === 401) {
-                setError("Session expired. Please log in again.");
-            } else if (error.response?.status === 403) {
-                setError("Access denied. You don't have permission to create portfolio posts.");
-            } else {
-                setError(error.response?.data?.errors?.[0] || "Failed to upload post. Please try again.");
-            }
+        } catch (err) {
+            console.error("❌ Upload failed:", err);
+            setError(err?.response?.data?.message || "Upload failed. Please try again.");
         } finally {
             setLoading(false);
         }
     };
-    if (!isLoggedIn || !userId) {
+
+    if (!isLoggedIn) {
         return (
             <div className="portfolio-overlay">
                 <div className="portfolio-modal">
@@ -171,15 +140,9 @@ export default function AddPortfolioModal({ onClose }) {
                         <h2 style={{ color: "#dc3545" }}>Authentication Required</h2>
                         <button onClick={onClose} className="close-btn">&times;</button>
                     </div>
-                    <div style={{
-                        padding: '20px',
-                        textAlign: 'center',
-                        color: '#666'
-                    }}>
+                    <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
                         <p>Please log in to add portfolio posts.</p>
-                        <button onClick={onClose} className="btn btn-cancel-compact">
-                            Close
-                        </button>
+                        <button onClick={onClose} className="btn btn-cancel-compact">Close</button>
                     </div>
                 </div>
             </div>
@@ -191,28 +154,16 @@ export default function AddPortfolioModal({ onClose }) {
             <div className="portfolio-modal">
                 <div className="portfolio-header">
                     <h2>Add Portfolio Post</h2>
-                    <button onClick={onClose} className="close-btn" disabled={loading}>
-                        &times;
-                    </button>
-
+                    <button onClick={onClose} className="close-btn" disabled={loading}>&times;</button>
                 </div>
 
-                {/* Error message */}
                 {error && (
-                    <div style={{
-                        background: '#fee2e2',
-                        color: '#dc2626',
-                        padding: '12px',
-                        margin: '0 20px',
-                        borderRadius: '4px',
-                        fontSize: '14px'
-                    }}>
+                    <div style={{ background: "#fee2e2", color: "#dc2626", padding: 12, margin: "0 20px", borderRadius: 4, fontSize: 14 }}>
                         {error}
                     </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="portfolio-form">
-                    {/* Basic Info Grid */}
                     <div className="form-grid">
                         <div className="form-row">
                             <div className="form-group-half">
@@ -227,14 +178,13 @@ export default function AddPortfolioModal({ onClose }) {
                                     disabled={loading}
                                 />
                             </div>
-
                         </div>
 
                         <div className="form-group-full">
                             <label className="form-label-compact">Tags</label>
                             <input
                                 type="text"
-                                placeholder="modern, minimalist, luxury (comma separated)"
+                                placeholder="modern, minimalist, luxury"
                                 value={newPost.tags}
                                 onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
                                 className="form-input-compact"
