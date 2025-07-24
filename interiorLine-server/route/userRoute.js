@@ -32,8 +32,8 @@ const upload = multer({ storage });
 router.get("/me", authenticateToken, getCurrentUserProfile);
 router.put("/me", authenticateToken, updateDesignerProfile);
 router.get("/getAllDesigners", getAllDesigners);
-router.get("/style/:style", getDesignersByStyle); // New route for filtering by style
-router.get("/designer", getUserById);
+router.get("/style/:style", getDesignersByStyle); 
+router.get("/:id", getUserById);
 router.put("/update", authenticateToken, upload.single("profilepic"), updateUserProfile);
 router.get("/search/:query", searchDesigners);
 module.exports = router;

@@ -23,7 +23,6 @@ export default function ProfilePage() {
     const [postToDelete, setPostToDelete] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const [averageRating, setAverageRating] = useState(0);
-
     const { isLoggedIn, userRole, loading: authLoading } = useAuth();
     const navigate = useNavigate();
 

@@ -18,7 +18,7 @@ export default function PublicProfilePage() {
     const [loadingProfile, setLoadingProfile] = useState(true);
     const [reviews, setReviews] = useState([]);
     const [averageRating, setAverageRating] = useState(0);
-    const { userId, isLoggedIn, loading } = useAuth();
+    const { user, isLoggedIn, loading } = useAuth();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const navigate = useNavigate();
 
@@ -114,13 +114,13 @@ export default function PublicProfilePage() {
                             <button
                                 className="edit-button"
                                 onClick={() => {
-                                    if (!isLoggedIn || !userId) {
+                                    if (!isLoggedIn || !user?._id) {
                                         setShowAuthModal(true);
                                     } else {
                                         navigate("/initial-project", {
                                             state: {
                                                 designerId: designer._id,
-                                                userId
+                                                // userId: user._id
                                             }
                                         });
                                     }

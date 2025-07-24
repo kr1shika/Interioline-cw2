@@ -13,7 +13,7 @@ export default function InitialProjectPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const userId = location.state?.userId || null;
+    // const userId = location.state?.userId || null;
     const designerId = location.state?.designerId || null;
 
     const [title, setTitle] = useState("");
@@ -24,14 +24,16 @@ export default function InitialProjectPage() {
     const [showAuth, setShowAuth] = useState(false);
 
     useEffect(() => {
-        if (!userId || !designerId) {
-            console.warn("Missing userId or designerId for initialization:", { userId, designerId });
+        if (!designerId) {
+            console.warn("Missing userId or designerId for initialization:", { designerId });
             return;
         }
 
         const fetchData = async () => {
             try {
-                const userRes = await axios.get(`https://localhost:2005/api/user/${userId}`);
+                const userRes = await axios.get("https://localhost:2005/api/user/me", {
+                    withCredentials: true,
+                });
                 const designerRes = await axios.get(`https://localhost:2005/api/user/${designerId}`);
 
                 const quizAnswer1 = userRes.data?.style_quiz?.["1"];
@@ -43,16 +45,20 @@ export default function InitialProjectPage() {
         };
 
         fetchData();
-    }, [userId, designerId]);
+    }, [designerId]);
 
     const handleConfirm = async () => {
         try {
-            const res = await axios.post("https://localhost:2005/api/project/createProject", {
-                title: title || placeholder,
-                client: userId,
-                designer: designerId,
-                payment: "pending",
-            });
+            const res = await axios.post(
+                "https://localhost:2005/api/project/createProject",
+                {
+                    title: title || placeholder,
+                    designer: designerId,
+                    payment: "pending",
+                },
+                { withCredentials: true } // ✅ critical for session cookie to be sent
+            );
+
 
             if (res.status === 201) {
                 setCreatedProjectId(res.data.project._id);
@@ -70,7 +76,7 @@ export default function InitialProjectPage() {
     };
 
     // 🚀 Show fallback if data missing
-    if (!userId || !designerId) {
+    if (!designerId) {
         return (
             <div style={{ padding: "2rem", textAlign: "center", color: "#C2805A" }}>
                 <Header />
