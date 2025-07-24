@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../../provider/authcontext";
 import "../../style/EditProfileForm.css";
 import PreferenceQuiz from "./PreferenceQuiz";
-
 export default function EditProfileForm({ designer, onClose }) {
   const [full_name, setFullName] = useState("");
   const [bio, setBio] = useState("");
@@ -17,10 +16,9 @@ export default function EditProfileForm({ designer, onClose }) {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { userId, userRole, updateUserProfile, isUserIdAvailable, getToken } = useAuth();
+  const { userRole, updateUserProfile } = useAuth();
   const isClient = userRole === 'client';
   const isDesigner = userRole === 'designer';
-
   useEffect(() => {
     if (designer) {
       setFullName(designer.full_name || "");
@@ -30,7 +28,6 @@ export default function EditProfileForm({ designer, onClose }) {
       setExperience(designer.experience || "");
       setPreferredTones(designer.preferredTones || []);
       setApproach(designer.approach || "Balanced");
-
       if (isDesigner) {
         const hasQuizData =
           designer.preferredTones?.length > 0 ||
@@ -56,7 +53,6 @@ export default function EditProfileForm({ designer, onClose }) {
 
     const data = new FormData();
     data.append("full_name", full_name);
-
     if (isClient) {
       data.append("email", email);
     } else {
@@ -90,7 +86,6 @@ export default function EditProfileForm({ designer, onClose }) {
       setLoading(false);
     }
   };
-
   return (
     <>
       <div className="edit-profile-container">
@@ -109,7 +104,6 @@ export default function EditProfileForm({ designer, onClose }) {
             </div>
           )}
         </div>
-
         <form onSubmit={handleSubmit} className="edit-profile-form-compact">
           {/* Profile Picture Section */}
           <div className="profile-pic-section">
@@ -136,8 +130,6 @@ export default function EditProfileForm({ designer, onClose }) {
               </label>
             </div>
           </div>
-
-
           {/* Form Grid */}
           <div className="form-grid">
             <div className="form-row">
@@ -166,7 +158,6 @@ export default function EditProfileForm({ designer, onClose }) {
                 </div>
               )}
             </div>
-
             {isDesigner ? (
               <div className="form-group-full">
                 <label className="form-label-compact">Bio</label>
@@ -235,8 +226,6 @@ export default function EditProfileForm({ designer, onClose }) {
               )}
             </div>
           )}
-
-          {/* Action Buttons */}
           <div className="action-buttons">
             <button
               type="button"
@@ -260,7 +249,6 @@ export default function EditProfileForm({ designer, onClose }) {
           </div>
         </form>
       </div>
-
       {showQuiz && isDesigner && (
         <PreferenceQuiz
           onComplete={handleQuizComplete}

@@ -55,9 +55,9 @@ const getUserPortfolioPosts = async (req, res) => {
 
 const deletePortfolioPost = async (req, res) => {
     try {
-        const post = await Portfolio.findOneAndDelete({
-            _id: req.params.id,
-            designer: req.user._id
+        const post = await PortfolioPost.findOneAndDelete({
+            _id: req.params.postId, // must match route param name
+            designer: req.user._id,
         });
 
         if (!post) {

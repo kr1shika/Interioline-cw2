@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // ✅ useLocation instead of useParams
 import AuthPromptModal from "../../components/AuthPromptModal";
 import Footer from "../../components/footer.jsx";
 import Header from "../../components/header.jsx";
@@ -10,8 +10,9 @@ import "./../style/profile.css";
 
 
 export default function PublicProfilePage() {
-    const { designerId } = useParams();
-    const [designer, setDesigner] = useState(null);
+    const { state } = useLocation();
+    const [designer, setDesigner] = useState(state?.designer || null);
+    // const [designer, setDesigner] = useState(null);
     const [portfolioPosts, setPortfolioPosts] = useState([]);
     const [activePost, setActivePost] = useState(null);
     const [loadingProfile, setLoadingProfile] = useState(true);
@@ -24,7 +25,7 @@ export default function PublicProfilePage() {
     useEffect(() => {
         const fetchDesigner = async () => {
             try {
-                const res = await axios.get(`https://localhost:2005/api/user/${designerId}`);
+                const res = await axios.get(`https://localhost:2005/api/user/${designer._id}`);
                 setDesigner(res.data);
             } catch (err) {
                 console.error("Error fetching designer profile", err);
@@ -35,7 +36,7 @@ export default function PublicProfilePage() {
 
         const fetchPortfolioPosts = async () => {
             try {
-                const res = await axios.get(`https://localhost:2005/api/portfolio/posts/${designerId}`);
+                const res = await axios.get(`https://localhost:2005/api/portfolio/posts/${designer._id}`);
                 setPortfolioPosts(res.data.posts || []);
             } catch (err) {
                 console.error("Error fetching portfolio posts", err);
@@ -44,20 +45,19 @@ export default function PublicProfilePage() {
 
         const fetchReviews = async () => {
             try {
-                const res = await axios.get(`https://localhost:2005/api/review/designer/${designerId}`);
+                const res = await axios.get(`https://localhost:2005/api/review/designer/${designer._id}`);
                 setReviews(res.data.reviews || []);
                 setAverageRating(res.data.averageRating || 0);
             } catch (err) {
                 console.error("Error fetching reviews", err);
             }
         };
-
-        if (designerId) {
+        if (designer._id) {
             fetchDesigner();
             fetchPortfolioPosts();
             fetchReviews();
         }
-    }, [designerId]);
+    }, [designer._id]);
 
     if (loadingProfile || !designer) {
         return (
@@ -128,13 +128,9 @@ export default function PublicProfilePage() {
                             >
                                 Select {designer.full_name}
                             </button>
-
-
                         </div>
-
                     </div>
                 </div>
-
                 {/* Portfolio Section */}
                 <section className="portfolio-section">
                     <div className="section-header">

@@ -44,7 +44,7 @@ function App() {
       ),
     },
     {
-      path: "/designer/:designerId",
+      path: "/designer",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PublicProfilePage />

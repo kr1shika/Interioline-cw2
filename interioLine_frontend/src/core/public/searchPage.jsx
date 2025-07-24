@@ -371,7 +371,9 @@ export default function SearchDesignersPage() {
                                 <div
                                     key={designer._id || i}
                                     className="designer-card recommended"
-                                    onClick={() => navigate(`/designer/${designer._id}`)}
+                                    onClick={() => navigate("/designer", {
+                                        state: { designer }
+                                    })}
                                 >
                                     <div className="designer-header">
                                         <img
@@ -443,7 +445,9 @@ export default function SearchDesignersPage() {
                                         <div
                                             key={designer._id || i}
                                             className={`designer-card ${isStyleFiltered ? 'style-filtered' : ''}`}
-                                            onClick={() => navigate(`/designer/${designer._id}`)}
+                                            onClick={() => navigate("/designer", {
+                                                state: { designer }
+                                            })}
                                         >
                                             <div className="designer-header">
                                                 <img
