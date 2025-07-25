@@ -111,17 +111,14 @@ export default function UploadRoomDataModal({ onClose, projectId }) {
 
         const formData = new FormData();
 
-        // Add room dimensions (only if provided)
         if (roomData.length) formData.append("length", roomData.length);
         if (roomData.width) formData.append("width", roomData.width);
         if (roomData.height) formData.append("height", roomData.height);
 
-        // Add description (only if provided)
         if (roomData.description.trim()) {
             formData.append("description", roomData.description.trim());
         }
 
-        // Add room images
         selectedImages.forEach((image) => {
             formData.append("room_images", image);
         });
@@ -132,8 +129,10 @@ export default function UploadRoomDataModal({ onClose, projectId }) {
                 formData,
                 {
                     headers: { "Content-Type": "multipart/form-data" },
+                    withCredentials: true  // <-- this is necessary
                 }
             );
+
             setToastType("success");
             setToastMessage("Project initialized and details have been saved");
             setTimeout(() => {
