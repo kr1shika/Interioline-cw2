@@ -17,15 +17,12 @@ export default function UploadRoomDataModal({ onClose, projectId }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [toastMessage, setToastMessage] = useState(null);
     const [toastType, setToastType] = useState("success");
-
-
     const handleInputChange = (field, value) => {
         setRoomData(prev => ({
             ...prev,
             [field]: value
         }));
     };
-
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
         if (selectedImages.length === 0) {
@@ -311,7 +308,6 @@ export default function UploadRoomDataModal({ onClose, projectId }) {
                     <Toast message={toastMessage} type={toastType} />
                 )}
             </AnimatePresence>
-
         </div>
     );
 }

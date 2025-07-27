@@ -1,9 +1,7 @@
-// controller/projectController.js
 const Project = require("../model/project");
 const Chatroom = require("../model/chat-room");
 const Notification = require("../model/user-notification");
 
-// Create Project
 const createProject = async (req, res) => {
   try {
     const client = req.user._id;
@@ -37,9 +35,7 @@ const createProject = async (req, res) => {
       end_date,
       is_public
     });
-
     await newProject.save();
-
     await new Chatroom({
       senderId: client,
       receiverId: designer,
@@ -70,7 +66,6 @@ const createProject = async (req, res) => {
   }
 };
 
-// Get Projects for Authenticated User
 const getMyProjects = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -90,7 +85,6 @@ const getMyProjects = async (req, res) => {
   }
 };
 
-// Update Project Status
 const updateProjectStatus = async (req, res) => {
   try {
     const projectId = req.params.projectId;
@@ -121,7 +115,6 @@ const updateProjectRoomDetails = async (req, res) => {
       { room_images },
       { new: true }
     );
-
     if (!project) return res.status(404).json({ message: "Project not found" });
     res.status(200).json(project);
   } catch (err) {
@@ -142,7 +135,7 @@ const getDesignerStats = async (req, res) => {
     res.status(200).json({
       totalClients,
       revenueThisMonth,
-      averageRating: 4.5, // placeholder
+      averageRating: 4.5,
       totalReviews: 0
     });
   } catch (err) {
