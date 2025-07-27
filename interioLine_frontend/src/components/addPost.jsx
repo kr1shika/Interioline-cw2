@@ -2,6 +2,7 @@ import axios from "axios";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useAuth } from "../provider/authcontext";
+import { getCsrfToken } from "../provider/csrf";
 import "./addpost.css";
 import Toast from "./toastMessage.jsx";
 
@@ -115,10 +116,12 @@ export default function AddPortfolioModal({ onClose }) {
         selectedImages.forEach((img) => formData.append("images", img));
 
         try {
+            const csrfToken = await getCsrfToken();
             await axios.post("https://localhost:2005/api/portfolio/create", formData, {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "multipart/form-data",
+                    "CSRF-Token": csrfToken
                 },
             });
 

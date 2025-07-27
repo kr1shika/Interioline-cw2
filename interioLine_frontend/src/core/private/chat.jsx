@@ -5,6 +5,7 @@ import { MdNavigateBefore } from "react-icons/md";
 import { TbSend2 } from "react-icons/tb";
 import defaultProfileImg from "../../assets/images/profile.jpg";
 import { useAuth } from "../../provider/authcontext";
+import { getCsrfToken } from "../../provider/csrf";
 import "../style/ChatWidget.css";
 
 export default function ChatWidget() {
@@ -86,9 +87,13 @@ export default function ChatWidget() {
 
     try {
       setLoading(true);
+      const csrfToken = await getCsrfToken();
+
       const res = await axios.post(`/api/chat/${selectedRoomId}`, formData, {
         withCredentials: true,
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: {
+          "Content-Type": "multipart/form-data", "CSRF-Token": csrfToken
+        }
       });
 
       setMessages((prev) => [...prev, res.data]);

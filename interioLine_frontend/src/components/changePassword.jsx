@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../provider/authcontext';
+import { getCsrfToken } from "../provider/csrf";
 import './changepassword.css';
 
 const ChangePasswordModal = ({ isOpen, onClose }) => {
@@ -94,9 +95,20 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
         setSuccess('');
 
         try {
-            await axios.post('https://localhost:2005/api/password-change/request-otp', {
-                email: formData.email
-            });
+            const csrfToken = await getCsrfToken();
+
+            await axios.post(
+                'https://localhost:2005/api/password-change/request-otp',
+                { email: formData.email },
+                {
+                    headers: {
+                        "CSRF-Token": csrfToken,
+                        "Content-Type": "application/json"
+                    },
+                    withCredentials: true
+                }
+            );
+
 
             setSuccess('OTP sent! Please check your email inbox and spam folder.');
             setStep(2);
@@ -115,9 +127,19 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
         setSuccess('');
 
         try {
-            await axios.post('https://localhost:2005/api/password-change/resend-otp', {
-                email: formData.email
-            });
+            const csrfToken = await getCsrfToken();
+
+            await axios.post(
+                'https://localhost:2005/api/password-change/resend-otp',
+                { email: formData.email },
+                {
+                    headers: {
+                        "CSRF-Token": csrfToken
+                    },
+                    withCredentials: true
+                }
+            );
+
 
             setSuccess('OTP resent! Please check your email.');
             setOtpTimer(300); // 5 minutes
@@ -146,11 +168,21 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
         setSuccess('');
 
         try {
-            // Use the new verify-only endpoint
-            await axios.post('https://localhost:2005/api/password-change/verify-otp-only', {
-                email: formData.email,
-                otp: formData.otp
-            });
+            const csrfToken = await getCsrfToken();
+
+            await axios.post(
+                'https://localhost:2005/api/password-change/verify-otp-only',
+                {
+                    email: formData.email,
+                    otp: formData.otp
+                },
+                {
+                    headers: {
+                        "CSRF-Token": csrfToken
+                    },
+                    withCredentials: true
+                }
+            );
 
             setSuccess('OTP verified successfully! Now create your new password.');
             setOtpVerified(true);
@@ -209,13 +241,22 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
         setSuccess('');
 
         try {
-            // Use the new change-password endpoint
-            await axios.post('https://localhost:2005/api/password-change/change-password', {
-                email: formData.email,
-                otp: formData.otp,
-                newPassword
-            });
+            const csrfToken = await getCsrfToken();
 
+            await axios.post(
+                'https://localhost:2005/api/password-change/change-password',
+                {
+                    email: formData.email,
+                    otp: formData.otp,
+                    newPassword
+                },
+                {
+                    headers: {
+                        "CSRF-Token": csrfToken
+                    },
+                    withCredentials: true
+                }
+            );
             setSuccess('Password changed successfully! You can now log in with your new password.');
             setTimeout(() => {
                 onClose();

@@ -5,7 +5,7 @@ import logo from "../../assets/images/logo.png";
 import ChangePasswordModal from "../../components/changePassword"; // Add this import
 import Toast from "../../components/toastMessage";
 import { useAuth } from "../../provider/authcontext";
-import { getCsrfToken } from "../../provider/csrf"; // Ensure this utility is available
+import { getCsrfToken } from "../../provider/csrf";
 // Password strength calculation
 const calculatePasswordStrength = (password) => {
     let score = 0;
@@ -169,7 +169,6 @@ export default async function AuthPopup({ onClose }) {
             });
 
             const data = await res.json();
-
             if (!res.ok) {
                 throw new Error(data.errors ? data.errors[0] : "OTP verification failed");
             }
@@ -328,6 +327,16 @@ export default async function AuthPopup({ onClose }) {
                                                 className="text-[#BE7B5D] rounded-md border border-gray-300 bg-[#f7f0e9]"
                                                 disabled={loading || otpSent}
                                             />
+                                            {/* Forgot Password Link */}
+                                            <button
+                                                type="button"
+                                                onClick={handleForgotPassword}
+                                                className="text-sm text-[#A75B2A] underline hover:text-[#BE7B5D] mb-2"
+                                                disabled={loading || otpSent}
+                                            >
+                                                Forgot your password?
+                                            </button>
+
 
                                             {/* OTP + Buttons */}
                                             {otpSent ? (

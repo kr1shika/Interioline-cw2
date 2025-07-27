@@ -6,6 +6,7 @@ import img2 from "../../assets/images/meow.png";
 import img3 from "../../assets/images/meow101.png";
 import Footer from "../../components/footer.jsx";
 import Header from "../../components/header.jsx";
+import { getCsrfToken } from "../../provider/csrf";
 import "../style/initiatizeProject.css";
 import UploadRoomDataModal from "./../../components/project-detail-form.jsx";
 
@@ -49,6 +50,8 @@ export default function InitialProjectPage() {
 
     const handleConfirm = async () => {
         try {
+            const csrfToken = await getCsrfToken(); // 🛡 Fetch CSRF token first
+
             const res = await axios.post(
                 "https://localhost:2005/api/project/createProject",
                 {
@@ -56,9 +59,14 @@ export default function InitialProjectPage() {
                     designer: designerId,
                     payment: "pending",
                 },
-                { withCredentials: true } // ✅ critical for session cookie to be sent
+                {
+                    withCredentials: true, // ✅ Include session cookie
+                    headers: {
+                        "CSRF-Token": csrfToken, // ✅ Attach CSRF token here
+                        "Content-Type": "application/json"
+                    }
+                }
             );
-
 
             if (res.status === 201) {
                 setCreatedProjectId(res.data.project._id);
@@ -69,6 +77,7 @@ export default function InitialProjectPage() {
             alert("Failed to initialize project.");
         }
     };
+
 
     const handleModalClose = () => {
         setShowUploadModal(false);

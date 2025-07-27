@@ -2,6 +2,7 @@ import { Star, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../provider/authcontext";
 import "./AddReviewModal.css";
+import { getCsrfToken } from "../../provider/csrf";
 
 const AddReviewModal = ({ isOpen, onClose, projectInfo, onSubmitSuccess }) => {
     const { userId } = useAuth();
@@ -61,11 +62,17 @@ const AddReviewModal = ({ isOpen, onClose, projectInfo, onSubmitSuccess }) => {
         setIsSubmitting(true);
 
         try {
+             const csrfToken = await getCsrfToken();
+
             const response = await fetch('https://localhost:2005/api/review', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                                        "CSRF-Token": csrfToken
+
                 },
+                                credentials: "include",
+
                 body: JSON.stringify({
                     projectId: projectInfo.id,
                     rating: formData.rating,

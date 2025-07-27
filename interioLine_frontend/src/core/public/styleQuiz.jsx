@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/header.jsx";
 import { useAuth } from "../../provider/authcontext";
 import "../style/styleQuiz.css";
+import { getCsrfToken } from "../../provider/csrf"; // or your correct path
 
 // Import images
 import bedroom from "../../assets/images/quiz/bedroom.png";
@@ -209,10 +210,16 @@ export default function StyleMatchQuiz() {
 
         setIsSubmitting(true);
         try {
-            const res = await fetch("https://localhost:2005/api/quiz/submit", {
+            const csrfToken = await getCsrfToken();
+
+            const res = await fetch("https://localhost:2005/api/match/submit", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId, answers }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "CSRF-Token": csrfToken
+                },
+                credentials: "include"
             });
 
             const data = await res.json();

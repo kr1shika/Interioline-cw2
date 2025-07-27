@@ -8,6 +8,7 @@ import Footer from "../../../components/footer.jsx";
 import Header from "../../../components/header.jsx";
 import PortfolioPostViewer from "../../../components/PortfolioPostViewer.jsx";
 import { useAuth } from "../../../provider/authcontext";
+import { getCsrfToken } from "../../provider/csrf";
 import "../../style/profile.css";
 import EditProfileForm from "./EditProfileForm.jsx";
 
@@ -99,8 +100,16 @@ export default function ProfilePage() {
 
         setIsDeleting(true);
         try {
+            const csrfToken = await getCsrfToken();
+
             await axios.delete(`https://localhost:2005/api/portfolio/posts/${postToDelete}`, {
                 withCredentials: true,
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "CSRF-Token": csrfToken
+                },
+
             });
 
             setPortfolioPosts(prev => prev.filter(p => p._id !== postToDelete));
