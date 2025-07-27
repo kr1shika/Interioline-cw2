@@ -9,11 +9,13 @@ const userRouter = require("./route/userRoute");
 const quizRouter = require("./route/matchRoute");
 const paymentRouter = require("./route/paymentRoute");
 const path = require("path");
-
+const csrf = require("csurf");
 const cors = require("cors");
 const app = express();
 const PORT = 2005;
 require('dotenv').config();
+
+const csrfProtection = csrf({ cookie: true });
 
 const https = require('https');
 const fs = require('fs');
@@ -29,6 +31,8 @@ https.createServer(options, app).listen(2005);
 // Connect to MongoDB
 connectDB();
 dotenv.config({ path: "./config/config.env" });
+
+app.use(csrfProtection);
 
 // Static file serving
 app.use("/profile_pics", express.static(path.join(__dirname, "profile_pics")));
@@ -53,6 +57,10 @@ app.use(cookieParser()); // <-- Add this after express.json()
 
 
 // Routes
+app.get("/api/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
 const portfolioRouter = require("./route/portfolioROute");
 app.use("/api/portfolio", portfolioRouter);
 
@@ -63,6 +71,7 @@ const passwordChangeRoutes = require("./route/passwordchangeroute");
 app.use("/api/password-change", passwordChangeRoutes);
 
 const reviewRoute = require("./route/reviewRoute");
+
 app.use("/api/review", reviewRoute);
 app.use("/api/payment", require("./route/paymentRoute")); // Ensure this is after the webhook route
 app.use("/api/user", userRouter);

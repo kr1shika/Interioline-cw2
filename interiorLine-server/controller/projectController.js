@@ -55,7 +55,6 @@ const createProject = async (req, res) => {
         entity_id: newProject._id
       }
     }).save();
-
     res.status(201).json({
       message: "Project created successfully",
       project: newProject
