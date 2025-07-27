@@ -5,7 +5,7 @@ import logo from "../../assets/images/logo.png";
 import ChangePasswordModal from "../../components/changePassword"; // Add this import
 import Toast from "../../components/toastMessage";
 import { useAuth } from "../../provider/authcontext";
-
+import { getCsrfToken } from "../../provider/csrf"; // Ensure this utility is available
 // Password strength calculation
 const calculatePasswordStrength = (password) => {
     let score = 0;
@@ -60,10 +60,9 @@ const calculatePasswordStrength = (password) => {
     return { score: Math.max(0, Math.min(100, score)), strength, feedback, color };
 };
 
-export default function AuthPopup({ onClose }) {
+export default async function AuthPopup({ onClose }) {
     const [otpSent, setOtpSent] = useState(false);
     const [otp, setOtp] = useState("");
-
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -112,9 +111,13 @@ export default function AuthPopup({ onClose }) {
         setLoading(true);
 
         try {
+            const csrfToken = await getCsrfToken();
             const res = await fetch("https://localhost:2005/api/auth/login", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "CSRF-Token": csrfToken
+                },
                 credentials: "include",
                 body: JSON.stringify({ email, password }),
             });
@@ -153,9 +156,14 @@ export default function AuthPopup({ onClose }) {
 
         setLoading(true);
         try {
+            const csrfToken = await getCsrfToken();
+
             const res = await fetch("https://localhost:2005/api/auth/verify-otp", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "CSRF-Token": csrfToken, // ✅ REQUIRED
+                },
                 credentials: "include",
                 body: JSON.stringify({ email, otp }),
             });

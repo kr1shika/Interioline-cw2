@@ -1,86 +1,86 @@
 const express = require('express');
 const dotenv = require("dotenv");
+const https = require('https');
+const fs = require('fs');
+const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
+const cors = require("cors");
+const path = require("path");
+
 dotenv.config({ path: "./config/config.env" });
 const connectDB = require('./config/db');
+
 const projectRouter = require("./route/projectRoute");
 const authRouter = require("./route/authRoute");
 const chatRouter = require("./route/chatRoomroute");
 const userRouter = require("./route/userRoute");
 const quizRouter = require("./route/matchRoute");
 const paymentRouter = require("./route/paymentRoute");
-const path = require("path");
-const csrf = require("csurf");
-const cors = require("cors");
+const portfolioRouter = require("./route/portfolioROute");
+const notificationRoutes = require("./route/notificationRoute");
+const passwordChangeRoutes = require("./route/passwordchangeroute");
+const reviewRoute = require("./route/reviewRoute");
+
 const app = express();
 const PORT = 2005;
-require('dotenv').config();
 
-const csrfProtection = csrf({ cookie: true });
-
-const https = require('https');
-const fs = require('fs');
+// ✅ Setup HTTPS
 const options = {
   key: fs.readFileSync('certs/localhost-key.pem'),
   cert: fs.readFileSync('certs/localhost.pem'),
 };
 
-
-https.createServer(options, app).listen(2005);
-
-
-// Connect to MongoDB
+// ✅ Connect to MongoDB
 connectDB();
-dotenv.config({ path: "./config/config.env" });
 
-app.use(csrfProtection);
-
-// Static file serving
-app.use("/profile_pics", express.static(path.join(__dirname, "profile_pics")));
-app.use("/portfolio_uploads", express.static(path.join(__dirname, "portfolio_uploads")));
-app.use("/chatUploads", express.static("chatUploads"));
-// app.use("/chatUploads", express.static(path.join(__dirname, "uploads/chatUploads")));
-
-// CORS configuration
+// ✅ CORS Configuration
 app.use(cors({
   origin: "https://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 }));
 
-// Webhook endpoint needs raw body, so it should be before express.json()
+// ✅ Webhook route first
 app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
-// JSON parsing for all other routes
+// ✅ Basic Middleware
 app.use(express.json());
-const cookieParser = require("cookie-parser");
-app.use(cookieParser()); // <-- Add this after express.json()
+app.use(cookieParser());
 
+// ✅ Static Files
+app.use("/profile_pics", express.static(path.join(__dirname, "profile_pics")));
+app.use("/portfolio_uploads", express.static(path.join(__dirname, "portfolio_uploads")));
+app.use("/chatUploads", express.static("chatUploads"));
 
-// Routes
+// ✅ CSRF Middleware
+app.use(csrf({ cookie: true }));
+
+// ✅ CSRF Token Route
 app.get("/api/csrf-token", (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-const portfolioRouter = require("./route/portfolioROute");
+// ✅ Application Routes
 app.use("/api/portfolio", portfolioRouter);
-
-const notificationRoutes = require("./route/notificationRoute");
 app.use("/api/notifications", notificationRoutes);
-
-const passwordChangeRoutes = require("./route/passwordchangeroute");
 app.use("/api/password-change", passwordChangeRoutes);
-
-const reviewRoute = require("./route/reviewRoute");
-
 app.use("/api/review", reviewRoute);
-app.use("/api/payment", require("./route/paymentRoute")); // Ensure this is after the webhook route
+app.use("/api/payment", paymentRouter); // after webhook
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/project", projectRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/quiz", quizRouter);
-app.use("/api/payment", paymentRouter); // Add this line
 
-app.listen(PORT, () => {
+// ✅ CSRF Error Handler
+app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).json({ errors: ["CSRF validation failed."] });
+  }
+  next(err);
+});
+
+// ✅ Start HTTPS Server
+https.createServer(options, app).listen(PORT, () => {
   console.log(`Server is running on https://localhost:${PORT}`);
 });
