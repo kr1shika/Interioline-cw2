@@ -1,10 +1,20 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useAuth } from "../../provider/authcontext"; // adjust the path as needed
+import { useAuth } from "../../provider/authcontext";
 import { getCsrfToken } from "../../provider/csrf";
-const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, project }) => {
+const PaymentPage = ({
+    projectId,
+    amount = 9999,
+    totalPaid = 0,
+    hasPaidHalf = false,
+    hasPaidFull = false,
+    isFullyPaid = false,
+    paymentType,
+    onSuccess,
+    onClose,
+    project
+}) => {
     const { user, isLoggedIn } = useAuth();
-
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
@@ -12,6 +22,7 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, proje
     const [projectData, setProjectData] = useState(project || null);
     const [designerData, setDesignerData] = useState(null);
     const [clientData, setClientData] = useState(null);
+    const [finalAmount, setFinalAmount] = useState(0);
     const [cardData, setCardData] = useState({
         cardNumber: '',
         expiryDate: '',
@@ -20,18 +31,16 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, proje
         email: '',
         phone: ''
     });
-
+    const currentProject = projectData || project;
     useEffect(() => {
-        // Auto-fill demo card data
         setCardData({
             cardNumber: '4242 4242 4242 4242',
             expiryDate: '12/28',
             cvv: '123',
-            cardholderName: 'John Doe',
+            cardholderName: 'Card name',
             email: 'client@example.com',
             phone: '+977-9800000000'
         });
-
         if (projectId) {
             fetchProjectDetails();
         }
@@ -39,9 +48,6 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, proje
 
     const fetchProjectDetails = async () => {
         try {
-            const currentProject = projectData || project;
-
-            // Fetch designer details
             if (currentProject?.designer) {
                 try {
                     const designerRes = await axios.get(`https://localhost:2005/api/user/${currentProject.designer}`);
@@ -64,24 +70,30 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, proje
             console.error('Error fetching project details:', err);
         }
     };
-
     const calculateAmount = () => {
-        const basePrice = 10000;
-        let totalAmount = basePrice;
+        console.log(" Calculating Amount...");
+        console.log("Selected Payment Type:", selectedPaymentType);
+        console.log("Project Amount:", amount);
+        console.log("Total Already Paid:", totalPaid);
 
-        const currentProject = projectData || project;
-        if (currentProject?.room_dimensions) {
-            const area = (currentProject.room_dimensions.length || 10) * (currentProject.room_dimensions.width || 10);
-            totalAmount += area * 500;
+        if (selectedPaymentType === "final") {
+            const remaining = amount - totalPaid;
+            console.log("💰 Final Payment Remaining:", remaining);
+            return remaining > 0 ? remaining : 0;
         }
 
-        if (selectedPaymentType === 'full') {
-            return Math.round(totalAmount * 0.95); // 5% discount
-        } else if (selectedPaymentType === 'half') {
-            return Math.round(totalAmount * 0.5); // 50% payment
+        if (selectedPaymentType === "full") {
+            const discounted = Math.round(amount * 0.95);
+            console.log("💰 Full Payment (95%):", discounted);
+            return discounted;
         }
-        return totalAmount;
+
+        const half = Math.round(amount * 0.5);
+        console.log("💰 Half Payment:", half);
+        return half;
     };
+
+
 
     const formatCardNumber = (value) => {
         const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
@@ -155,6 +167,8 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, proje
         }
 
         const finalAmount = calculateAmount();
+        setFinalAmount(finalAmount);
+
         const csrfToken = await getCsrfToken();
         setTimeout(async () => {
             try {
@@ -178,11 +192,13 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, proje
                     setSuccess(true);
                     setLoading(false);
 
-                    setTimeout(() => {
+                    setTimeout(async () => {
                         if (onSuccess) {
+                            const updatedProject = await axios.get(`https://localhost:2005/api/project/${projectId}`);
                             onSuccess({
                                 ...response.data.payment,
-                                amount: finalAmount
+                                amount: finalAmount,
+                                updatedProject: updatedProject.data.project
                             });
                         }
                     }, 2000);
@@ -197,18 +213,16 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, proje
             }
         }, 2000);
     };
-
-    const currentProject = projectData || project;
-
     if (success) {
         return (
             <div style={styles.container}>
                 <div style={styles.successCard}>
                     <div style={styles.successIcon}>✓</div>
                     <h2 style={styles.successTitle}>Payment Successful!</h2>
-                    <p style={styles.successMessage}>
-                        Your payment of Rs. {calculateAmount().toLocaleString()} has been processed successfully.
+                    <p className="successMessage">
+                        Your payment of Rs. {finalAmount.toLocaleString()} has been processed successfully.
                     </p>
+
                     <div style={styles.successDetails}>
                         <p>Payment Type: {selectedPaymentType === 'half' ? 'Half Payment (50%)' : 'Full Payment'}</p>
                         <p>Project: {currentProject?.title}</p>
@@ -222,14 +236,11 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, proje
     return (
         <div style={styles.container}>
             <div style={styles.paymentWrapper}>
-                {/* LEFT SIDE - BILL/INFO SECTION */}
                 <div style={styles.leftSection}>
                     {/* Invoice Header */}
                     <div style={styles.invoiceHeader}>
                         <h2 style={styles.invoiceTitle}>Invoice</h2>
-                        {/* <div style={styles.invoiceNumber}>
-                            #{projectId?.slice(-6).toUpperCase() || 'INV001'}
-                        </div> */}
+
                     </div>
 
                     {/* Project Details */}
@@ -311,57 +322,105 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, proje
                     <div style={styles.infoCard}>
                         <h3 style={styles.cardTitle}>Payment Options</h3>
                         <div style={styles.paymentOptions}>
-                            <div
-                                style={{
-                                    ...styles.paymentOption,
-                                    ...(selectedPaymentType === 'half' ? styles.paymentOptionActive : {})
-                                }}
-                                onClick={() => setSelectedPaymentType('half')}
-                            >
-                                <div style={styles.optionHeader}>
-                                    <input
-                                        type="radio"
-                                        checked={selectedPaymentType === 'half'}
-                                        onChange={() => setSelectedPaymentType('half')}
-                                        style={styles.radioInput}
-                                    />
-                                    <span style={styles.optionTitle}>Half Payment (50%)</span>
-                                </div>
-                                <div style={styles.optionAmount}>
-                                    Rs. {Math.round((10000 + (currentProject?.room_dimensions ?
-                                        (currentProject.room_dimensions.length || 10) * (currentProject.room_dimensions.width || 10) * 500 : 0)) * 0.5).toLocaleString()}
-                                </div>
-                                <div style={styles.optionDescription}>
-                                    Pay 50% now to start the project
-                                </div>
-                            </div>
+                            {/* Decide what to show based on existing payments */}
+                            {(() => {
+                                console.log("📦 Payment Conditions");
+                                console.log("✅ isFullyPaid:", isFullyPaid);
+                                console.log("🧾 hasPaidHalf:", hasPaidHalf);
+                                console.log("💯 hasPaidFull:", hasPaidFull);
+                                console.log("🏷️ Total Paid:", totalPaid);
+                                console.log("🏷️ Project Amount:", amount);
+                                if (isFullyPaid) {
+                                    return (
+                                        <div style={{ padding: "1rem", color: "#4caf50", fontWeight: "600" }}>
+                                            ✅ You have fully paid for this project.
+                                        </div>
+                                    );
+                                }
 
-                            <div
-                                style={{
-                                    ...styles.paymentOption,
-                                    ...(selectedPaymentType === 'full' ? styles.paymentOptionActive : {})
-                                }}
-                                onClick={() => setSelectedPaymentType('full')}
-                            >
-                                <div style={styles.optionHeader}>
-                                    <input
-                                        type="radio"
-                                        checked={selectedPaymentType === 'full'}
-                                        onChange={() => setSelectedPaymentType('full')}
-                                        style={styles.radioInput}
-                                    />
-                                    <span style={styles.optionTitle}>Full Payment</span>
-                                </div>
-                                <div style={styles.optionAmount}>
-                                    Rs. {Math.round((10000 + (currentProject?.room_dimensions ?
-                                        (currentProject.room_dimensions.length || 10) * (currentProject.room_dimensions.width || 10) * 500 : 0)) * 0.95).toLocaleString()}
-                                </div>
-                                <div style={styles.optionDescription}>
-                                    Pay full amount upfront (5% discount applied)
-                                </div>
-                            </div>
+                                if (hasPaidHalf && !hasPaidFull) {
+                                    return (
+                                        <div
+                                            style={{
+                                                ...styles.paymentOption,
+                                                ...(selectedPaymentType === 'final' ? styles.paymentOptionActive : {})
+                                            }}
+                                            onClick={() => setSelectedPaymentType('final')}
+                                        >
+                                            <div style={styles.optionHeader}>
+                                                <input
+                                                    type="radio"
+                                                    checked={selectedPaymentType === 'final'}
+                                                    onChange={() => setSelectedPaymentType('final')}
+                                                    style={styles.radioInput}
+                                                />
+                                                <span style={styles.optionTitle}>Final Payment (Remaining)</span>
+                                            </div>
+                                            <div style={styles.optionAmount}>
+                                                Rs. {Math.max(amount - totalPaid, 0).toLocaleString()}
+                                            </div>
+                                            <div style={styles.optionDescription}>
+                                                Pay the remaining balance to complete your payment
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                                return (
+                                    <>
+                                        <div
+                                            style={{
+                                                ...styles.paymentOption,
+                                                ...(selectedPaymentType === 'half' ? styles.paymentOptionActive : {})
+                                            }}
+                                            onClick={() => setSelectedPaymentType('half')}
+                                        >
+                                            <div style={styles.optionHeader}>
+                                                <input
+                                                    type="radio"
+                                                    checked={selectedPaymentType === 'half'}
+                                                    onChange={() => setSelectedPaymentType('half')}
+                                                    style={styles.radioInput}
+                                                />
+                                                <span style={styles.optionTitle}>Half Payment (50%)</span>
+                                            </div>
+                                            <div style={styles.optionAmount}>
+                                                Rs. {Math.round(amount * 0.5).toLocaleString()}
+                                            </div>
+                                            <div style={styles.optionDescription}>
+                                                Pay 50% now to start the project
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            style={{
+                                                ...styles.paymentOption,
+                                                ...(selectedPaymentType === 'full' ? styles.paymentOptionActive : {})
+                                            }}
+                                            onClick={() => setSelectedPaymentType('full')}
+                                        >
+                                            <div style={styles.optionHeader}>
+                                                <input
+                                                    type="radio"
+                                                    checked={selectedPaymentType === 'full'}
+                                                    onChange={() => setSelectedPaymentType('full')}
+                                                    style={styles.radioInput}
+                                                />
+                                                <span style={styles.optionTitle}>Full Payment</span>
+                                            </div>
+                                            <div style={styles.optionAmount}>
+                                                Rs. {Math.round(amount * 0.95).toLocaleString()}
+                                            </div>
+                                            <div style={styles.optionDescription}>
+                                                Pay full amount upfront (5% discount applied)
+                                            </div>
+                                        </div>
+                                    </>
+                                );
+                            })()}
+
                         </div>
                     </div>
+
 
                     {/* Total Summary */}
                     <div style={styles.totalCard}>

@@ -41,9 +41,15 @@ export default function PaymentHistoryModal({ projectTitle, payments = [], total
                             })}
 
                             <div style={{ textAlign: 'right', fontWeight: 600, marginTop: '1rem' }}>
-                                Total Paid: Rs. {totalPaid.toLocaleString()}<br />
-                                Remaining: Rs. {(projectAmount - totalPaid).toLocaleString()}
+                                Total Paid: Rs. {totalPaid.toLocaleString()}
+                                {projectAmount > totalPaid && (
+                                    <>
+                                        <br />
+                                        Remaining: Rs. {(projectAmount - totalPaid).toLocaleString()}
+                                    </>
+                                )}
                             </div>
+
                         </>
                     )}
                 </div>

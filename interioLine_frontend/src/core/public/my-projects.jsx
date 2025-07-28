@@ -21,7 +21,7 @@ export default function MyProjectsPage() {
     const [showEditProfile, setShowEditProfile] = useState(false);
     const [showPaymentPage, setShowPaymentPage] = useState(false);
     const [selectedProject, setSelectedProject] = useState(null);
-    const [paymentType, setPaymentType] = useState('initial');
+    const [paymentType, setPaymentType] = useState('half');
     const [toast, setToast] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -230,7 +230,7 @@ export default function MyProjectsPage() {
 
         // Determine payment type based on project payment status
         if (project.payment === 'pending') {
-            setPaymentType('initial');
+            setPaymentType('half');
         } else if (project.payment === 'half-installment') {
             setPaymentType('final');
         }
@@ -271,7 +271,7 @@ export default function MyProjectsPage() {
             totalAmount += area * 500;
         }
 
-        return type === 'initial' || type === 'final' ? Math.round(totalAmount * 0.5) : totalAmount;
+        return type === 'half' || type === 'final' ? Math.round(totalAmount * 0.5) : totalAmount;
     };
 
     const canMakePayment = (project) => {
@@ -299,7 +299,7 @@ export default function MyProjectsPage() {
 
         if (payments.length >= 2) return '✅ Paid (Installments)';
 
-        if (payments.length === 1 && payments[0].payment_type === 'initial') {
+        if (payments.length === 1 && payments[0].payment_type === 'half') {
             return '🔄 50% Paid';
         }
 
@@ -311,8 +311,8 @@ export default function MyProjectsPage() {
     const getPaymentButtonText = (project) => {
         const payments = project.payments || [];
 
-        if (payments.length === 0) return 'Pay Initial (50%)';
-        if (payments.length === 1 && payments[0].payment_type === 'initial') return 'Pay Final (50%)';
+        if (payments.length === 0) return 'Pay half (50%)';
+        if (payments.length === 1 && payments[0].payment_type === 'half') return 'Pay Final (50%)';
 
         return 'Pay Now';
     };
@@ -600,7 +600,7 @@ export default function MyProjectsPage() {
                                                 )}
 
 
-                                                {showHistoryModal && historyProject && (
+                                                {/* {showHistoryModal && historyProject && (
                                                     <PaymentHistoryModal
                                                         projectTitle={historyProject.title}
                                                         payments={historyProject.payments}
@@ -608,7 +608,7 @@ export default function MyProjectsPage() {
                                                         projectAmount={historyProject.amount}
                                                         onClose={() => setShowHistoryModal(false)}
                                                     />
-                                                )}
+                                                )} */}
 
                                             </div>
                                         </div>
@@ -666,15 +666,6 @@ export default function MyProjectsPage() {
                                                 <FiEye />
                                             </button>
 
-                                            {showHistoryModal && historyProject && (
-                                                <PaymentHistoryModal
-                                                    projectTitle={historyProject.title}
-                                                    payments={historyProject.payments}
-                                                    totalPaid={historyProject.totalPaid}
-                                                    projectAmount={historyProject.amount}
-                                                    onClose={() => setShowHistoryModal(false)}
-                                                />
-                                            )}
 
                                         </div>
                                     </div>
@@ -709,25 +700,41 @@ export default function MyProjectsPage() {
                 </div>
             )}
 
-            {/* Payment Page */}
             {showPaymentPage && selectedProject && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    zIndex: 1000
-                }}>
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        zIndex: 1000
+                    }}>
+
                     <PaymentPage
                         projectId={selectedProject._id}
-                        amount={calculatePaymentAmount(selectedProject, paymentType)}
+                        amount={selectedProject.amount}
+                        totalPaid={selectedProject.totalPaid}
+                        hasPaidHalf={selectedProject.payments?.some(p => p.payment_type === "half")}
+                        hasPaidFull={selectedProject.payments?.some(p => p.payment_type === "full")}
+                        isFullyPaid={selectedProject.totalPaid >= selectedProject.amount}
                         paymentType={paymentType}
                         onSuccess={handlePaymentSuccess}
                         onClose={handleClosePayment}
                         project={selectedProject}
                     />
                 </div>
+            )}
+
+
+            {showHistoryModal && historyProject && (
+                <PaymentHistoryModal
+                    projectTitle={historyProject.title}
+                    payments={historyProject.payments}
+                    totalPaid={historyProject.totalPaid}
+                    projectAmount={historyProject.amount}
+                    onClose={() => setShowHistoryModal(false)}
+                />
             )}
             <Footer />
         </div>
