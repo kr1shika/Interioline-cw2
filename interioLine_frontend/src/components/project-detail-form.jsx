@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { getCsrfToken } from "../provider/csrf";
 import "./addpost.css";
 import Toast from "./toastMessage.jsx";
 
@@ -121,11 +122,15 @@ export default function UploadRoomDataModal({ onClose, projectId }) {
         });
 
         try {
+            const csrfToken = await getCsrfToken();
+
             await axios.patch(
                 `https://localhost:2005/api/project/${projectId}/room-details`,
                 formData,
                 {
-                    headers: { "Content-Type": "multipart/form-data" },
+                    headers: {
+                        "Content-Type": "multipart/form-data", "CSRF-Token": csrfToken
+                    },
                     withCredentials: true  // <-- this is necessary
                 }
             );

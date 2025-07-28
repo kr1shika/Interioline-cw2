@@ -52,7 +52,12 @@ const projectSchema = new mongoose.Schema({
     is_public: {
         type: Boolean,
         default: false
-    }
+    },
+    amount: {
+  type: Number,
+  required: true,
+  default: 9999 
+}
 }, { timestamps: true });
 
 const Project = mongoose.model("Project", projectSchema);

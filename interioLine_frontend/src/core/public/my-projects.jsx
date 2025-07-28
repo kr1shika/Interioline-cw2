@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FiCreditCard, FiEdit, FiEye, FiMoreHorizontal, FiStar, FiUsers } from "react-icons/fi";
+import { FiEdit, FiEye, FiMoreHorizontal, FiStar, FiUsers } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import bannerArt from "../../assets/images/art.png";
 import profile from "../../assets/images/profile.jpg";
@@ -12,8 +12,8 @@ import { useAuth } from "../../provider/authcontext";
 import EditProfileForm from "../private/designer/EditProfileForm.jsx";
 import "../style/myprj.css";
 import { getRoomConfigurationByProjectId } from "./editingRoom/components/room-designer/furniture-Catalog";
+import PaymentHistoryModal from "./PaymentHistoryModal.jsx";
 import PaymentPage from "./PaymentPage.jsx";
-
 export default function MyProjectsPage() {
     const [projects, setProjects] = useState([]);
     const [userProfile, setUserProfile] = useState(null);
@@ -25,6 +25,9 @@ export default function MyProjectsPage() {
     const [toast, setToast] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [showHistoryModal, setShowHistoryModal] = useState(false);
+    const [historyProject, setHistoryProject] = useState(null);
+
 
     const [dashboardStats, setDashboardStats] = useState({
         activeProjects: 0,
@@ -38,10 +41,7 @@ export default function MyProjectsPage() {
     const { user, userRole, isLoggedIn, loading: authLoading } = useAuth();
 
     useEffect(() => {
-        // Wait for auth to finish loading
         if (authLoading) return;
-
-        // 🔐 Security checks
         if (!isLoggedIn) {
             console.log("🔒 Not authenticated, redirecting to home");
             navigate('/');
@@ -54,18 +54,18 @@ export default function MyProjectsPage() {
                 });
 
                 const fetched = Array.isArray(res.data) ? res.data : [];
-                setProjects(fetched);
 
                 if (userRole === "designer") {
                     calculateDashboardStats(fetched);
                 }
+
+                return fetched;
             } catch (err) {
                 console.error("❌ Error fetching projects:", err);
                 setError("Failed to load projects.");
+                return [];
             }
         };
-
-
 
         const fetchUserProfile = async () => {
             try {
@@ -100,7 +100,8 @@ export default function MyProjectsPage() {
 
         const loadData = async () => {
             setLoading(true);
-            await fetchProjects();
+            const fetched = await fetchProjects();
+            setProjects(fetched);
             if (userRole === "client") await fetchUserProfile();
             if (userRole === "designer") await fetchDesignerStats();
             setLoading(false);
@@ -174,6 +175,7 @@ export default function MyProjectsPage() {
 
     };
 
+
     const getStatusProgress = (status) => {
         const statusMap = {
             'pending': 20,
@@ -236,29 +238,24 @@ export default function MyProjectsPage() {
         setShowPaymentPage(true);
     };
 
-    const handlePaymentSuccess = (paymentData) => {
+    const handlePaymentHistory = (project) => {
+        setHistoryProject(project);
+        setShowHistoryModal(true);
+    };
+
+
+    const handlePaymentSuccess = async (paymentData) => {
         console.log('💳 Payment successful:', paymentData);
 
-        // Refresh payment details for the project
-        const refreshPaymentDetails = async () => {
-            const payments = await checkProjectPayments(selectedProject._id);
-            setProjectPaymentDetails(prev => ({
-                ...prev,
-                [selectedProject._id]: payments
-            }));
-        };
-
-        refreshPaymentDetails();
+        const updatedProjects = await fetchProjects();
+        setProjects(updatedProjects);
 
         setShowPaymentPage(false);
         setSelectedProject(null);
 
-        // Show success toast
-        showToast(
-            `Payment of Rs. ${paymentData.amount.toLocaleString()} completed successfully!`,
-            "success"
-        );
+        showToast(`Payment of Rs. ${paymentData.amount.toLocaleString()} completed successfully!`, "success");
     };
+
 
     const handleClosePayment = () => {
         setShowPaymentPage(false);
@@ -277,109 +274,47 @@ export default function MyProjectsPage() {
         return type === 'initial' || type === 'final' ? Math.round(totalAmount * 0.5) : totalAmount;
     };
 
-    // Check actual payment status by checking payment records
-    const [projectPaymentDetails, setProjectPaymentDetails] = useState({});
-
-    const checkProjectPayments = async (projectId) => {
-        try {
-            const response = await axios.get(`https://localhost:2005/api/payment/history?projectId=${projectId}`);
-            if (response.data.success) {
-                const payments = response.data.payments.filter(p => p.status === 'succeeded');
-                return payments;
-            }
-            return [];
-        } catch (error) {
-            console.error('Error fetching payment history:', error);
-            return [];
-        }
-    };
-
-    // Check if project can accept payments
     const canMakePayment = (project) => {
-        // Don't allow payments for completed projects
         if (project.status === 'completed') return false;
 
-        const payments = projectPaymentDetails[project._id] || [];
+        const payments = project.payments || [];
 
-        // If there's a "full" payment, no more payments allowed
         const hasFullPayment = payments.some(p => p.payment_type === 'full');
-        if (hasFullPayment) return false;
-
-        // If there are 2 or more payments (initial + final), no more payments
-        if (payments.length >= 2) return false;
+        if (hasFullPayment || payments.length >= 2) return false;
 
         return userRole === 'client' && project.status !== 'cancelled';
     };
 
-    // Check if should show payment history button
     const shouldShowPaymentHistory = (project) => {
-        const payments = projectPaymentDetails[project._id] || [];
-
-        // Show history if there's a full payment OR if there are any successful payments
+        const payments = project.payments || [];
         const hasFullPayment = payments.some(p => p.payment_type === 'full');
-        const hasAnyPayments = payments.length > 0;
-
-        return userRole === 'client' && (hasFullPayment || hasAnyPayments);
+        return userRole === 'client' && (hasFullPayment || payments.length > 0);
     };
 
-    // Get payment status display
     const getPaymentStatusDisplay = (project) => {
-        const payments = projectPaymentDetails[project._id] || [];
+        const payments = project.payments || [];
 
-        // Check for full payment first
         const hasFullPayment = payments.some(p => p.payment_type === 'full');
         if (hasFullPayment) return '✅ Paid (Full)';
 
-        // Check for multiple payments
         if (payments.length >= 2) return '✅ Paid (Installments)';
 
-        // Check for single payment
-        if (payments.length === 1) {
-            const payment = payments[0];
-            if (payment.payment_type === 'initial') return '🔄 50% Paid';
+        if (payments.length === 1 && payments[0].payment_type === 'initial') {
+            return '🔄 50% Paid';
         }
 
         return '⏳ Payment Pending';
     };
 
+
     // Get payment button text
     const getPaymentButtonText = (project) => {
-        const payments = projectPaymentDetails[project._id] || [];
+        const payments = project.payments || [];
 
-        if (payments.length === 0) {
-            return 'Pay Initial (50%)';
-        } else if (payments.length === 1 && payments[0].payment_type === 'initial') {
-            return 'Pay Final (50%)';
-        }
+        if (payments.length === 0) return 'Pay Initial (50%)';
+        if (payments.length === 1 && payments[0].payment_type === 'initial') return 'Pay Final (50%)';
+
         return 'Pay Now';
-    };
-
-    // Handle payment history view
-    const handlePaymentHistory = (project) => {
-        const payments = projectPaymentDetails[project._id] || [];
-
-        let historyMessage = `Payment History for ${project.title}:\n\n`;
-
-        if (payments.length === 0) {
-            historyMessage += 'No payments found.';
-        } else {
-            payments.forEach((payment, index) => {
-                const date = new Date(payment.payment_date).toLocaleDateString();
-                const amount = payment.amount.toLocaleString();
-                const type = payment.payment_type === 'full' ? 'Full Payment' :
-                    payment.payment_type === 'initial' ? 'Initial Payment (50%)' : 'Final Payment (50%)';
-
-                historyMessage += `${index + 1}. ${type}\n`;
-                historyMessage += `   Amount: Rs. ${amount}\n`;
-                historyMessage += `   Date: ${date}\n`;
-                historyMessage += `   Status: ${payment.status}\n\n`;
-            });
-
-            const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
-            historyMessage += `Total Paid: Rs. ${totalPaid.toLocaleString()}`;
-        }
-
-        alert(historyMessage);
     };
 
     // Modified function to handle edit/view button click
@@ -654,16 +589,27 @@ export default function MyProjectsPage() {
                                                         Pay Now
                                                     </button>
                                                 )}
-
-                                                {/* Payment History Button - Show when payments exist */}
-                                                {shouldShowPaymentHistory(project) && !canMakePayment(project) && (
+                                                {shouldShowPaymentHistory(project) && (
                                                     <button
-                                                        className="active-action-btn history-btn"
+                                                        className="active-action-btn pay-btn"
+                                                        style={{ backgroundColor: "#F3F4F6", color: "#A4502F", border: "1px solid #e5e7eb" }}
                                                         onClick={() => handlePaymentHistory(project)}
                                                     >
-                                                        Payment History
+                                                        History
                                                     </button>
                                                 )}
+
+
+                                                {showHistoryModal && historyProject && (
+                                                    <PaymentHistoryModal
+                                                        projectTitle={historyProject.title}
+                                                        payments={historyProject.payments}
+                                                        totalPaid={historyProject.totalPaid}
+                                                        projectAmount={historyProject.amount}
+                                                        onClose={() => setShowHistoryModal(false)}
+                                                    />
+                                                )}
+
                                             </div>
                                         </div>
                                     </div>
@@ -720,16 +666,16 @@ export default function MyProjectsPage() {
                                                 <FiEye />
                                             </button>
 
-                                            {/* Payment History Button for completed projects */}
-                                            {shouldShowPaymentHistory(project) && (
-                                                <button
-                                                    className="past-project-history-btn"
-                                                    onClick={() => handlePaymentHistory(project)}
-                                                    title="Payment History"
-                                                >
-                                                    <FiCreditCard />
-                                                </button>
+                                            {showHistoryModal && historyProject && (
+                                                <PaymentHistoryModal
+                                                    projectTitle={historyProject.title}
+                                                    payments={historyProject.payments}
+                                                    totalPaid={historyProject.totalPaid}
+                                                    projectAmount={historyProject.amount}
+                                                    onClose={() => setShowHistoryModal(false)}
+                                                />
                                             )}
+
                                         </div>
                                     </div>
                                 </div>
@@ -779,7 +725,6 @@ export default function MyProjectsPage() {
                         paymentType={paymentType}
                         onSuccess={handlePaymentSuccess}
                         onClose={handleClosePayment}
-                        userId={userId}
                         project={selectedProject}
                     />
                 </div>

@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useAuth } from "../../provider/authcontext"; // adjust the path as needed
+import { getCsrfToken } from "../../provider/csrf";
+const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, project }) => {
+    const { user, isLoggedIn } = useAuth();
 
-const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, userId, project }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
@@ -152,7 +155,7 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, userI
         }
 
         const finalAmount = calculateAmount();
-
+        const csrfToken = await getCsrfToken();
         setTimeout(async () => {
             try {
                 const response = await axios.post(
@@ -161,15 +164,16 @@ const PaymentPage = ({ projectId, amount, paymentType, onSuccess, onClose, userI
                         amount: finalAmount,
                         projectId: projectId,
                         paymentType: selectedPaymentType,
-                        userId: userId
+                        userId: user?._id  // <-- from context
                     },
                     {
+                        withCredentials: true,
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            "CSRF-Token": csrfToken
                         }
-                    }
+                    },
                 );
-
                 if (response.data.success) {
                     setSuccess(true);
                     setLoading(false);

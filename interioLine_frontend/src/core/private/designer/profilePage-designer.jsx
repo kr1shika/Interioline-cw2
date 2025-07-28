@@ -8,7 +8,7 @@ import Footer from "../../../components/footer.jsx";
 import Header from "../../../components/header.jsx";
 import PortfolioPostViewer from "../../../components/PortfolioPostViewer.jsx";
 import { useAuth } from "../../../provider/authcontext";
-import { getCsrfToken } from "../../provider/csrf";
+import { getCsrfToken } from "../../../provider/csrf";
 import "../../style/profile.css";
 import EditProfileForm from "./EditProfileForm.jsx";
 

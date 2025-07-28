@@ -1,5 +1,3 @@
-// Create a new file: components/ConfirmationModal.jsx
-
 const ConfirmationModal = ({
     isOpen,
     onClose,

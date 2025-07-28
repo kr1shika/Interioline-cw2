@@ -4,7 +4,7 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const { authenticateToken } = require("../middleware/authMiddleware");
+const { authenticateToken, authorizeRole } = require("../middleware/authMiddleware");
 
 const {
     createProject,
@@ -33,7 +33,7 @@ const upload = multer({ storage });
 // Project routes
 router.post("/createProject", authenticateToken, createProject);
 router.get("/my", authenticateToken, getMyProjects);
-router.patch("/:projectId/status", authenticateToken, updateProjectStatus);
+router.patch("/:projectId/status", authenticateToken, authorizeRole(["designer"]), updateProjectStatus);
 router.patch(
     "/:projectId/room-details",
     authenticateToken,
