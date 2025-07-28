@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { authenticateToken } = require('../middleware/authMiddleware');
+const { authenticateToken, bruteForceProtection } = require('../middleware/authMiddleware');
 
 const {
     loginRequest, verifyOtp,
@@ -9,8 +9,8 @@ const {
 
 router.post('/signup', signup);
 
-router.post('/login', loginRequest);
-router.post('/verify-otp', verifyOtp);
+router.post('/login', bruteForceProtection, loginRequest);
+router.post('/verify-otp', bruteForceProtection, verifyOtp);
 
 router.get('/me', authenticateToken, (req, res) => {
     res.status(200).json(req.user);

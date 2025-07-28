@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../config/util.js");
 const User = require("../model/user");
-const { trackLoginAttempt, checkAccountLock } = require("../middleware/authMiddleware");
 const jwt = require("jsonwebtoken");
+const { trackLoginAttempt, checkAccountLock } = require("../middleware/authMiddleware");
 
 const signup = async (req, res) => {
     const { full_name, email, password, role } = req.body;
@@ -77,16 +77,25 @@ const signup = async (req, res) => {
 // add at top
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-// const User = require("../model/user");
-// const { generateToken } = require("../config/util");
+
 
 const loginRequest = async (req, res) => {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user || !(await user.matchPassword(password))) {
-        return res.status(401).json({ error: "Invalid credentials" });
+    // Check if account is locked due to brute force
+    const lockMessage = checkAccountLock(email);
+    if (lockMessage) {
+        return res.status(429).json({ errors: [lockMessage] });
     }
+
+    const user = await User.findOne({ email });
+
+    if (!user || !(await user.matchPassword(password))) {
+        trackLoginAttempt(email, false);
+        return res.status(401).json({ errors: ["Invalid credentials"] });
+    }
+
+    trackLoginAttempt(email, true);
 
     // generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -115,6 +124,7 @@ const loginRequest = async (req, res) => {
 
     res.json({ message: "OTP sent to your email" });
 };
+
 
 const verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
