@@ -47,6 +47,20 @@ app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 app.use(cookieParser());
 
+// additionla security headers
+// ✅ Security Headers Middleware
+app.use((req, res, next) => {
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+  res.setHeader("Referrer-Policy", "no-referrer-when-downgrade");
+  res.setHeader("Permissions-Policy", "geolocation=(), microphone=()");
+  res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self';");
+
+  next();
+});
+
+
 // ✅ Static Files
 app.use("/profile_pics", express.static(path.join(__dirname, "profile_pics")));
 app.use("/portfolio_uploads", express.static(path.join(__dirname, "portfolio_uploads")));
