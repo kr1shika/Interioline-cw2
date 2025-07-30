@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const cors = require("cors");
 const path = require("path");
+const mongoSanitize = require("express-mongo-sanitize");
+
 
 dotenv.config({ path: "./config/config.env" });
 const connectDB = require('./config/db');
@@ -47,6 +49,7 @@ app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(mongoSanitize());
 
 // additionla security headers
 app.use((req, res, next) => {

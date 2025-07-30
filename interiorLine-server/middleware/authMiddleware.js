@@ -117,7 +117,6 @@ const bruteForceProtection = (req, res, next) => {
     next();
 };
 
-// 🔐 Login attempt tracking for specific users
 const trackLoginAttempt = (email, success = false) => {
     const now = Date.now();
     const windowMs = 15 * 60 * 1000; // 15 minutes
@@ -225,6 +224,28 @@ const checkPasswordExpiry = (req, res, next) => {
     next();
 };
 
+const requestBuckets = new Map();
+
+const createRateLimiter = ({ windowMs, max }) => {
+    return (req, res, next) => {
+        const key = req.ip + req.originalUrl;
+        const now = Date.now();
+        const bucket = requestBuckets.get(key) || { count: 0, firstRequest: now };
+
+        if (now - bucket.firstRequest > windowMs) {
+            requestBuckets.set(key, { count: 1, firstRequest: now });
+            return next();
+        }
+
+        if (bucket.count >= max) {
+            return res.status(429).json({ error: "Too many requests. Please try again later." });
+        }
+
+        bucket.count++;
+        requestBuckets.set(key, bucket);
+        next();
+    };
+};
 
 module.exports = {
     logActivity,
@@ -234,6 +255,5 @@ module.exports = {
     bruteForceProtection,
     trackLoginAttempt,
     checkAccountLock,
-    checkPasswordExpiry, checkGlobalLocks
-
+    checkPasswordExpiry, checkGlobalLocks,createRateLimiter
 };
