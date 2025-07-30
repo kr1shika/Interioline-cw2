@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const { getMyPortfolioPosts,
     createPortfolioPost, getUserPortfolioPosts, deletePortfolioPost } = require("../controller/portfolioController");
-const { authenticateToken, authorizeRole } = require("../middleware/authMiddleware");
+const { logActivity, authenticateToken, authorizeRole } = require("../middleware/authMiddleware");
 
 const uploadDir = "portfolio_uploads";
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
@@ -29,9 +29,11 @@ router.get("/posts/:designerId", getUserPortfolioPosts);
 router.delete(
     "/posts/:postId",
     authenticateToken,
-    authorizeRole(["designer"]),
+    authorizeRole(["designer"]), logActivity("Delete Portfolio"),
     deletePortfolioPost
-); router.get("/my", authenticateToken, getMyPortfolioPosts);
-router.delete("/:id", authenticateToken, authorizeRole(["designer"]), deletePortfolioPost);
+);
+
+router.get("/my", authenticateToken, logActivity("Get My Portfolio Posts"), getMyPortfolioPosts);
+router.delete("/:id", authenticateToken, authorizeRole(["designer"]), logActivity("Delete Portfolio"), deletePortfolioPost);
 
 module.exports = router;

@@ -85,7 +85,6 @@ export default function AuthPopup({ onClose }) {
     // Password strength for signup
     const passwordStrength = !isLogin ? calculatePasswordStrength(password) : null;
 
-    // Show toast message with auto-dismiss
     const showToast = (message, type = "info") => {
         setToast({ show: true, message, type });
         setTimeout(() => {
@@ -93,12 +92,10 @@ export default function AuthPopup({ onClose }) {
         }, 5000);
     };
 
-    // Handle forgot password click
     const handleForgotPassword = () => {
         setShowChangePassword(true);
     };
 
-    // Handle change password modal close
     const handleChangePasswordClose = () => {
         setShowChangePassword(false);
     };

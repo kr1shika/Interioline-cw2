@@ -17,5 +17,4 @@ router.get('/me', authenticateToken, checkGlobalLocks, (req, res) => {
     res.status(200).json(req.user);
 });
 
-
 module.exports = router;

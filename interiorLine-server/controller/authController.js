@@ -110,6 +110,10 @@ const loginRequest = async (req, res) => {
 const verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
     const user = await User.findOne({ email });
+
+    if (!user) return res.status(400).json({ error: "User not found" });
+
+    // 🔐 Init lock if missing
     if (!user.lock || !user.lock.otp) {
         user.lock = {
             ...(user.lock || {}),
@@ -120,26 +124,35 @@ const verifyOtp = async (req, res) => {
         };
     }
 
-    if (!user) return res.status(400).json({ error: "User not found" });
-
-    // Check OTP lock
-    if (user.lock?.otp?.lockedUntil && Date.now() < new Date(user.lock.otp.lockedUntil)) {
+    // 🔐 Check OTP lock
+    if (user.lock.otp.lockedUntil && Date.now() < new Date(user.lock.otp.lockedUntil)) {
         const mins = Math.ceil((new Date(user.lock.otp.lockedUntil) - Date.now()) / 60000);
         return res.status(429).json({ error: `Too many OTP attempts. Try again in ${mins} minutes.` });
     }
 
-    // Verify OTP
+    // 🔐 Verify OTP
     const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
     if (user.otp !== hashedOtp || user.otpExpiry < Date.now()) {
         user.lock.otp.attempts += 1;
         if (user.lock.otp.attempts >= 5) {
-            user.lock.otp.lockedUntil = new Date(Date.now() + 60 * 60 * 1000); // 1 hour lock
+            user.lock.otp.lockedUntil = new Date(Date.now() + 60 * 60 * 1000); // lock for 1 hr
         }
         await user.save();
         return res.status(400).json({ error: "Invalid or expired OTP" });
     }
 
-    // Success: Reset OTP and lock
+    // ✅ Check password expiry (2 months = 60 days)
+    const expiryDays = 60;
+    const changedAt = user.passwordChangedAt || user.lastPasswordChange;
+    if (changedAt) {
+        const expiryDate = new Date(changedAt);
+        expiryDate.setDate(expiryDate.getDate() + expiryDays);
+        if (Date.now() > expiryDate) {
+            return res.status(403).json({ error: "Your password has expired. Please change your password to continue." });
+        }
+    }
+
+    // ✅ Reset OTP and lock
     user.otpVerified = true;
     user.otp = undefined;
     user.otpExpiry = undefined;
@@ -147,7 +160,6 @@ const verifyOtp = async (req, res) => {
     user.lock.otp.lockedUntil = null;
     await user.save();
 
-    // Session setup
     await generateToken(user._id, res, req);
 
     res.status(200).json({
