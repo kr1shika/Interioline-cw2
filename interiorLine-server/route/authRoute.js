@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { authenticateToken, bruteForceProtection } = require('../middleware/authMiddleware');
+const { checkGlobalLocks,authenticateToken, bruteForceProtection ,logActivity } = require('../middleware/authMiddleware');
 
 const {
     loginRequest, verifyOtp,
@@ -12,7 +12,7 @@ router.post('/signup', signup);
 router.post('/login', bruteForceProtection, loginRequest);
 router.post('/verify-otp', bruteForceProtection, verifyOtp);
 
-router.get('/me', authenticateToken, (req, res) => {
+router.get('/me', authenticateToken,checkGlobalLocks, (req, res) => {
     res.status(200).json(req.user);
 });
 router.post('/logout', logout);

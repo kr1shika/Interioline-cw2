@@ -71,6 +71,19 @@ const verifyOwnership = (req, res, next) => {
     next();
 };
 
+const checkGlobalLocks = async (req, res, next) => {
+    const user = await User.findById(req.userId);
+
+    const floodLock = user?.lock?.activityFlood?.lockedUntil;
+    if (floodLock && Date.now() < new Date(floodLock)) {
+        const mins = Math.ceil((new Date(floodLock) - Date.now()) / 60000);
+        return res.status(403).json({ error: `Your account is locked due to abnormal activity. Try again in ${mins} minutes.` });
+    }
+
+    next();
+};
+
+
 const bruteForceProtection = (req, res, next) => {
     const clientIP = req.ip || req.connection.remoteAddress;
     const key = `${clientIP}_${req.route?.path || req.path}`;
@@ -143,18 +156,44 @@ const checkAccountLock = (email) => {
     return null;
 };
 
+const ActivityLog = require("../model/activityLog"); // add this
+const MAX_ACTIVITY_LOGS = 80;
+
 const logActivity = (action) => {
-    return (req, res, next) => {
-        const logData = {
-            userId: req.userId,
-            action,
-            ip: req.ip || req.connection.remoteAddress,
-            userAgent: req.get('User-Agent'),
-            timestamp: new Date(),
-            endpoint: req.originalUrl,
-            method: req.method
-        };
-        next();
+    return async (req, res, next) => {
+        try {
+            const logEntry = new ActivityLog({
+                userId: req.userId,
+                action,
+                endpoint: req.originalUrl,
+                method: req.method,
+                ip: req.ip,
+                userAgent: req.get('User-Agent'),
+            });
+
+            await logEntry.save();
+
+            // Count recent logs (past 1 hour)
+            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+            const count = await ActivityLog.countDocuments({
+                userId: req.userId,
+                createdAt: { $gte: oneHourAgo }
+            });
+
+            if (count >= MAX_ACTIVITY_LOGS) {
+                await User.findByIdAndUpdate(req.userId, {
+                    $set: {
+                        "lock.activityFlood.lockedUntil": new Date(Date.now() + 60 * 60 * 1000) // 1 hour lock
+                    }
+                });
+                return res.status(429).json({ error: "Account temporarily locked due to excessive activity. Try again later." });
+            }
+
+            next();
+        } catch (err) {
+            console.error("Activity log error:", err);
+            next(); // Don’t block on logging error
+        }
     };
 };
 
@@ -179,6 +218,6 @@ module.exports = {
     bruteForceProtection,
     trackLoginAttempt,
     checkAccountLock,
-    checkPasswordExpiry
+    checkPasswordExpiry, checkGlobalLocks
 
 };

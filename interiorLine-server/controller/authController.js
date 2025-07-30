@@ -113,24 +113,37 @@ const loginRequest = async (req, res) => {
     res.json({ message: "OTP sent to your email" });
 };
 
-
 const verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ error: "User not found" });
 
-    const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
+    // Check OTP lock
+    if (user.lock?.otp?.lockedUntil && Date.now() < new Date(user.lock.otp.lockedUntil)) {
+        const mins = Math.ceil((new Date(user.lock.otp.lockedUntil) - Date.now()) / 60000);
+        return res.status(429).json({ error: `Too many OTP attempts. Try again in ${mins} minutes.` });
+    }
 
+    // Verify OTP
+    const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
     if (user.otp !== hashedOtp || user.otpExpiry < Date.now()) {
+        user.lock.otp.attempts += 1;
+        if (user.lock.otp.attempts >= 5) {
+            user.lock.otp.lockedUntil = new Date(Date.now() + 60 * 60 * 1000); // 1 hour lock
+        }
+        await user.save();
         return res.status(400).json({ error: "Invalid or expired OTP" });
     }
 
+    // Success: Reset OTP and lock
     user.otpVerified = true;
     user.otp = undefined;
     user.otpExpiry = undefined;
+    user.lock.otp.attempts = 0;
+    user.lock.otp.lockedUntil = null;
     await user.save();
 
-    // After successful OTP validation
+    // Session setup
     await generateToken(user._id, res, req);
 
     res.status(200).json({
@@ -141,10 +154,7 @@ const verifyOtp = async (req, res) => {
             role: user.role,
         },
     });
-
-
 };
-
 
 const changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
