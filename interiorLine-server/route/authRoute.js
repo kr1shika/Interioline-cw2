@@ -4,7 +4,7 @@ const { authenticateToken, bruteForceProtection } = require('../middleware/authM
 
 const {
     loginRequest, verifyOtp,
-    signup, logout
+    signup, logout,verifyRegistrationOtp
 } = require('../controller/authController.js');
 
 router.post('/signup', signup);
@@ -16,5 +16,6 @@ router.get('/me', authenticateToken, (req, res) => {
     res.status(200).json(req.user);
 });
 router.post('/logout', logout);
+router.post("/verify-registration-otp", bruteForceProtection,verifyRegistrationOtp);
 
 module.exports = router;

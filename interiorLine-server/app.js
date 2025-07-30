@@ -35,7 +35,7 @@ connectDB();
 
 // ✅ CORS Configuration
 app.use(cors({
-  origin: "https://localhost:5173",
+  origin: ["https://localhost:5173", "https://192.168.1.78:5173"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 }));
@@ -94,7 +94,11 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-// ✅ Start HTTPS Server
 https.createServer(options, app).listen(PORT, () => {
   console.log(`Server is running on https://localhost:${PORT}`);
 });
+
+
+// https.createServer(options, app).listen(PORT, '0.0.0.0', () => {
+//   console.log(`Server is running on https://0.0.0.0:${PORT}`);
+// });

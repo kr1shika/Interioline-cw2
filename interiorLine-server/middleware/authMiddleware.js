@@ -2,7 +2,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
 
-// Rate limiting storage (use Redis in production)
 const loginAttempts = new Map();
 const requestLimits = new Map();
 const blacklistedTokens = new Set();
@@ -26,23 +25,17 @@ const authenticateToken = async (req, res, next) => {
         if (!session) {
             return res.status(401).json({ errors: ["Session invalid or expired."] });
         }
-
         const user = await User.findById(decoded.userId).select("-password -passwordHistory");
-
-
         req.user = user;
         req.userId = user._id.toString();
         req.token = token;
         req.sessionId = decoded.sessionId;
         // console.log("🔍 Session validated:", session);
-
-
         next();
     } catch (err) {
         return res.status(401).json({ errors: ["Invalid or expired token"] });
     }
 };
-
 
 // 🔐 Role-based authorization middleware
 const authorizeRole = (allowedRoles) => {
@@ -52,10 +45,8 @@ const authorizeRole = (allowedRoles) => {
                 errors: ["Access denied. Please login."]
             });
         }
-
         const userRole = req.user.role?.toLowerCase();
         const normalizedRoles = allowedRoles.map(role => role.toLowerCase());
-
         if (!normalizedRoles.includes(userRole)) {
             return res.status(403).json({
                 errors: ["Access denied. Insufficient permissions."],
@@ -63,12 +54,10 @@ const authorizeRole = (allowedRoles) => {
                 current: req.user.role
             });
         }
-
         next();
     };
 };
 
-// 🔐 User ownership verification (user can only access their own data)
 const verifyOwnership = (req, res, next) => {
     const resourceUserId = req.params.userId || req.params.id;
     const requestingUserId = req.userId;
@@ -82,7 +71,6 @@ const verifyOwnership = (req, res, next) => {
     next();
 };
 
-// 🔐 Brute force protection middleware
 const bruteForceProtection = (req, res, next) => {
     const clientIP = req.ip || req.connection.remoteAddress;
     const key = `${clientIP}_${req.route?.path || req.path}`;
@@ -169,6 +157,20 @@ const logActivity = (action) => {
         next();
     };
 };
+
+const checkPasswordExpiry = (req, res, next) => {
+    const passwordChangedAt = req.user?.passwordChangedAt || req.user?.lastPasswordChange;
+    const expiryPeriod = 60 * 24 * 60 * 60 * 1000; // 60 days
+
+    if (passwordChangedAt && (Date.now() - new Date(passwordChangedAt)) > expiryPeriod) {
+        return res.status(403).json({
+            errors: ["Password expired. Please update your password."]
+        });
+    }
+    next();
+};
+
+
 module.exports = {
     logActivity,
     authenticateToken,
@@ -177,5 +179,6 @@ module.exports = {
     bruteForceProtection,
     trackLoginAttempt,
     checkAccountLock,
+    checkPasswordExpiry
 
 };

@@ -3,80 +3,68 @@ const { generateToken } = require("../config/util.js");
 const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const { trackLoginAttempt, checkAccountLock } = require("../middleware/authMiddleware");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+let pendingSignups = {};
 
 const signup = async (req, res) => {
     const { full_name, email, password, role } = req.body;
+
     try {
         const errors = [];
-        if (!full_name) errors.push("Full name is required");
-        if (!email) errors.push("Email is required");
-        if (!password) errors.push("Password is required");
-        if (!role) errors.push("Role is required");
-
-        // Email format validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (email && !emailRegex.test(email)) {
-            errors.push("Please enter a valid email address");
+        if (!full_name || !email || !password || !role) {
+            return res.status(400).json({ errors: ["All fields are required"] });
         }
 
-        // Role validation
-        if (!["client", "designer"].includes(role)) {
-            errors.push("Invalid role specified");
-        }
-        if (errors.length > 0) {
-            return res.status(400).json({ errors });
-        }
-
-        // Check for existing user
         const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
             return res.status(400).json({ errors: ["Email already registered"] });
         }
 
-        // Hash password with higher cost for better security
-        const hashedPassword = await bcrypt.hash(password, 12);
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
 
-        // Create user with additional security fields
-        const newUser = new User({
-            full_name: full_name.trim(),
-            email: email.toLowerCase().trim(),
-            password: hashedPassword,
+        // Save signup data temporarily (in production, use Redis or DB)
+        pendingSignups[email.toLowerCase()] = {
+            full_name,
+            email: email.toLowerCase(),
+            password: await bcrypt.hash(password, 12),
             role,
-            createdAt: new Date(),
-            lastLogin: null,
-            loginAttempts: 0,
-            accountLocked: false,
-            passwordHistory: [hashedPassword], // Store for password reuse prevention
-            passwordChangedAt: new Date()
+            otp: hashedOtp,
+            otpExpiry: Date.now() + 10 * 60 * 1000
+        };
+
+        await transporter.sendMail({
+            from: `"InterioLine" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: "Verify your InterioLine account",
+            text: `Your signup OTP is: ${otp}`
         });
+        const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+        if (!strongPassword.test(password)) {
+            return res.status(400).json({ errors: ["Password must include upper, lower, number, and special character. Min 8 chars."] });
+        }
 
-        await newUser.save();
 
-        // Generate token and set secure cookie
-        const token = await generateToken(newUser._id, res, req);
+        res.status(200).json({ message: "OTP sent. Please verify." });
 
-        // Log activity (implement activity logging)
-        console.log(`User registered: ${email} at ${new Date().toISOString()}`);
-
-        // Return user data (excluding sensitive information)
-        res.status(201).json({
-            _id: newUser._id,
-            full_name: newUser.full_name,
-            email: newUser.email,
-            role: newUser.role,
-            profile_picture: newUser.profile_picture,
-            token: token // Include token for client-side storage if needed
-        });
-
-    } catch (error) {
-        console.error("Signup error:", error);
-        res.status(500).json({ errors: ["Internal server error"] });
+    } catch (err) {
+        console.error("Signup OTP error:", err);
+        res.status(500).json({ errors: ["Internal error during signup."] });
     }
 };
 
-// add at top
-const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+
+
 
 
 const loginRequest = async (req, res) => {
@@ -251,10 +239,55 @@ const logout = async (req, res) => {
     }
 };
 
+const verifyRegistrationOtp = async (req, res) => {
+    const { email, otp } = req.body;
 
+    try {
+        const signupData = pendingSignups[email.toLowerCase()];
+        if (!signupData) {
+            return res.status(400).json({ error: "Signup session expired or not found" });
+        }
+
+        const hashedInputOtp = crypto.createHash("sha256").update(otp).digest("hex");
+
+        if (
+            signupData.otp !== hashedInputOtp ||
+            Date.now() > signupData.otpExpiry
+        ) {
+            return res.status(400).json({ error: "Invalid or expired OTP" });
+        }
+
+        // ✅ Create the user now
+        const newUser = new User({
+            full_name: signupData.full_name,
+            email: signupData.email,
+            password: signupData.password,
+            role: signupData.role,
+            otpVerified: true,
+            createdAt: new Date(),
+            lastLogin: null,
+            loginAttempts: 0,
+            accountLocked: false,
+            passwordHistory: [signupData.password],
+            passwordChangedAt: new Date(),
+        });
+
+        await newUser.save();
+
+        // 🧹 Clear temporary data
+        delete pendingSignups[email.toLowerCase()];
+
+        res.status(200).json({ message: "OTP verified and account created!" });
+
+    } catch (err) {
+        console.error("OTP verify error:", err);
+        res.status(500).json({ error: "Failed to verify OTP" });
+    }
+};
 
 module.exports = {
     signup,
+    verifyRegistrationOtp,
     loginRequest,
     verifyOtp,
     changePassword,

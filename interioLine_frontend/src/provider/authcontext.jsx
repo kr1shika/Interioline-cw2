@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { getCsrfToken } from "./../provider/csrf";
 
 export const AuthContext = createContext();
 
@@ -12,7 +13,14 @@ export const AuthProvider = ({ children }) => {
 
     const logout = useCallback(async () => {
         try {
-            await axios.post("/api/auth/logout", {}, { withCredentials: true });
+            const csrfToken = await getCsrfToken();
+
+            await axios.post("/api/auth/logout", {}, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "CSRF-Token": csrfToken
+                }, withCredentials: true
+            });
         } catch (error) {
             console.error("Logout API call failed:", error);
         } finally {
@@ -32,7 +40,14 @@ export const AuthProvider = ({ children }) => {
 
     const initializeAuth = useCallback(async () => {
         try {
-            const res = await axios.get("/api/auth/me", { withCredentials: true });
+            const csrfToken = await getCsrfToken();
+
+            const res = await axios.get("/api/auth/me", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "CSRF-Token": csrfToken
+                }, withCredentials: true
+            });
             const userData = res.data;
 
             setIsLoggedIn(true);

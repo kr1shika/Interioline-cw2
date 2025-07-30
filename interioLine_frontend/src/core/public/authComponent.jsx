@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import illustration from "../../assets/images/authIllustration.png";
 import logo from "../../assets/images/logo.png";
-import ChangePasswordModal from "../../components/changePassword"; // Add this import
+import ChangePasswordModal from "../../components/changePassword";
 import Toast from "../../components/toastMessage";
 import { useAuth } from "../../provider/authcontext";
 import { getCsrfToken } from "../../provider/csrf";
+import "../style/authComponent.css"; // Import the CSS file
+
 // Password strength calculation
 const calculatePasswordStrength = (password) => {
     let score = 0;
@@ -60,7 +61,7 @@ const calculatePasswordStrength = (password) => {
     return { score: Math.max(0, Math.min(100, score)), strength, feedback, color };
 };
 
-export default async function AuthPopup({ onClose }) {
+export default function AuthPopup({ onClose }) {
     const [otpSent, setOtpSent] = useState(false);
     const [otp, setOtp] = useState("");
     const [isLogin, setIsLogin] = useState(true);
@@ -69,7 +70,7 @@ export default async function AuthPopup({ onClose }) {
     const [fullName, setFullName] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const [showChangePassword, setShowChangePassword] = useState(false); // Add this state
+    const [showChangePassword, setShowChangePassword] = useState(false);
 
     // Toast state
     const [toast, setToast] = useState({
@@ -162,7 +163,7 @@ export default async function AuthPopup({ onClose }) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "CSRF-Token": csrfToken, // ✅ REQUIRED
+                    "CSRF-Token": csrfToken,
                 },
                 credentials: "include",
                 body: JSON.stringify({ email, otp }),
@@ -187,31 +188,29 @@ export default async function AuthPopup({ onClose }) {
         }
     };
 
-
-
     const handleSignup = async (e) => {
         e.preventDefault();
 
-        // Enhanced validation
         if (!email || !fullName || !password) {
             return showToast("Please fill in all required fields", "error");
         }
-
         if (password !== confirmPassword) {
             return showToast("Passwords do not match", "error");
         }
-
-        // Check password strength
         if (passwordStrength.score < 50) {
             return showToast("Please choose a stronger password", "error");
         }
 
         setLoading(true);
-
         try {
+            const csrfToken = await getCsrfToken();
+
             const res = await fetch("https://localhost:2005/api/auth/signup", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "CSRF-Token": csrfToken,
+                },
                 credentials: "include",
                 body: JSON.stringify({
                     email: email.toLowerCase().trim(),
@@ -220,23 +219,22 @@ export default async function AuthPopup({ onClose }) {
                     role: "client",
                 }),
             });
+
             const data = await res.json();
-            if (!res.ok) {
-                throw new Error(data.errors ? data.errors[0] : "Signup failed");
-            }
-
-            showToast("Account created successfully! You can now log in.", "success");
-
-            setTimeout(() => {
-                setIsLogin(true);
-                setFullName("");
+            if (res.ok) {
+                setOtpSent(true);
+                showToast("OTP sent to your email. Please verify.", "info");
+            } else {
                 setPassword("");
                 setConfirmPassword("");
-            }, 1500);
+            }
+
+            showToast("OTP sent to your email. Please verify.", "info");
+            setOtpSent(true);
 
         } catch (err) {
             console.error("Signup error:", err);
-            showToast(err.message || "An unexpected error occurred", "error");
+            showToast(err.message || "Signup error", "error");
         } finally {
             setLoading(false);
         }
@@ -244,36 +242,17 @@ export default async function AuthPopup({ onClose }) {
 
     return (
         <>
-            <div style={{ backgroundColor: "rgba(0, 0, 0, 0.2)", }} className="fixed inset-0 bg-opacity-60 flex items-center justify-center z-50 px-4">
-                <div style={{ padding: "10px" }} className="bg-[#FCFCEC] border border-[#C2805A] rounded-xl shadow-[0_0_35px_rgba(0,0,0,0.3)] w-180 h-120 flex flex-col md:flex-row overflow-hidden relative items-center justify-center">
-
+            <div className="auth-overlay">
+                <div className="auth-container">
                     {/* Close Button */}
-                    <button
-                        onClick={onClose}
-                        className="absolute top-4 right-4 text-2xl text-gray-700 hover:text-black font-bold z-10"
-                    >
+                    <button onClick={onClose} className="close-button">
                         &times;
                     </button>
 
-                    {/* Left Illustration */}
-                    <div className="hidden md:flex md:w-[58%] items-center justify-center">
-                        <img
-                            src={illustration}
-                            alt="Background"
-                            className="w-200 object-contain"
-                            style={{ maxHeight: "510px", marginLeft: "20px", marginRight: "0px" }}
-                        />
-                    </div>
-
                     {/* Right Auth Content */}
-                    <div className="w-full md:w-[60%] p-8 flex flex-col items-center justify-center">
-                        <div className="">
-                            <img
-                                src={logo}
-                                alt="Background"
-                                className="w-50 object-contain"
-                                style={{ maxHeight: "30px", marginBottom: "5px" }}
-                            />
+                    <div className="auth-content">
+                        <div className="logo-container">
+                            <img src={logo} alt="Logo" className="logo" />
                         </div>
 
                         {/* Enhanced Toggle Buttons */}
@@ -295,7 +274,7 @@ export default async function AuthPopup({ onClose }) {
                         </div>
 
                         {/* Form Content */}
-                        <div className="w-full max-w-sm min-h-[270px] flex flex-col justify-center items-center">
+                        <div className="form-container">
                             <AnimatePresence mode="wait">
                                 {isLogin ? (
                                     <motion.div
@@ -305,15 +284,14 @@ export default async function AuthPopup({ onClose }) {
                                         exit={{ x: -100, opacity: 0 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <form onSubmit={handleLogin} className="flex flex-col gap-2 mt-2">
+                                        <form onSubmit={handleLogin} className="login-form">
                                             {/* Email Input */}
                                             <input
                                                 type="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
-                                                style={{ padding: "5px 12px", width: "290px" }}
                                                 placeholder="Enter Email"
-                                                className="text-[#BE7B5D] rounded-md border border-gray-300 bg-[#f7f0e9]"
+                                                className="auth-input"
                                                 disabled={loading || otpSent}
                                             />
 
@@ -322,21 +300,20 @@ export default async function AuthPopup({ onClose }) {
                                                 type="password"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                style={{ padding: "5px 12px", width: "290px" }}
                                                 placeholder="Enter Password"
-                                                className="text-[#BE7B5D] rounded-md border border-gray-300 bg-[#f7f0e9]"
+                                                className="auth-input"
                                                 disabled={loading || otpSent}
                                             />
+
                                             {/* Forgot Password Link */}
                                             <button
                                                 type="button"
                                                 onClick={handleForgotPassword}
-                                                className="text-sm text-[#A75B2A] underline hover:text-[#BE7B5D] mb-2"
+                                                className="forgot-password-link"
                                                 disabled={loading || otpSent}
                                             >
                                                 Forgot your password?
                                             </button>
-
 
                                             {/* OTP + Buttons */}
                                             {otpSent ? (
@@ -345,14 +322,13 @@ export default async function AuthPopup({ onClose }) {
                                                         type="text"
                                                         value={otp}
                                                         onChange={(e) => setOtp(e.target.value)}
-                                                        style={{ padding: "5px 12px", width: "290px" }}
                                                         placeholder="Enter OTP"
-                                                        className="text-[#BE7B5D] rounded-md border border-gray-300 bg-[#f7f0e9]"
+                                                        className="auth-input"
                                                         disabled={loading}
                                                     />
                                                     <button
                                                         type="button"
-                                                        className="bg-[#C2805A] text-white py-2 px-4 rounded-md font-semibold disabled:opacity-50"
+                                                        className="auth-button auth-button-primary"
                                                         disabled={loading}
                                                         onClick={handleOtpVerify}
                                                     >
@@ -361,16 +337,14 @@ export default async function AuthPopup({ onClose }) {
                                                 </>
                                             ) : (
                                                 <button
-                                                    style={{ padding: "4px 12px", width: "130px" }}
                                                     type="submit"
-                                                    className="bg-[#C2805A] text-white py-2 rounded-md font-semibold disabled:opacity-50"
+                                                    className="auth-button auth-button-primary login-button"
                                                     disabled={loading}
                                                 >
                                                     {loading ? "LOGGING IN..." : "LOGIN"}
                                                 </button>
                                             )}
                                         </form>
-
                                     </motion.div>
                                 ) : (
                                     <motion.div
@@ -380,96 +354,131 @@ export default async function AuthPopup({ onClose }) {
                                         exit={{ x: 100, opacity: 0 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <form onSubmit={handleSignup} className="flex flex-col gap-6 justify-center items-center">
+                                        <form onSubmit={handleSignup} className="signup-form">
+                                            {/* Row 1 */}
                                             <input
-                                                style={{ padding: "4px 12px", marginTop: "-40px", width: "305px" }}
                                                 type="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
-                                                placeholder="E-mail"
-                                                className="text-[#BE7B5D] p-3 rounded-md border border-gray-300 bg-[#f7f0e9]"
+                                                placeholder="Email"
+                                                className="auth-input"
                                                 disabled={loading}
                                             />
                                             <input
-                                                style={{ padding: "4px 12px", width: "305px" }}
                                                 type="text"
                                                 value={fullName}
                                                 onChange={(e) => setFullName(e.target.value)}
                                                 placeholder="Full Name"
-                                                className="text-[#BE7B5D] p-3 rounded-md border border-gray-300 bg-[#f7f0e9]"
+                                                className="auth-input"
                                                 disabled={loading}
                                             />
 
-                                            {/* Password with strength indicator */}
-                                            <div className="password-field-container">
-                                                <input
-                                                    type="password"
-                                                    value={password}
-                                                    onChange={(e) => setPassword(e.target.value)}
-                                                    placeholder="Password"
-                                                    className="text-[#BE7B5D] p-3 rounded-md border border-gray-300 bg-[#f7f0e9]"
-                                                    style={{ padding: "4px 12px", width: "305px" }}
-                                                    disabled={loading}
-                                                />
-
-                                                {/* Password Strength Indicator */}
-                                                {password && (
-                                                    <div className="password-strength-container">
-                                                        <div className="strength-bar-bg">
-                                                            <div
-                                                                className="strength-bar-fill"
-                                                                style={{
-                                                                    width: `${passwordStrength.score}%`,
-                                                                    backgroundColor: passwordStrength.color
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <div className="strength-info">
-                                                            <span
-                                                                className="strength-label"
-                                                                style={{ color: passwordStrength.color }}
-                                                            >
-                                                                {passwordStrength.strength}
-                                                            </span>
-                                                            {passwordStrength.feedback.length > 0 && (
-                                                                <div className="strength-feedback">
-                                                                    {passwordStrength.feedback.slice(0, 2).map((tip, index) => (
-                                                                        <span key={index} className="feedback-tip">{tip}</span>
-                                                                    ))}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-
+                                            {/* Row 2 */}
+                                            <input
+                                                type="password"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                placeholder="Password"
+                                                className="auth-input"
+                                                disabled={loading}
+                                            />
                                             <input
                                                 type="password"
                                                 value={confirmPassword}
                                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                                 placeholder="Confirm Password"
-                                                className="text-[#BE7B5D] p-3 rounded-md border border-gray-300 bg-[#f7f0e9]"
-                                                style={{ padding: "4px 12px", width: "305px" }}
+                                                className="auth-input"
                                                 disabled={loading}
                                             />
 
+                                            {password && (
+                                                <div className="password-strength-wrapper">
+                                                    <div className="strength-bar-bg">
+                                                        <div
+                                                            className="strength-bar-fill"
+                                                            style={{
+                                                                width: `${passwordStrength.score}%`,
+                                                                backgroundColor: passwordStrength.color
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="strength-info" style={{ color: passwordStrength.color }}>
+                                                        {passwordStrength.strength}
+                                                        {passwordStrength.feedback.length > 0 && (
+                                                            <div className="strength-feedback">
+                                                                {passwordStrength.feedback.slice(0, 2).map((tip, i) => (
+                                                                    <div key={i} className="feedback-tip">• {tip}</div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Signup button */}
                                             <button
-                                                style={{ padding: "4px 12px", width: "180px" }}
                                                 type="submit"
-                                                className="bg-[#C2805A] text-white py-2 rounded-md font-semibold disabled:opacity-50"
+                                                className="auth-button auth-button-primary signup-button"
                                                 disabled={loading || (password && passwordStrength.score < 50)}
                                             >
                                                 {loading ? "SIGNING UP..." : "SIGN UP"}
                                             </button>
                                         </form>
+
+                                        {otpSent && (
+                                            <form
+                                                onSubmit={async (e) => {
+                                                    e.preventDefault();
+                                                    if (!otp) return showToast("Enter OTP", "error");
+
+                                                    try {
+                                                        const csrfToken = await getCsrfToken();
+
+                                                        const res = await fetch("https://localhost:2005/api/auth/verify-registration-otp", {
+                                                            method: "POST",
+                                                            headers: {
+                                                                "Content-Type": "application/json",
+                                                                "CSRF-Token": csrfToken,
+                                                            },
+                                                            credentials: "include",
+                                                            body: JSON.stringify({ email, otp }),
+                                                        });
+
+                                                        const data = await res.json();
+                                                        if (!res.ok) throw new Error(data.error || "OTP verification failed");
+
+                                                        showToast("OTP verified! You can now log in.", "success");
+                                                        setIsLogin(true);
+                                                        setOtpSent(false);
+
+                                                    } catch (err) {
+                                                        console.error("OTP error:", err);
+                                                        showToast(err.message || "An unexpected error occurred", "error");
+                                                    }
+                                                }}
+                                                className="otp-form"
+                                            >
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter OTP"
+                                                    value={otp}
+                                                    onChange={(e) => setOtp(e.target.value)}
+                                                    className="auth-input otp-input"
+                                                />
+                                                <button
+                                                    type="submit"
+                                                    className="auth-button auth-button-primary"
+                                                >
+                                                    VERIFY OTP
+                                                </button>
+                                            </form>
+                                        )}
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                         </div>
                     </div>
                 </div>
-
-                {/* Toast component */}
                 <AnimatePresence>
                     {toast.show && (
                         <motion.div
@@ -481,106 +490,6 @@ export default async function AuthPopup({ onClose }) {
                         </motion.div>
                     )}
                 </AnimatePresence>
-
-                <style jsx>{`
-                    .auth-tab-container {
-                        display: flex;
-                        justify-content: center;
-                        margin-bottom: 24px;
-                        padding: 12px;
-                    }
-
-                    .auth-tab-list {
-                        background: #f3f4f6;
-                        border-radius: 8px;
-                        padding: 4px;
-                        display: flex;
-                        gap: 2px;
-                        min-width: 200px;
-                    }
-
-                    .auth-tab {
-                        flex: 1;
-                        padding: 8px 16px;
-                        border-radius: 6px;
-                        border: none;
-                        font-size: 14px;
-                        font-weight: 500;
-                        cursor: pointer;
-                        transition: all 0.2s ease;
-                        white-space: nowrap;
-                        font-family: inherit;
-                    }
-
-                    .auth-tab-active {
-                        background: #C2805A !important;
-                        color: white !important;
-                        box-shadow: 0 2px 4px rgba(194, 128, 90, 0.25);
-                        transform: translateY(-1px);
-                    }
-
-                    .auth-tab-inactive {
-                        background: transparent;
-                        color: #6b7280;
-                    }
-
-                    .auth-tab-inactive:hover {
-                        background: #e5e7eb;
-                        color: #374151;
-                    }
-
-                    .auth-tab:focus {
-                        outline: none;
-                    }
-
-                    .password-field-container {
-                        width: 305px;
-                    }
-
-                    .password-strength-container {
-                        margin-top: 8px;
-                        width: 100%;
-                    }
-
-                    .strength-bar-bg {
-                        width: 100%;
-                        height: 4px;
-                        background-color: #e5e7eb;
-                        border-radius: 2px;
-                        overflow: hidden;
-                    }
-
-                    .strength-bar-fill {
-                        height: 100%;
-                        transition: all 0.3s ease;
-                        border-radius: 2px;
-                    }
-
-                    .strength-info {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-top: 4px;
-                        font-size: 12px;
-                    }
-
-                    .strength-label {
-                        font-weight: 600;
-                    }
-
-                    .strength-feedback {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: flex-end;
-                        gap: 2px;
-                    }
-
-                    .feedback-tip {
-                        color: #6b7280;
-                        font-size: 10px;
-                        text-align: right;
-                    }
-                `}</style>
             </div>
 
             {/* Change Password Modal */}
