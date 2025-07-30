@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { rateLimiter, checkGlobalLocks, authenticateToken, bruteForceProtection, logActivity } = require('../middleware/authMiddleware');
+const { checkGlobalLocks, authenticateToken, bruteForceProtection, logActivity } = require('../middleware/authMiddleware');
+const rateLimiter = require("../middleware/rateLimiter.js");
 
 const {
     loginRequest, verifyOtp,

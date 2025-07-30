@@ -5,6 +5,7 @@ import ChangePasswordModal from "../../components/changePassword";
 import Toast from "../../components/toastMessage";
 import { useAuth } from "../../provider/authcontext";
 import { getCsrfToken } from "../../provider/csrf";
+import { sanitizeUserInput } from "../../provider/santization";
 import "../style/authComponent.css"; // Import the CSS file
 
 // Password strength calculation
@@ -101,54 +102,31 @@ export default function AuthPopup({ onClose }) {
     const handleChangePasswordClose = () => {
         setShowChangePassword(false);
     };
-
     const handleLogin = async (e) => {
         e.preventDefault();
-
-        if (!email || !password) {
-            return showToast("Please fill in all fields", "error");
-        }
-
-        setLoading(true);
-
         try {
-            const csrfToken = await getCsrfToken();
-            console.log("📤 Sending login request to /api/auth/login");
+            const cleanEmail = sanitizeUserInput(email);
+            const cleanPassword = sanitizeUserInput(password);
+            if (!cleanEmail || !cleanPassword) return showToast("Please fill in all fields", "error");
 
+            setLoading(true);
+            const csrfToken = await getCsrfToken();
             const res = await fetch("https://localhost:2005/api/auth/login", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "CSRF-Token": csrfToken
-                },
+                headers: { "Content-Type": "application/json", "CSRF-Token": csrfToken },
                 credentials: "include",
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email: cleanEmail, password: cleanPassword }),
             });
-            console.log("📥 Received response:", res.status);
-
-
             const data = await res.json();
-            console.log("Login response:", data);
+            if (!res.ok) throw new Error(data.errors?.[0] || "Login failed");
 
-
-            if (!res.ok) {
-                throw new Error(data.errors ? data.errors[0] : "Login failed");
-            }
-
-            if (data.message && data.message.includes("OTP sent")) {
+            if (data.message?.includes("OTP sent")) {
                 setOtpSent(true);
                 showToast(data.message, "info");
-            } else if (data.errors && Array.isArray(data.errors)) {
-                showToast(data.errors[0], "error");
-            } else if (data.message) {
-                showToast(data.message, "error");
-            } else {
-                showToast("Unexpected server response", "error");
             }
-
         } catch (err) {
             console.error("Login error:", err);
-            showToast(err.message || "An unexpected error occurred", "error");
+            showToast(err.message || "Login error", "error");
         } finally {
             setLoading(false);
         }
