@@ -46,6 +46,7 @@ const signup = async (req, res) => {
         await transporter.sendMail({
             from: `"InterioLine" <${process.env.EMAIL_USER}>`,
             to: email,
+
             subject: "Verify your InterioLine account",
             text: `Your signup OTP is: ${otp}`
         });
@@ -64,20 +65,17 @@ const signup = async (req, res) => {
 };
 
 
-
-
-
 const loginRequest = async (req, res) => {
+    console.log("🚀 LOGIN endpoint hit:", req.body);
+
     const { email, password } = req.body;
 
-    // Check if account is locked due to brute force
     const lockMessage = checkAccountLock(email);
     if (lockMessage) {
         return res.status(429).json({ errors: [lockMessage] });
     }
 
     const user = await User.findOne({ email });
-
     if (!user || !(await user.matchPassword(password))) {
         trackLoginAttempt(email, false);
         return res.status(401).json({ errors: ["Invalid credentials"] });
@@ -85,37 +83,43 @@ const loginRequest = async (req, res) => {
 
     trackLoginAttempt(email, true);
 
-    // generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
 
     user.otp = hashedOtp;
-    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // valid 10 mins
+    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
     user.otpVerified = false;
     await user.save();
 
-    // send OTP to email
-    const transporter = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
+    try {
+        await transporter.sendMail({
+            from: `"InterioLine" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: "Your OTP Code",
+            text: `Your OTP is: ${otp}`,
+        });
+    } catch (mailErr) {
+        console.error("❌ Failed to send OTP email:", mailErr);
+        return res.status(500).json({ errors: ["Failed to send OTP. Try again later."] });
+    }
 
-    await transporter.sendMail({
-        from: `"InterioLine" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: "Your OTP Code",
-        text: `Your OTP is: ${otp}`,
-    });
-
+    console.log("✅ OTP email sent and user updated:", email);
     res.json({ message: "OTP sent to your email" });
 };
 
 const verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
     const user = await User.findOne({ email });
+    if (!user.lock || !user.lock.otp) {
+        user.lock = {
+            ...(user.lock || {}),
+            otp: {
+                attempts: 0,
+                lockedUntil: null
+            }
+        };
+    }
+
     if (!user) return res.status(400).json({ error: "User not found" });
 
     // Check OTP lock
@@ -217,8 +221,6 @@ const changePassword = async (req, res) => {
 };
 
 const Session = require("../model/Session");
-
-
 
 const logout = async (req, res) => {
     try {

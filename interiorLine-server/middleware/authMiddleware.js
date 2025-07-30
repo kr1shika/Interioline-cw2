@@ -156,14 +156,28 @@ const checkAccountLock = (email) => {
     return null;
 };
 
-const ActivityLog = require("../model/activityLog"); // add this
+const ActivityLog = require("../model/activityLog");
+
 const MAX_ACTIVITY_LOGS = 80;
 
 const logActivity = (action) => {
     return async (req, res, next) => {
         try {
+            let userId = req.userId;
+
+            if (!userId && req.cookies?.interio_token) {
+                try {
+                    const decoded = jwt.verify(req.cookies.interio_token, process.env.JWT_SECRET);
+                    const session = await Session.findOne({ sessionId: decoded.sessionId, valid: true });
+                    if (session) userId = session.userId?.toString();
+                } catch (err) {
+                }
+            }
+
+            if (!userId) return next(); // Skip if still not available
+
             const logEntry = new ActivityLog({
-                userId: req.userId,
+                userId,
                 action,
                 endpoint: req.originalUrl,
                 method: req.method,
@@ -173,26 +187,28 @@ const logActivity = (action) => {
 
             await logEntry.save();
 
-            // Count recent logs (past 1 hour)
+            // Rate limit activity
             const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
             const count = await ActivityLog.countDocuments({
-                userId: req.userId,
+                userId,
                 createdAt: { $gte: oneHourAgo }
             });
 
             if (count >= MAX_ACTIVITY_LOGS) {
-                await User.findByIdAndUpdate(req.userId, {
+                await User.findByIdAndUpdate(userId, {
                     $set: {
-                        "lock.activityFlood.lockedUntil": new Date(Date.now() + 60 * 60 * 1000) // 1 hour lock
+                        "lock.activityFlood.lockedUntil": new Date(Date.now() + 60 * 60 * 1000)
                     }
                 });
-                return res.status(429).json({ error: "Account temporarily locked due to excessive activity. Try again later." });
+                return res.status(429).json({
+                    error: "Account temporarily locked due to excessive activity. Try again later."
+                });
             }
 
             next();
         } catch (err) {
             console.error("Activity log error:", err);
-            next(); // Don’t block on logging error
+            next(); // never block logout
         }
     };
 };

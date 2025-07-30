@@ -113,6 +113,8 @@ export default function AuthPopup({ onClose }) {
 
         try {
             const csrfToken = await getCsrfToken();
+            console.log("📤 Sending login request to /api/auth/login");
+
             const res = await fetch("https://localhost:2005/api/auth/login", {
                 method: "POST",
                 headers: {
@@ -122,8 +124,12 @@ export default function AuthPopup({ onClose }) {
                 credentials: "include",
                 body: JSON.stringify({ email, password }),
             });
+            console.log("📥 Received response:", res.status);
+
 
             const data = await res.json();
+            console.log("Login response:", data);
+
 
             if (!res.ok) {
                 throw new Error(data.errors ? data.errors[0] : "Login failed");
