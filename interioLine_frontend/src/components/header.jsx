@@ -8,6 +8,7 @@ import ChatIconWithWidget from "./chatIcon";
 import "./Headerr.css";
 import NotificationComponent from "./notification";
 import ProfileMenu from "./ProfileMenu";
+const BASE_URL = "https://192.168.1.71:2005";
 
 const Header = ({ onGetStartedClick }) => {
     const { isLoggedIn, loading, user, getToken } = useAuth();
@@ -42,7 +43,7 @@ const Header = ({ onGetStartedClick }) => {
             if (!isLoggedIn) return;
 
             try {
-                const res = await axios.get("https://localhost:2005/api/project/my", {
+                const res = await axios.get('${BASE_URL}/api/project/my', {
                     withCredentials: true,
                 });
                 const projects = res.data || [];

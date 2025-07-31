@@ -1,4 +1,4 @@
-// ✅ chatRoomroute.js — Secured version
+//  chatRoomroute.js — Secured version
 const express = require("express");
 const router = express.Router();
 const { authenticateToken } = require("../middleware/authMiddleware");
@@ -26,13 +26,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ✅ Fetch all messages for a project
+//  Fetch all messages for a project
 router.get("/:projectId", authenticateToken, chatController.getMessagesByProject);
 
-// ✅ Send message to a project room (with attachments)
+//  Send message to a project room (with attachments)
 router.post("/:projectId", authenticateToken, upload.array("attachments"), chatController.sendMessageToRoom);
 
-// ✅ Get all chatrooms the logged-in user is part of
+//  Get all chatrooms the logged-in user is part of
 router.get("/", authenticateToken, async (req, res) => {
     try {
         const userId = req.user._id;

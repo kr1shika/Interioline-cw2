@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error("Logout API call failed:", error);
         } finally {
-            setIsLoggedIn(false);
+            setIsLoggedIn(true);
             setUserRole("");
             setUser(null);
             console.log("✅ Logout complete");

@@ -75,7 +75,7 @@ const bruteForceProtection = (req, res, next) => {
     const key = `${clientIP}_${req.route?.path || req.path}`;
     const now = Date.now();
     const windowMs = 15 * 60 * 1000; // 15 minutes
-    const maxAttempts = 10; // Adjust based on endpoint sensitivity
+    const maxAttempts = 4; // Adjust based on endpoint sensitivity
 
     // Clean old entries
     for (let [k, v] of requestLimits.entries()) {
@@ -219,5 +219,6 @@ module.exports = {
     bruteForceProtection,
     trackLoginAttempt,
     checkAccountLock,
-    checkPasswordExpiry, checkGlobalLocks
+    checkPasswordExpiry, 
+    checkGlobalLocks
 };

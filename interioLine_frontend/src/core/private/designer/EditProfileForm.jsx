@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../provider/authcontext";
+import { getCsrfToken } from "../../../provider/csrf";
 import "../../style/EditProfileForm.css";
+
 import PreferenceQuiz from "./PreferenceQuiz";
 export default function EditProfileForm({ designer, onClose }) {
   const [full_name, setFullName] = useState("");
@@ -66,11 +68,11 @@ export default function EditProfileForm({ designer, onClose }) {
     if (file) data.append("profilepic", file);
 
     try {
+      const csrfToken = await getCsrfToken();
+
       const response = await axios.put("/api/user/update", data, {
         withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "application/json", "CSRF-Token": csrfToken },
       });
 
       updateUserProfile(response.data.user); // context update

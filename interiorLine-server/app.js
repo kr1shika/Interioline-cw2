@@ -24,31 +24,31 @@ const reviewRoute = require("./route/reviewRoute");
 const app = express();
 const PORT = 2005;
 
-// ✅ Setup HTTPS
+//  Setup HTTPS
 const options = {
   key: fs.readFileSync('certs/localhost-key.pem'),
   cert: fs.readFileSync('certs/localhost.pem'),
 };
 
-// ✅ Connect to MongoDB
 connectDB();
 
-// ✅ CORS Configuration
 app.use(cors({
   origin: ["https://localhost:5173", "https://192.168.1.78:5173"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 }));
 
-// ✅ Webhook route first
+// app.use(cors({
+//   origin: "https://192.168.1.71:5173", // or "*" during development
+//   credentials: true
+// }));
+
 app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
-// ✅ Basic Middleware
 app.use(express.json());
 app.use(cookieParser());
 
 
-// additionla security headers
 app.use((req, res, next) => {
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("X-Content-Type-Options", "nosniff");
@@ -60,21 +60,20 @@ app.use((req, res, next) => {
   next();
 });
 
-
-// ✅ Static Files
+//  Static Files
 app.use("/profile_pics", express.static(path.join(__dirname, "profile_pics")));
 app.use("/portfolio_uploads", express.static(path.join(__dirname, "portfolio_uploads")));
 app.use("/chatUploads", express.static("chatUploads"));
 
-// ✅ CSRF Middleware
+//  CSRF Middleware
 app.use(csrf({ cookie: true }));
 
-// ✅ CSRF Token Route
+//  CSRF Token Route
 app.get("/api/csrf-token", (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-// ✅ Application Routes
+//  Application Routes
 app.use("/api/portfolio", portfolioRouter);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/password-change", passwordChangeRoutes);
@@ -86,7 +85,7 @@ app.use("/api/project", projectRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/quiz", quizRouter);
 
-// ✅ CSRF Error Handler
+//  CSRF Error Handler
 app.use((err, req, res, next) => {
   if (err.code === 'EBADCSRFTOKEN') {
     return res.status(403).json({ errors: ["CSRF validation failed."] });

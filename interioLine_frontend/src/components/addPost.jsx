@@ -3,6 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useAuth } from "../provider/authcontext";
 import { getCsrfToken } from "../provider/csrf";
+import { sanitizeUserInput } from "../provider/santization";
 import "./addpost.css";
 import Toast from "./toastMessage.jsx";
 
@@ -88,52 +89,59 @@ export default function AddPortfolioModal({ onClose }) {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-        if (!isLoggedIn) {
-            setError("Please log in first.");
-            return;
-        }
+    if (!isLoggedIn) {
+        setError("Please log in first.");
+        return;
+    }
 
-        if (selectedImages.length === 0) {
-            setError("Please select at least one image.");
-            return;
-        }
+    if (selectedImages.length === 0) {
+        setError("Please select at least one image.");
+        return;
+    }
 
-        setLoading(true);
-        const formData = new FormData();
-        formData.append("title", newPost.title);
-        formData.append("room_type", newPost.room_type);
-        formData.append("tags", newPost.tags);
-        formData.append("primaryIndex", newPost.primaryIndex);
-        // formData.append("designer", userId);
+    setLoading(true);
+    const formData = new FormData();
 
-        newPost.captions.forEach((caption, idx) =>
-            formData.append(`captions[${idx}]`, caption)
-        );
-        selectedImages.forEach((img) => formData.append("images", img));
+    try {
+        formData.append("title", sanitizeUserInput(newPost.title));
+        formData.append("room_type", sanitizeUserInput(newPost.room_type));
+        formData.append("tags", sanitizeUserInput(newPost.tags));
+        newPost.captions.forEach((caption, idx) => {
+            formData.append(`captions[${idx}]`, sanitizeUserInput(caption));
+        });
+    } catch (err) {
+        console.error("Sanitization error:", err.message);
+        setToast({ message: err.message || "Suspicious input blocked", type: "error" });
+        setLoading(false);
+        return;
+    }
 
-        try {
-            const csrfToken = await getCsrfToken();
-            await axios.post("https://localhost:2005/api/portfolio/create", formData, {
-                withCredentials: true,
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    "CSRF-Token": csrfToken
-                },
-            });
+    selectedImages.forEach((img) => formData.append("images", img));
 
-            setToast({ message: "Post uploaded successfully!", type: "success" });
-            onClose();
-        } catch (err) {
-            console.error("❌ Upload failed:", err);
-            setError(err?.response?.data?.message || "Upload failed. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
+    try {
+        const csrfToken = await getCsrfToken();
+        await axios.post("https://localhost:2005/api/portfolio/create", formData, {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "CSRF-Token": csrfToken
+            },
+        });
+
+        setToast({ message: "Post uploaded successfully!", type: "success" });
+        onClose();
+    } catch (err) {
+        console.error("❌ Upload failed:", err);
+        setError(err?.response?.data?.message || "Upload failed. Please try again.");
+    } finally {
+        setLoading(false);
+    }
+};
+
 
     if (!isLoggedIn) {
         return (

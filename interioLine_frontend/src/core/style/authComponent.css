@@ -180,7 +180,7 @@
   padding: 0.75rem;
   border-radius: 0.375rem;
   border: 1px solid #d1d5db;
-  background-color: #f7f0e9;
+  background-color: #f2f7e9;
   font-size: 1rem;
 }
 
@@ -226,7 +226,7 @@
 }
 
 .auth-button-primary:hover:not(:disabled) {
-  background-color: #a66a48;
+  background-color: #C3C7B7;
 }
 
 .auth-button:disabled {

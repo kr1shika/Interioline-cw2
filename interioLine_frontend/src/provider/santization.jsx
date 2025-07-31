@@ -3,12 +3,19 @@ import DOMPurify from "dompurify";
 export function sanitizeUserInput(input) {
   if (typeof input !== "string") return input;
 
-  const clean = DOMPurify.sanitize(input);
-  const blacklist = /('|--|;|\/\*|\*\/|select|insert|delete|update|drop|union)/i;
+  let clean = DOMPurify.sanitize(input);
 
-  if (blacklist.test(clean)) {
-    throw new Error("Suspicious input blocked for security.");
+  clean = clean.trim();
+
+  const nosqlPattern = /\$ne|\$gt|\$gte|\$lt|\$lte|\$or|\$and|\$not|\$where|\$regex|sleep|eval|function|new\s+Function/gi;
+  if (nosqlPattern.test(clean)) {
+    throw new Error("Blocked dangerous NoSQL input");
   }
 
-  return clean.trim();
+  // const sqlPattern = /\b(select|insert|delete|update|drop|union|--|;)\b/i;
+  // if (sqlPattern.test(clean)) {
+  //   throw new Error("Suspicious SQL keyword detected");
+  // }
+
+  return clean;
 }

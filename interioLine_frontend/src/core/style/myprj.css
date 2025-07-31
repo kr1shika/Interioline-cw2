@@ -47,7 +47,7 @@
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid #b869457d;
+    border: 1px solid #C3C7B7;
     display: flex;
     align-items: center;
     gap: 16px;
@@ -127,7 +127,7 @@
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #F1D5BC;
+    border: 3px solid #FCFCEC;
 }
 
 .profile-info {
@@ -173,8 +173,8 @@
     justify-content: space-between;
     align-items: center;
     background: linear-gradient(to bottom, rgba(252, 252, 236, 0.262), rgba(184, 127, 104, 0.237));
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #b869457d;
+    box-shadow: 0 4px 6px #C3C7B7;
+    border: 1px solid #C3C7B7;
     border-radius: 16px;
     padding: 12px 30px;
     margin-bottom: 18px;
@@ -197,7 +197,7 @@
     font-size: 14px;
     font-weight: 580;
     margin-bottom: 16px;
-    color: #B87E68;
+    color: #7e8a58;
 }
 
 .start-btn {
@@ -259,7 +259,7 @@
 }
 
 .status-dropdown {
-    background-color: #F1D5BC;
+    background-color: #FCFCEC;
     border: 1px solid #4D5A4A;
     border-radius: 4px;
     padding: 4px 8px;
@@ -282,7 +282,7 @@
 .progress-bar {
     min-width: 90%;
     height: 5px;
-    background-color: #EBD6C8;
+    background-color: #C3C7B7;
     border-radius: 4px;
     overflow: hidden;
 }
@@ -393,7 +393,7 @@
     .profile-image {
         width: 70px;
         height: 70px;
-        border: 2px solid #F1D5BC;
+        border: 2px solid #FCFCEC;
     }
 
     .profile-name {
@@ -557,7 +557,7 @@
 }
 
 .profile-actions:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: #C3C7B7;
 }
 
 /* Updated CSS for Active and Past Projects - Add to myprj.css */
@@ -575,14 +575,14 @@
     background: #fffff6c1;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #b869457d;
+    box-shadow: 0 4px 6px #C3C7B7;
+    border: 1px solid #C3C7B7;
     transition: all 0.3s ease;
     max-width: 100%;
 }
 
 .active-project-card:hover {
-    box-shadow: 0 8px 20px rgba(144, 94, 71, 0.474);
+    box-shadow: 0 8px 20px rgba(111, 146, 109, 0.295);
     transform: translateY(-2px);
 }
 
@@ -597,7 +597,7 @@
 .active-project-icon {
     width: 60px;
     height: 60px;
-    background: #F1D5BC;
+    background: #FCFCEC;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -678,7 +678,7 @@
 .active-project-progress .progress-bar {
     flex: 1;
     height: 6px;
-    background-color: #EBD6C8;
+    background-color: #C3C7B7;
     border-radius: 3px;
     overflow: hidden;
 }
@@ -703,7 +703,7 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 16px;
-    border-top: 1px solid #EBD6C8;
+    border-top: 1px solid #C3C7B7;
 }
 
 .active-project-date {
@@ -789,8 +789,8 @@
     background: #fffff6c1;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #b869457d;
+    box-shadow: 0 4px 6px #C3C7B7;
+    border: 1px solid #C3C7B7;
     transition: all 0.3s ease;
     position: relative;
 }
@@ -811,7 +811,7 @@
 .past-project-icon {
     width: 50px;
     height: 50px;
-    background: #F1D5BC;
+    background: #FCFCEC;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -880,7 +880,7 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 16px;
-    border-top: 1px solid #EBD6C8;
+    border-top: 1px solid #C3C7B7;
 }
 
 .past-project-date {

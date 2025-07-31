@@ -25,7 +25,7 @@ export default function ChatWidget() {
     if (user?.profilePicture) {
       return user.profilePicture.startsWith("http")
         ? user.profilePicture
-        : `http://localhost:2005${user.profilePicture}`;
+        : `https://localhost:2005${user.profilePicture}`;
     }
     return defaultProfileImg;
   };
