@@ -37,7 +37,7 @@ const AutoCarousel = () => {
     return (
         <div
             style={{
-                backgroundColor: "#F0E7D6",
+                backgroundColor: "#C3C7B7",
                 padding: "15px 20px",
                 borderRadius: "12px",
                 width: "90%",

@@ -58,19 +58,6 @@ const authorizeRole = (allowedRoles) => {
     };
 };
 
-const verifyOwnership = (req, res, next) => {
-    const resourceUserId = req.params.userId || req.params.id;
-    const requestingUserId = req.userId;
-
-    if (resourceUserId !== requestingUserId) {
-        return res.status(403).json({
-            errors: ["Access denied. You can only access your own resources."]
-        });
-    }
-
-    next();
-};
-
 const checkGlobalLocks = async (req, res, next) => {
     const user = await User.findById(req.userId);
 
@@ -82,7 +69,6 @@ const checkGlobalLocks = async (req, res, next) => {
 
     next();
 };
-
 
 const bruteForceProtection = (req, res, next) => {
     const clientIP = req.ip || req.connection.remoteAddress;
@@ -230,10 +216,8 @@ module.exports = {
     logActivity,
     authenticateToken,
     authorizeRole,
-    verifyOwnership,
     bruteForceProtection,
     trackLoginAttempt,
     checkAccountLock,
     checkPasswordExpiry, checkGlobalLocks
-
 };

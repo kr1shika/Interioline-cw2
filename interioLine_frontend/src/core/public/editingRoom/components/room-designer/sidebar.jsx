@@ -82,25 +82,37 @@ const Sidebar = ({
         { name: "Dining Room", width: 4, length: 5, height: 2.7, type: "dining" },
     ];
 
-    const CollapsibleSection = ({ title, isOpen, onToggle, children, icon }) => (
-        <div className="collapsible-section">
-            <button
-                className="section-toggle"
-                onClick={onToggle}
-            >
-                <h3 className="section-title-collapsible">
-                    {icon && <span className="section-icon">{icon}</span>}
-                    {title}
-                </h3>
-                {isOpen ? <ChevronUp className="icon-sm" /> : <ChevronDown className="icon-sm" />}
-            </button>
-            {isOpen && (
-                <div className="section-content">
+    const CollapsibleSection = ({ title, isOpen, onToggle, children, icon }) => {
+        return (
+            <div className="collapsible-section">
+                <button
+                    className="section-toggle"
+                    onClick={(e) => {
+                        // Toggle only when the header itself is clicked
+                        e.stopPropagation();
+                        onToggle();
+                    }}
+                >
+                    <h3 className="section-title-collapsible">
+                        {icon && <span className="section-icon">{icon}</span>}
+                        {title}
+                    </h3>
+                    {isOpen ? <ChevronUp className="icon-sm" /> : <ChevronDown className="icon-sm" />}
+                </button>
+
+                {/* Keep content mounted at all times */}
+                <div
+                    className="section-content"
+                    style={{ display: isOpen ? "block" : "none" }}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
+                >
                     {children}
                 </div>
-            )}
-        </div>
-    );
+            </div>
+        );
+    };
+
 
     return (
         <div className="sidebar">
@@ -217,8 +229,14 @@ const Sidebar = ({
                                         type="color"
                                         value={floorColor}
                                         onChange={(e) => setFloorColor(e.target.value)}
+                                        onMouseDown={(e) => e.stopPropagation()}
+                                        onMouseUp={(e) => e.stopPropagation()}
+                                        onClick={(e) => e.stopPropagation()}
+                                        onFocus={(e) => e.stopPropagation()}
+                                        onBlur={(e) => e.stopPropagation()} // <== Add this
                                         className="color-input"
                                     />
+
                                 </div>
                             </div>
                         </CollapsibleSection>

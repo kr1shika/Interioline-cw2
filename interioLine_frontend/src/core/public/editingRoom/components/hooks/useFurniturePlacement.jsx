@@ -364,7 +364,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
             const scaleX = width / size.x;
             const scaleY = height / size.y;
             const scaleZ = depth / size.z;
-            const scale = Math.min(scaleX, scaleY, scaleZ) * 0.9; // Slightly smaller to fit better
+            const scale = Math.min(scaleX, scaleY, scaleZ) * 1; // Slightly smaller to fit better
 
             furnitureObject.scale.setScalar(scale);
             console.log("Applied scale:", scale);

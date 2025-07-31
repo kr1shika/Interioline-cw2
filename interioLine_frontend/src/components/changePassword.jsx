@@ -320,9 +320,9 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
 
     return (
         <div className="change-password-modal-overlay">
-            <div className="change-password-modal" style={{ backgroundColor: '#FCFCEC' }}>
-                <div className="modal-header" style={{ color: '#FCFCEC' }}>
-                    <h2 style={{ color: "#A75B2A" }}>Change Password</h2>
+            <div className="change-password-modal" style={{ backgroundColor: '#FFFFF6' }}>
+                <div className="modal-header" style={{ color: '#FFFFF6' }}>
+                    <h2 style={{ color: "#4D5A4A" }}>Change Password</h2>
                     <button
                         className="close-button"
                         onClick={handleClose}

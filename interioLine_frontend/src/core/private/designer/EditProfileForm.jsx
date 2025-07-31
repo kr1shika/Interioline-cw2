@@ -90,7 +90,7 @@ export default function EditProfileForm({ designer, onClose }) {
     <>
       <div className="edit-profile-container">
         <div className="profile-header">
-          <h2 style={{ color: "#A4502F " }}>Edit {isClient ? 'Client' : 'Designer'} Profile</h2>
+          <h2 style={{ color: "#374635 " }}>Edit {isClient ? 'Client' : 'Designer'} Profile</h2>
           {error && (
             <div style={{
               background: '#fee2e2',

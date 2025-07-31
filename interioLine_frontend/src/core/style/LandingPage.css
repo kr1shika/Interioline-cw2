@@ -2,7 +2,7 @@
     position: relative;
     width: 100%;
     min-height: 100vh;
-    background-color: #FCFCEC;
+    background-color: #FFFFF6;
     overflow-y: auto;
     overflow-x: hidden;
     /* ✅ This disables sideways scroll */
@@ -30,7 +30,7 @@
 
 .text-section h1 {
     font-size: 5rem;
-    color: #A75B2A;
+    color: #4D5A4A;
     font-weight: 1000;
     /* margin-bottom: 15px; */
     min-width: 500px;
@@ -39,14 +39,14 @@
 
 .text-section p {
     font-size: 1.2rem;
-    color: #D0AA96;
+    color: #7F886F;
     padding-bottom: 5px;
     font-weight: 500;
     padding-right: 50px;
 }
 
 .text-section button {
-    background-color: #A75B2A;
+    background-color: #4D5A4A;
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -84,7 +84,7 @@
 
     .text-section h1 {
         font-size: 2.4rem;
-        color: #A75B2A;
+        color: #4D5A4A;
         font-weight: 800;
         margin-bottom: 10px;
         min-width: 300px;
@@ -93,7 +93,7 @@
 
     .text-section p {
         font-size: 1rem;
-        color: #D0AA96;
+        color: #7F886F;
         margin-bottom: 25px;
         font-weight: 500;
         padding-right: 50px;
@@ -118,12 +118,6 @@
     }
 
     .canvas-section {
-
-        /* width: 100px;
-        margin: 20px 0;
-        padding: 0 20px;
-        justify-content: center;
-        align-items: center; */
 
         min-width: 200px;
         min-height: 0px;
@@ -185,7 +179,7 @@
     position: relative;
     width: 100%;
     min-height: 100vh;
-    background-color: #FCFCEC;
+    background-color: #FFFFF6;
     overflow-y: auto;
 }
 
@@ -209,7 +203,7 @@
 
 .text-section h1 {
     font-size: 2.5rem;
-    color: #A75B2A;
+    color: #4D5A4A;
     font-weight: 800;
     margin-bottom: 10px;
     min-width: 500px;
@@ -217,14 +211,14 @@
 
 .text-section p {
     font-size: 1.2rem;
-    color: #D0AA96;
+    color: #7F886F;
     margin-bottom: 25px;
     font-weight: 500;
     padding-right: 50px;
 }
 
 .text-section button {
-    background-color: #A75B2A;
+    background-color: #4D5A4A;
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -262,16 +256,15 @@
 
     .text-section h1 {
         font-size: 2.4rem;
-        color: #A75B2A;
+        color: #4D5A4A;
         font-weight: 800;
         margin-bottom: 10px;
         min-width: 300px;
     }
 
-
     .text-section p {
         font-size: 1rem;
-        color: #D0AA96;
+        color: #7F886F;
         margin-bottom: 25px;
         font-weight: 500;
         padding-right: 50px;
@@ -362,7 +355,7 @@
 /* HOW IT WORKS SECTION */
 .how-it-works-section {
     padding: 0px 40px;
-    background-color: #FCFCEC;
+    background-color: #FFFFF6;
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -370,7 +363,7 @@
 .how-it-works-title {
     text-align: center;
     font-size: 2rem;
-    color: #A75B2A;
+    color: #4D5A4A;
     font-weight: 700;
     margin-bottom: 25px;
     letter-spacing: -0.5px;
@@ -387,11 +380,11 @@
     position: absolute;
     left: 50%;
     top: 180px;
-    bottom: 300px;
+    bottom: 620px;
     width: 2px;
     background: repeating-linear-gradient(to bottom,
-            #D0AA96 0,
-            #D0AA96 8px,
+            #7F886F 0,
+            #7F886F 8px,
             transparent 8px,
             transparent 16px);
     transform: translateX(-50%);
@@ -445,7 +438,7 @@
 .step-number {
     width: 40px;
     height: 40px;
-    background: #A75B2A;
+    background: #4D5A4A;
     color: white;
     border-radius: 50%;
     display: flex;
@@ -453,8 +446,8 @@
     justify-content: center;
     font-size: 1.2rem;
     font-weight: 700;
-    box-shadow: 0 6px 20px rgba(167, 91, 42, 0.3);
-    border: 4px solid #FCFCEC;
+    box-shadow: 0 6px 20px rgba(42, 167, 88, 0.3);
+    border: 4px solid #FFFFF6;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -497,15 +490,15 @@
 
 .step-number.animate {
     transform: translate(-50%, -50%) scale(1.2);
-    box-shadow: 0 8px 30px rgba(167, 91, 42, 0.4);
-    background: linear-gradient(135deg, #A75B2A 0%, #D4772A 100%);
+    box-shadow: 0 8px 30px rgba(39, 83, 44, 0.225);
+    background: linear-gradient(135deg, #4D5A4A 0%, #7F886F 100%);
     transition: all 0.6s ease;
     transition-delay: 0.4s;
 }
 
 .step-wrapper.active .description-box {
     background: #ffffff;
-    box-shadow: 0 12px 35px rgba(167, 91, 42, 0.15);
+    box-shadow: 0 12px 35px rgba(56, 89, 48, 0.15);
     border: 1px solid rgba(167, 91, 42, 0.2);
     transform: translateY(-5px);
     transition: all 0.6s ease;
@@ -515,7 +508,7 @@
 /* Text content */
 .text-content h3 {
     font-size: 1.4rem;
-    color: #A75B2A;
+    color: #4D5A4A;
     font-weight: 700;
     margin-bottom: 20px;
     letter-spacing: 0.5px;
@@ -526,7 +519,7 @@
     background: #fffff6;
     padding: 25px;
     border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(167, 91, 42, 0.1);
+    /* box-shadow: 0 8px 25px rgba(167, 91, 42, 0.1); */
     backdrop-filter: blur(10px);
     border: 1px solid rgba(167, 91, 42, 0.15);
     transition: all 0.6s ease;
@@ -534,7 +527,7 @@
 
 .description-box p {
     font-size: 1.1rem;
-    color: #A75B2A;
+    color: #4D5A4A;
     line-height: 1.6;
     font-weight: 400;
     margin: 0;
@@ -613,17 +606,17 @@
 
 .step1-bg {
     background: linear-gradient(135deg, #FFF5E6 0%, #F0E6D2 100%);
-    border: 2px solid #E8D5C4;
+    border: 2px solid #4D5A4A;
 }
 
 .step2-bg {
     background: linear-gradient(135deg, #E6F3FF 0%, #D2E7F0 100%);
-    border: 2px solid #C4D5E8;
+    border: 2px solid #4D5A4A;
 }
 
 .step3-bg {
     background: linear-gradient(135deg, #F0E6FF 0%, #E2D2F0 100%);
-    border: 2px solid #D5C4E8;
+    border: 2px solid #4D5A4A;
 }
 
 .step4-bg {
@@ -633,7 +626,7 @@
 
 .step-content h3 {
     font-size: 1.4rem;
-    color: #A75B2A;
+    color: #4D5A4A;
     font-weight: 700;
     margin-bottom: 15px;
     letter-spacing: 0.5px;
@@ -642,13 +635,13 @@
 
 .step-content p {
     font-size: 1rem;
-    color: #8B6B4A;
+    color: #7F886F;
     line-height: 1.6;
     font-weight: 400;
 }
 
 .delivered-text {
-    color: #D4772A;
+    color: #7F886F;
     font-weight: 800;
 }
 
@@ -673,7 +666,7 @@
 .room-showcase {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #A75B2A 0%, #8B4513 100%);
+    background: linear-gradient(135deg, #4D5A4A 0%, #4D5A4A 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -844,4 +837,45 @@
     .showcase-image {
         height: 300px;
     }
+}
+
+
+.video-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: -60px;
+    margin-bottom: 30px;
+    transition: all 0.6s ease;
+}
+
+.video-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.landing-video {
+    width: 100%;
+    max-width: 720px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.edit-room-btn {
+    margin-top: 15px;
+    padding: 0;
+    font-size: 16px;
+    color: #7F886F;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.edit-room-btn:hover {
+    color: #4D5A4A;
 }

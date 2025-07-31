@@ -1,3 +1,5 @@
+
+
 import { Badge, Button, Card, CardBody, Tab, Tabs } from "@heroui/react";
 import {
   Home,
@@ -16,6 +18,14 @@ import {
   wallColors,
   wallTextures,
 } from "./ColorsandTextures";
+
+
+
+
+
+
+
+
 
 const RoomControls = ({
   roomDimensions,
@@ -714,5 +724,3 @@ const RoomControls = ({
     </div>
   );
 };
-
-export default RoomControls;

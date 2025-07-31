@@ -4,8 +4,8 @@
   right: 3.3rem;
   width: 25rem;
   height: 80vh;
-  background-color: #FCFCEC;
-  border: 1px solid #BE7B5D;
+  background-color: #FFFFF6;
+  border: 1px solid #4D5A4A;
   border-radius: 1rem;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
   display: flex;
@@ -17,7 +17,7 @@
 .chat-header {
   padding: 1rem;
   font-weight: 600;
-  color: #A75B2A;
+  color: #4D5A4A;
   border-bottom: 1px solid #F4D7C8;
 }
 
@@ -57,7 +57,7 @@
   font-size: 0.875rem;
   padding: 0.25rem 0.75rem;
   text-align: left;
-  color: #A75B2A;
+  color: #4D5A4A;
   border: none;
   background: none;
   cursor: pointer;
@@ -98,7 +98,7 @@
 .chat-input-container {
   position: sticky;
   bottom: 0;
-  background-color: #FCFCEC;
+  background-color: #FFFFF6;
   z-index: 10;
   padding-bottom: 0.25rem;
 }
@@ -130,7 +130,7 @@
   position: absolute;
   top: -6px;
   right: -6px;
-  background: #BE7B5D;
+  background: #4D5A4A;
   border: none;
   color: white;
   border-radius: 50%;
@@ -153,7 +153,7 @@
   flex: 1;
   padding: 0.5rem 0.75rem;
   border-radius: 9999px;
-  border: 1px solid #BE7B5D;
+  border: 1px solid #4D5A4A;
   font-size: 0.875rem;
 }
 
@@ -172,7 +172,7 @@
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  color: #BE7B5D;
+  color: #4D5A4A;
   transition: color 0.2s ease;
 }
 

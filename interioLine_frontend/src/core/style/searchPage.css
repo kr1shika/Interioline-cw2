@@ -1,7 +1,7 @@
 /* === Base Styles === */
 body {
-    background-color: #FCFCEC;
-    color: #BE7B5D;
+    background-color: #FFFFF6;
+    color: #4D5A4A;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
@@ -78,7 +78,7 @@ main {
 }
 
 .match-button {
-    background-color: #BE7B5D;
+    background-color: #4D5A4A;
     color: white;
     padding: 0.75rem 1.5rem;
     border: none;
@@ -140,11 +140,11 @@ main {
 
 .style-card.selected img {
     box-shadow: 0 4px 8px rgba(190, 123, 93, 0.3);
-    border: 2px solid #BE7B5D;
+    border: 2px solid #4D5A4A;
 }
 
 .style-card.selected p {
-    color: #BE7B5D;
+    color: #4D5A4A;
     font-weight: 600;
 }
 
@@ -174,7 +174,7 @@ main {
 }
 
 .clear-filter-btn {
-    background-color: #BE7B5D;
+    background-color: #4D5A4A;
     color: white;
     padding: 0.5rem 1rem;
     border: none;
@@ -202,7 +202,7 @@ main {
 }
 
 .no-designers-found h4 {
-    color: #BE7B5D;
+    color: #4D5A4A;
     font-size: 1.2rem;
     margin-bottom: 1rem;
     font-weight: 600;
@@ -218,7 +218,7 @@ main {
 .link-button {
     background: none;
     border: none;
-    color: #BE7B5D;
+    color: #4D5A4A;
     text-decoration: underline;
     cursor: pointer;
     font-size: inherit;
@@ -271,7 +271,7 @@ main {
 }
 
 .style-card:hover p {
-    color: #BE7B5D;
+    color: #4D5A4A;
 }
 
 /* Updated CSS for consistent card layout with JSX bio truncation */
@@ -294,12 +294,12 @@ main {
 
 .designer-card {
     width: 260px;
-    background-color: #FCFCEC;
+    background-color: #FFFFF6;
     border-radius: 0.5rem;
     padding: 1.0rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    border: #BE7B5D 0.5px solid;
+    border: #4D5A4A 0.5px solid;
     cursor: pointer;
     transform: translateY(0);
     display: flex;
@@ -373,7 +373,7 @@ main {
 
 .specialization {
     font-size: 0.75rem !important;
-    color: #BE7B5D !important;
+    color: #4D5A4A !important;
     font-weight: 500 !important;
     margin-top: 0.25rem !important;
     margin-bottom: 0 !important;
@@ -407,7 +407,7 @@ main {
 
 .compatibility-text {
     font-size: 0.8rem;
-    color: #BE7B5D;
+    color: #4D5A4A;
     margin: 0;
     font-style: italic;
     text-align: center;
@@ -426,7 +426,7 @@ main {
 }
 
 .designer-card:hover .designer-header h4 {
-    color: #BE7B5D;
+    color: #4D5A4A;
 }
 
 .designer-card:hover img.room-preview {
@@ -498,7 +498,7 @@ main {
 /* === Quiz Results Banner === */
 .quiz-results-banner {
     background: linear-gradient(135deg, #e8f4f8 0%, #f0e6d2 100%);
-    border: 2px solid #BE7B5D;
+    border: 2px solid #4D5A4A;
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
@@ -522,7 +522,7 @@ main {
 }
 
 .retake-quiz-btn {
-    background-color: #BE7B5D;
+    background-color: #4D5A4A;
     color: white;
     padding: 0.5rem 1rem;
     border: none;
@@ -584,8 +584,8 @@ main {
 
 /* === Different styling for other/lower match cards === */
 .designer-card.other {
-    border: 1px solid #BE7B5D;
-    background: #FCFCEC;
+    border: 1px solid #4D5A4A;
+    background: #FFFFF6;
     opacity: 0.9;
 }
 
@@ -601,7 +601,7 @@ main {
 }
 
 .load-more button {
-    background-color: #BE7B5D;
+    background-color: #4D5A4A;
     color: white;
     padding: 0.75rem 2rem;
     border: none;
@@ -622,7 +622,7 @@ main {
 
 /* === Loading States === */
 .loading-indicator {
-    color: #BE7B5D;
+    color: #4D5A4A;
     font-style: italic;
     font-size: 0.9rem;
 }
@@ -636,8 +636,8 @@ main {
 
 /* === Quiz-Based Designer Cards === */
 .designer-card.quiz-ranked {
-    border: 2px solid #BE7B5D;
-    background: linear-gradient(145deg, #FCFCEC 0%, #f8f5e8 100%);
+    border: 2px solid #4D5A4A;
+    background: linear-gradient(145deg, #FFFFF6 0%, #f8f5e8 100%);
     position: relative;
 }
 
@@ -654,7 +654,7 @@ main {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #BE7B5D, #A66A4F, #BE7B5D);
+    background: linear-gradient(90deg, #4D5A4A, #A66A4F, #4D5A4A);
     z-index: 1;
 }
 
@@ -725,7 +725,7 @@ main {
 /* === Specialization Text === */
 .specialization {
     font-size: 0.75rem !important;
-    color: #BE7B5D !important;
+    color: #4D5A4A !important;
     font-weight: 500 !important;
     margin-top: 0.25rem !important;
 }
@@ -739,7 +739,7 @@ main {
 
 .compatibility-text {
     font-size: 0.8rem;
-    color: #BE7B5D;
+    color: #4D5A4A;
     margin: 0;
     font-style: italic;
     text-align: center;
@@ -895,7 +895,7 @@ main {
 .section-divider {
     border: none;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #BE7B5D, transparent);
+    background: linear-gradient(90deg, transparent, #4D5A4A, transparent);
     margin: 2rem 0;
 }
 
@@ -906,7 +906,7 @@ main {
 }
 
 .designer-card.other:focus {
-    outline: 2px solid #BE7B5D;
+    outline: 2px solid #4D5A4A;
     outline-offset: 2px;
 }
 
@@ -939,7 +939,7 @@ main {
 /* === Quiz Results Banner === */
 .quiz-results-banner {
     background: linear-gradient(135deg, #e8f4f8 0%, #f0e6d2 100%);
-    border: 2px solid #BE7B5D;
+    border: 2px solid #4D5A4A;
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
@@ -963,7 +963,7 @@ main {
 }
 
 .retake-quiz-btn {
-    background-color: #BE7B5D;
+    background-color: #4D5A4A;
     color: white;
     padding: 0.5rem 1rem;
     border: none;
@@ -980,7 +980,7 @@ main {
 
 /* === Loading States === */
 .loading-indicator {
-    color: #BE7B5D;
+    color: #4D5A4A;
     font-style: italic;
     font-size: 0.9rem;
 }
@@ -994,8 +994,8 @@ main {
 
 /* === Quiz-Based Designer Cards === */
 .designer-card.quiz-ranked {
-    border: 2px solid #BE7B5D;
-    background: linear-gradient(145deg, #FCFCEC 0%, #f8f5e8 100%);
+    border: 2px solid #4D5A4A;
+    background: linear-gradient(145deg, #FFFFF6 0%, #f8f5e8 100%);
     position: relative;
 }
 
@@ -1012,7 +1012,7 @@ main {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #BE7B5D, #A66A4F, #BE7B5D);
+    background: linear-gradient(90deg, #4D5A4A, #A66A4F, #4D5A4A);
     z-index: 1;
 }
 
@@ -1083,7 +1083,7 @@ main {
 /* === Specialization Text === */
 .specialization {
     font-size: 0.75rem !important;
-    color: #BE7B5D !important;
+    color: #4D5A4A !important;
     font-weight: 500 !important;
     margin-top: 0.25rem !important;
 }
@@ -1097,7 +1097,7 @@ main {
 
 .compatibility-text {
     font-size: 0.8rem;
-    color: #BE7B5D;
+    color: #4D5A4A;
     margin: 0;
     font-style: italic;
     text-align: center;
@@ -1193,8 +1193,8 @@ main {
 }
 
 .designer-card.style-filtered {
-    border: 2px solid #BE7B5D;
-    background: linear-gradient(145deg, #FCFCEC 0%, #f8f5e8 100%);
+    border: 2px solid #4D5A4A;
+    background: linear-gradient(145deg, #FFFFF6 0%, #f8f5e8 100%);
     position: relative;
 }
 
@@ -1211,7 +1211,7 @@ main {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #BE7B5D, #A66A4F, #BE7B5D);
+    background: linear-gradient(90deg, #4D5A4A, #A66A4F, #4D5A4A);
     border-radius: 0.5rem 0.5rem 0 0;
     z-index: 1;
 }

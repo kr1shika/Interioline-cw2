@@ -100,7 +100,7 @@ const NotificationComponent = () => {
     };
 
     const getNotificationIcon = (type) => {
-        const iconProps = { color: '#B86A45' };
+        const iconProps = { color: '#4D5A4A' };
         switch (type) {
             case 'project_update': return <FaBriefcase {...iconProps} />;
             case 'message': return <FaComment {...iconProps} />;

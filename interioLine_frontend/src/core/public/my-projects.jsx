@@ -592,7 +592,7 @@ export default function MyProjectsPage() {
                                                 {shouldShowPaymentHistory(project) && (
                                                     <button
                                                         className="active-action-btn pay-btn"
-                                                        style={{ backgroundColor: "#F3F4F6", color: "#A4502F", border: "1px solid #e5e7eb" }}
+                                                        style={{ backgroundColor: "#F3F4F6", color: "#374635", border: "1px solid #e5e7eb" }}
                                                         onClick={() => handlePaymentHistory(project)}
                                                     >
                                                         History

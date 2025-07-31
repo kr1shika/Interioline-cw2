@@ -331,7 +331,7 @@ export default function ChatWidget() {
                     background: 'none',
                     border: 'none',
                     fontSize: '20px',
-                    color: '#A75B2A',
+                    color: '#4D5A4A',
                     display: 'flex',
                     alignItems: 'center',
                     padding: '8px'
@@ -372,7 +372,7 @@ export default function ChatWidget() {
                     background: 'none',
                     border: 'none',
                     fontSize: '20px',
-                    color: '#A75B2A',
+                    color: '#4D5A4A',
                     display: 'flex',
                     alignItems: 'center',
                     padding: '8px'

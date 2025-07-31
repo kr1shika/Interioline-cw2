@@ -94,7 +94,7 @@ const ProfileMenu = () => {
                         zIndex: 1000,
                         minWidth: "180px",
                         overflow: "hidden",
-                        color: "#A4502F",
+                        color: "#374635",
                     }}
                 >
                     <ul style={{
@@ -110,7 +110,7 @@ const ProfileMenu = () => {
                                 onMouseEnter={(e) => e.target.style.backgroundColor = "#f8f9fa"}
                                 onMouseLeave={(e) => e.target.style.backgroundColor = "transparent"}
                             >
-                                <GoProjectRoadmap size={16} style={{ color: "#A4502F" }} />
+                                <GoProjectRoadmap size={16} style={{ color: "#374635" }} />
                                 My Projects
                             </li>
                         )}
@@ -123,12 +123,12 @@ const ProfileMenu = () => {
                         >
                             {userRole === "designer" ? (
                                 <>
-                                    <RiAccountBoxLine size={16} style={{ color: "#A4502F" }} />
+                                    <RiAccountBoxLine size={16} style={{ color: "#374635" }} />
                                     My Profile
                                 </>
                             ) : (
                                 <>
-                                    <RiAccountBoxLine size={16} style={{ color: "#A4502F" }} />
+                                    <RiAccountBoxLine size={16} style={{ color: "#374635" }} />
                                     My Account
                                 </>
                             )}
@@ -175,7 +175,7 @@ const menuItemStyle = {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    color: "#A4502F",
+    color: "#374635",
 
 };
 

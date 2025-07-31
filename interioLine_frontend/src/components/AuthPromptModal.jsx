@@ -25,7 +25,7 @@ export default function AuthPromptModal({
     <div className="auth-prompt-overlay">
       <div className="auth-prompt-container">
         <div className="auth-prompt-header">
-          <h2 style={{ color: "#A4502F" }}>{title}</h2>
+          <h2 style={{ color: "#374635" }}>{title}</h2>
         </div>
         <div className="auth-prompt-body">
           <p>{message}</p>

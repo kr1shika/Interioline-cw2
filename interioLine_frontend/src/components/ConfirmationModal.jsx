@@ -13,14 +13,14 @@ const ConfirmationModal = ({
     return (
         <div className="confirmation-modal-overlay">
             <div className="confirmation-modal" style={
-                { backgroundColor: '#FFFFF6', border: '1px solid #A75B2A', borderRadius: '8px', color: '#A75B2A' }
+                { backgroundColor: '#FFFFF6', border: '1px solid #4D5A4A', borderRadius: '8px', color: '#4D5A4A' }
             }>
                 <div className="confirmation-modal-header" >
-                    <h3 style={{ color: '#A75B2A' }}>{title}</h3>
+                    <h3 style={{ color: '#4D5A4A' }}>{title}</h3>
                 </div>
 
                 <div className="confirmation-modal-body">
-                    <p style={{ color: '#A75B2A' }}>{message}</p>
+                    <p style={{ color: '#4D5A4A' }}>{message}</p>
                 </div>
 
                 <div className="confirmation-modal-footer">
@@ -28,7 +28,7 @@ const ConfirmationModal = ({
                         className="confirm-cancel-btn"
                         onClick={onClose}
                         disabled={isLoading}
-                        style={{ border: '1px solid #A75B2A', color: '#A75B2A' }}
+                        style={{ border: '1px solid #4D5A4A', color: '#4D5A4A' }}
                     >
                         {cancelText}
                     </button>

@@ -1,7 +1,7 @@
 body {
   font-family: sans-serif;
   background-color: #fdfbee;
-  color: #8b4d24;
+  color: #374635;
   margin: 0;
   /* padding: 40px 16px; */
 }
@@ -18,7 +18,7 @@ body {
 
   font-weight: bold;
   margin-bottom: 1.9rem;
-  color: #a75b2a;
+  color: #4D5A4A;
   letter-spacing: 1px;
 }
 
@@ -41,7 +41,7 @@ body {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  color: #8b4d24;
+  color: #374635;
   position: relative;
   transition: background-color 0.3s ease;
 }

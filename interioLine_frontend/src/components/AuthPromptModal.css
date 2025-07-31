@@ -9,7 +9,7 @@
 }
 
 .auth-prompt-container {
-    background-color: #FCFCEC;
+    background-color: #FFFFF6;
     border-radius: 0.75rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
         0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -58,7 +58,7 @@
 }
 
 .auth-prompt-actions .btn-submit-compact {
-    background-color: #B86A45;
+    background-color: #4D5A4A;
     color: white;
 }
 

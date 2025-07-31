@@ -20,9 +20,9 @@ import AuthPopup from "../../../authComponent";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import Footer from "../../../../../components/footer.jsx";
 import Header from "../../../../../components/header.jsx";
 import { useAuth } from "../../../../../provider/authcontext";
-import Footer from "../../../../../components/footer.jsx";
 import "./CustomRoomDesigner.css";
 import Sidebar from "./sidebar.jsx";
 
@@ -674,14 +674,21 @@ const CustomRoomDesigner = () => {
     }
   }, [wallColor, updateWallColor, roomInitialized]);
 
-  useEffect(() => {
-    if (!updateFloorColor || !roomInitialized) return;
+  // useEffect(() => {
+  //   if (!updateFloorColor || !roomInitialized) return;
 
-    if (floorColor !== lastFloorColorRef.current) {
-      lastFloorColorRef.current = floorColor;
+  //   if (floorColor !== lastFloorColorRef.current) {
+  //     lastFloorColorRef.current = floorColor;
+  //     updateFloorColor(floorColor);
+  //   }
+  // }, [floorColor, updateFloorColor, roomInitialized]);
+
+  useEffect(() => {
+    if (floorColor) {
       updateFloorColor(floorColor);
     }
-  }, [floorColor, updateFloorColor, roomInitialized]);
+  }, [floorColor, updateFloorColor]);
+
 
   // Update room type - CONTROLLED UPDATES
   useEffect(() => {

@@ -1,6 +1,6 @@
 .initial-project-page {
-    background-color: #FCFCEC;
-    color: #BE7B5D;
+    background-color: #FFFFF6;
+    color: #4D5A4A;
     font-family: 'Arial', sans-serif;
     min-height: 100vh;
     /* ensure full height */
@@ -24,11 +24,11 @@
 .project-title-input {
     padding: 5px 12px;
     border-radius: 10px;
-    border: 1px solid #BE7B5D;
+    border: 1px solid #4D5A4A;
     width: 250px;
     font-size: 16px;
     background-color: #b87f6819;
-    color: #BE7B5D;
+    color: #4D5A4A;
     margin: 1px 1px 2px;
     margin-left: 8px;
     margin-top: -6px;
@@ -82,7 +82,7 @@
     height: 70px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #BE7B5D;
+    border: 2px solid #4D5A4A;
     display: block;
     margin: 18px auto 5px;
 }
@@ -131,7 +131,7 @@
 .card h4 {
     font-size: 18px;
     margin-bottom: 6px;
-    color: #BE7B5D;
+    color: #4D5A4A;
 }
 
 .card p {
@@ -141,11 +141,11 @@
 
 .card .price {
     font-weight: bold;
-    color: #BE7B5D;
+    color: #4D5A4A;
 }
 
 .confirm-btn {
-    background-color: #BE7B5D;
+    background-color: #4D5A4A;
     color: white;
     border: none;
     padding: 12px 28px;

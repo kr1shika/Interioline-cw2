@@ -65,7 +65,7 @@ const Header = ({ onGetStartedClick }) => {
                             <Home size={20} />
                         </div>
                         <Link to="/Home" className="logo-text">
-                            InterioLine
+                            Spacio
                         </Link>
                     </div>
                 </div>
@@ -83,10 +83,10 @@ const Header = ({ onGetStartedClick }) => {
             <div className="navbar-left">
                 <div className="logo">
                     <div className="logo-icon">
-                        <img src={logo} alt="InterioLine Logo" />
+                        <img src={logo} alt="Spacio Logo" />
                     </div>
                     <Link to="/Home" className="logo-text">
-                        InterioLine
+                        Spacio
                     </Link>
                 </div>
 

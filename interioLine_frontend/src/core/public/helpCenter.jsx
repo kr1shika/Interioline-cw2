@@ -17,7 +17,7 @@ const faqs = [
         answer: "You can request up to three revisions during the project. After that, additional revisions may incur a fee."
     },
     {
-        question: "Do I have to take the style quiz to use InterioLine?",
+        question: "Do I have to take the style quiz to use Spacio?",
         answer: "No, but we highly recommend it to help our designers better understand your preferences."
     },
     {
@@ -29,7 +29,7 @@ const faqs = [
         answer: "Yes, designers can reject a project. If this happens, the project will be returned to the pool for another designer to pick."
     },
     {
-        question: "How do I delete or pause my InterioLine account?",
+        question: "How do I delete or pause my Spacio account?",
         answer: "Go to Account Settings, then select 'Delete or Pause Account' and follow the on-screen instructions."
     },
     {
@@ -53,8 +53,8 @@ export default function HelpCenter() {
     return (
 
         <div style={{
-            backgroundColor: " #FCFCEC",
-            color: "#BE7B5D",
+            backgroundColor: " #FFFFF6",
+            color: "#4D5A4A",
             minHeight: "100vh"
         }}>
 

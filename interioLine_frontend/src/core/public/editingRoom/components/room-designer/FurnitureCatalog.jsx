@@ -49,8 +49,6 @@ const FurnitureCatalog = ({
     const [addingItemId, setAddingItemId] = useState(null);
     const [brokenImages, setBrokenImages] = useState(new Set());
     const [showFilters, setShowFilters] = useState(false);
-
-    // For floating card positioning
     const [cardPosition, setCardPosition] = useState({ top: 0, left: 0 });
     const containerRef = useRef(null);
 
@@ -99,10 +97,10 @@ const FurnitureCatalog = ({
                         <div className="fallback-text">{item.type}</div>
                     </div>
                     {/* 3D Model indicator */}
-                    <div className="model-indicator">
+                    {/* <div className="model-indicator">
                         <Download className="model-indicator-icon" />
                         3D
-                    </div>
+                    </div> */}
                 </div>
             );
         }
@@ -116,6 +114,11 @@ const FurnitureCatalog = ({
                     onError={() => handleImageError(item.id)}
                     loading="lazy"
                 />
+                {/* 3D Model indicator for working images */}
+                {/* <div className="model-indicator">
+                    <Download className="model-indicator-icon" />
+                    3D
+                </div> */}
             </div>
         );
     };
@@ -164,7 +167,6 @@ const FurnitureCatalog = ({
         <>
             <div className="furniture-catalog-container" ref={containerRef}>
 
-
                 {/* Search */}
                 <div className="search-container">
                     <input
@@ -206,6 +208,7 @@ const FurnitureCatalog = ({
                                         className={`filter-btn ${activeStyle === style ? "active" : ""}`}
                                         title={`${stats.count} items, avg ${stats.avgPrice}`}
                                     >
+                                        {style}
                                     </button>
                                 ))}
                             </div>
@@ -274,17 +277,13 @@ const FurnitureCatalog = ({
                                     {item.name}
                                 </h4>
 
-                                <div className="item-meta">
+                                <div className="item-meta" style={{ paddingTop: '5px', marginBottom: '-1px' }}>
                                     <span className={`item-badge ${categoryColors[item.category] || "default"}`}>
                                         {item.type}
                                     </span>
-                                    <span className="item-dimensions">
-                                        {item.dimensions.width}×{item.dimensions.depth}m
-                                    </span>
-                                </div>
-
-                                <div className="item-material">
-                                    {item.material}
+                                    <div className="item-material">
+                                        {item.material}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -374,8 +373,6 @@ const FurnitureCatalog = ({
                                     <span className="spec-value">{selectedItem.style}</span>
                                 </div>
                             </div>
-
-
 
                             <button
                                 className="floating-add-btn"

@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #A75B2A;
+  color: #374635;
   min-height: 0rem !important;
   position: relative;
   z-index: 10;
@@ -40,7 +40,7 @@
 }
 
 .get-started-button {
-  background-color: #a75b2a;
+  background-color: #374635;
   color: #fff;
   padding: 8px 16px;
   border: none;
@@ -49,7 +49,7 @@
 }
 
 .get-started-button:hover {
-  background-color: #8b4d24;
+  background-color: #374635;
 }
 
 /* Search bar container in header */
@@ -76,20 +76,20 @@
   outline: none;
   font-size: 14px;
   background: rgba(252, 252, 236, 0.6);
-  color: #A75B2A;
+  color: #374635;
   width: 100%;
   transition: all 0.3s ease;
 
 }
 
 .header-search-input:focus {
-  border-color: #A75B2A;
+  border-color: #374635;
   box-shadow: 0 0 0 3px rgba(167, 91, 42, 0.1);
 }
 
 /* Icon animation */
 .search-toggle-button {
-  background: #A75B2A;
+  background: #374635;
   border: none;
   cursor: pointer;
   padding: 4px;
@@ -104,4 +104,34 @@
 
 .search-toggle-button.spin {
   transform: rotate(180deg);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-icon {
+  width: 39px;
+  height: 39px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFF6;
+  transition: background-color 0.2s ease;
+}
+
+.logo-text {
+  font-weight: bolder;
+  color: #374635;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.logo-text:hover {
+  opacity: 0.8;
 }

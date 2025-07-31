@@ -1,6 +1,7 @@
 import { Search, X } from 'lucide-react';
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/images/logo.png";
 import { useAuth } from "../provider/authcontext";
 import "./landingHeader.css";
 import ProfileMenu from "./ProfileMenu";
@@ -32,10 +33,16 @@ const LandingHeader = ({ onGetStartedClick }) => {
         return (
             <div className="landnavbar">
                 <div className="landnavbar-left landnavbar-title">
-                    <Link to="/Home">
-                        <span>InterioLine</span>
-                    </Link>
+                    <div className="logo">
+                        <div className="logo-icon">
+                            <img src={logo} alt="Spacio Logo" />
+                        </div>
+                        <Link to="/Home" className="logo-text">
+                            Spacio
+                        </Link>
+                    </div>
                 </div>
+
                 <div className="landnavbar-right">
                     <div style={{
                         color: '#C2805A',
@@ -54,12 +61,15 @@ const LandingHeader = ({ onGetStartedClick }) => {
     return (
         <div className="landnavbar">
             <div className="landnavbar-left landnavbar-title">
-
-                <Link to="/Home">
-                    <span>InterioLine</span>
-                </Link>
+                <div className="logo">
+                    <div className="logo-icon">
+                        <img src={logo} alt="Spacio Logo" />
+                    </div>
+                    <Link to="/Home" className="logo-text">
+                        Spacio
+                    </Link>
+                </div>
             </div>
-
             {isLoggedIn && user ? (
                 <div className="landnavbar-right">
                     <div className={`header-search-container ${searchActive ? 'active' : ''}`}>

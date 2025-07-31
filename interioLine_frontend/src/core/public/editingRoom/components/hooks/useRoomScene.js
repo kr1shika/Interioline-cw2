@@ -9,39 +9,14 @@ export const useRoomScene = (mountRef) => {
     const [controls, setControls] = useState(null);
     const [roomObject, setRoomObject] = useState(null);
     const [currentRoomDimensions, setCurrentRoomDimensions] = useState({ width: 13, length: 10, height: 5 });
-    const [currentWallTexture, setCurrentWallTexture] = useState("smooth");
-    const [currentFloorTexture, setCurrentFloorTexture] = useState("parquet");
 
-    const textureLoader = new THREE.TextureLoader();
     const doorsRef = useRef([]);
     const windowsRef = useRef([]);
-
-    const getTextureMaterial = (color, textureType) => {
-        if (!textureType || textureType === "smooth") {
-            return new THREE.MeshStandardMaterial({ color, roughness: 0.9, metalness: 0.1 });
-        }
-        let texturePath;
-        if (textureType === "brick") texturePath = "/textures/brick.jpg";
-        else if (textureType === "concrete") texturePath = "/textures/concrete.jpg";
-        else if (textureType === "parquet") texturePath = "/textures/parquet.jpg";
-        else if (textureType === "mosaic") texturePath = "/textures/mosaic.jpg";
-        else if (textureType === "marble") texturePath = "/textures/marble.jpg";
-
-        const map = textureLoader.load(texturePath);
-        map.wrapS = map.wrapT = THREE.RepeatWrapping;
-        map.repeat.set(4, 4);
-
-        return new THREE.MeshStandardMaterial({
-            color,
-            map,
-            roughness: 0.7,
-            metalness: 0.2
-        });
-    };
 
     const setupLighting = useCallback((scene) => {
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
         scene.add(ambientLight);
+
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
         directionalLight.position.set(10, 20, 5);
         directionalLight.castShadow = true;
@@ -54,80 +29,79 @@ export const useRoomScene = (mountRef) => {
         directionalLight.shadow.camera.top = 15;
         directionalLight.shadow.camera.bottom = -15;
         scene.add(directionalLight);
+
         const fillLight = new THREE.DirectionalLight(0x87CEEB, 0.3);
         fillLight.position.set(-8, 15, -8);
         scene.add(fillLight);
     }, []);
 
-    const createRoom = useCallback((dimensions, wallColor, floorColor, wallTexture = "smooth", floorTexture = "parquet") => {
+    const createRoom = useCallback((dimensions, wallColor, floorColor) => {
         const { width, length, height } = dimensions;
         const roomGroup = new THREE.Group();
         roomGroup.name = 'room';
 
-        // floor
-        const floorMaterial = getTextureMaterial(floorColor, floorTexture);
-        const floor = new THREE.Mesh(new THREE.PlaneGeometry(width, length), floorMaterial);
+        const floorGeometry = new THREE.PlaneGeometry(width, length);
+        const floorMaterial = new THREE.MeshStandardMaterial({
+            color: floorColor,
+            roughness: 0.8,
+            metalness: 0.1
+        });
+        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
         floor.rotation.x = -Math.PI / 2;
         floor.receiveShadow = true;
         floor.name = 'floor';
         roomGroup.add(floor);
 
-        // walls
-        const wallMaterial = getTextureMaterial(wallColor, wallTexture);
+        const wallMaterial = new THREE.MeshStandardMaterial({
+            color: wallColor,
+            roughness: 0.9,
+            metalness: 0.1
+        });
 
-        const northWall = new THREE.Mesh(new THREE.PlaneGeometry(width, height), wallMaterial.clone());
+        const northWallGeometry = new THREE.PlaneGeometry(width, height);
+        const northWall = new THREE.Mesh(northWallGeometry, wallMaterial.clone());
         northWall.position.set(0, height / 2, -length / 2);
         northWall.name = 'northWall';
+        northWall.receiveShadow = true;
         roomGroup.add(northWall);
 
-        const southWall = new THREE.Mesh(new THREE.PlaneGeometry(width, height), wallMaterial.clone());
+        const southWall = new THREE.Mesh(northWallGeometry, wallMaterial.clone());
         southWall.position.set(0, height / 2, length / 2);
         southWall.rotation.y = Math.PI;
         southWall.name = 'southWall';
+        southWall.receiveShadow = true;
         roomGroup.add(southWall);
 
-        const eastWall = new THREE.Mesh(new THREE.PlaneGeometry(length, height), wallMaterial.clone());
+        const eastWallGeometry = new THREE.PlaneGeometry(length, height);
+        const eastWall = new THREE.Mesh(eastWallGeometry, wallMaterial.clone());
         eastWall.position.set(width / 2, height / 2, 0);
         eastWall.rotation.y = -Math.PI / 2;
         eastWall.name = 'eastWall';
+        eastWall.receiveShadow = true;
         roomGroup.add(eastWall);
 
-        const westWall = new THREE.Mesh(new THREE.PlaneGeometry(length, height), wallMaterial.clone());
+        const westWall = new THREE.Mesh(eastWallGeometry, wallMaterial.clone());
         westWall.position.set(-width / 2, height / 2, 0);
         westWall.rotation.y = Math.PI / 2;
         westWall.name = 'westWall';
+        westWall.receiveShadow = true;
         roomGroup.add(westWall);
 
-        const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(width, length), new THREE.MeshStandardMaterial({
-            color: '#ffffff', roughness: 0.9, metalness: 0.0
-        }));
+        const ceilingGeometry = new THREE.PlaneGeometry(width, length);
+        const ceilingMaterial = new THREE.MeshStandardMaterial({
+            color: '#ffffff',
+            roughness: 0.9,
+            metalness: 0.0
+        });
+        const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
         ceiling.rotation.x = Math.PI / 2;
         ceiling.position.y = height;
+        ceiling.receiveShadow = true;
         ceiling.name = 'ceiling';
         roomGroup.add(ceiling);
 
         return roomGroup;
     }, []);
-
-    // ➡️ NEW texture updaters
-    const updateWallTexture = useCallback((texture) => {
-        setCurrentWallTexture(texture);
-        if (scene && roomObject) {
-            roomObject.children.forEach(child => {
-                if (child.name && child.name.includes('Wall')) {
-                    child.material = getTextureMaterial(child.material.color, texture);
-                }
-            });
-        }
-    }, [scene, roomObject]);
-
-    const updateFloorTexture = useCallback((texture) => {
-        setCurrentFloorTexture(texture);
-        if (scene && roomObject) {
-            const floor = roomObject.children.find(child => child.name === "floor");
-            if (floor) floor.material = getTextureMaterial(floor.material.color, texture);
-        }
-    }, [scene, roomObject]);
 
     const positionDoorOnWall = useCallback((doorGroup, doorData, roomDimensions) => {
         const { width, length } = roomDimensions;
@@ -461,8 +435,6 @@ export const useRoomScene = (mountRef) => {
         updateDoors,
         updateWindows,
         updateWallColor,
-        updateFloorColor,
-        updateWallTexture,  
-        updateFloorTexture
+        updateFloorColor
     };
 };

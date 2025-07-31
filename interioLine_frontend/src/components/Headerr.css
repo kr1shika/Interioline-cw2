@@ -3,9 +3,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #FCFCEC;
+  background-color: #FFFFF6;
   padding: 16px 24px;
-  color: #A75B2A;
+  color: #374635;
   box-shadow: 0 1px 3px rgba(167, 91, 42, 0.1);
   border-bottom: 1px solid rgba(167, 91, 42, 0.2);
 }
@@ -33,14 +33,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FCFCEC;
+  color: #FFFFF6;
   transition: background-color 0.2s ease;
 }
 
 .logo-text {
   font-size: 20px;
   font-weight: 600;
-  color: #A75B2A;
+  color: #374635;
   text-decoration: none;
   transition: opacity 0.2s ease;
 }
@@ -73,12 +73,12 @@
 }
 
 .nav-item:hover {
-  color: #A75B2A;
+  color: #374635;
   background-color: rgba(167, 91, 42, 0.1);
 }
 
 .nav-item.active {
-  color: #A75B2A;
+  color: #374635;
   background-color: rgba(167, 91, 42, 0.15);
   font-weight: 600;
 }
@@ -113,13 +113,13 @@
   outline: none;
   transition: all 0.2s ease;
   background-color: rgba(252, 252, 236, 0.5);
-  color: #A75B2A;
+  color: #374635;
 }
 
 .search-input:focus {
-  border-color: #A75B2A;
+  border-color: #374635;
   box-shadow: 0 0 0 3px rgba(167, 91, 42, 0.1);
-  background-color: #FCFCEC;
+  background-color: #FFFFF6;
 }
 
 .search-input::placeholder {
@@ -128,8 +128,8 @@
 
 /* Get Started Button */
 .get-started-button {
-  background-color: #A75B2A;
-  color: #FCFCEC;
+  background-color: #374635;
+  color: #FFFFF6;
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
@@ -163,7 +163,7 @@
   font-weight: bold;
   letter-spacing: 0.05em;
   text-decoration: none;
-  color: #A75B2A;
+  color: #374635;
 }
 
 .icon-button {
@@ -173,7 +173,7 @@
   cursor: pointer;
   padding: 8px;
   border-radius: 8px;
-  color: #A75B2A;
+  color: #374635;
   transition: all 0.2s ease;
 }
 
@@ -184,7 +184,7 @@
 
 .navicon {
   font-size: 1.25rem;
-  color: #A75B2A;
+  color: #374635;
 }
 
 .notification-dot {
@@ -193,7 +193,7 @@
   right: 2px;
   width: 8px;
   height: 8px;
-  background-color: #A75B2A;
+  background-color: #374635;
   border-radius: 50%;
 }
 
@@ -268,19 +268,19 @@
   outline: none;
   font-size: 14px;
   background: rgba(252, 252, 236, 0.6);
-  color: #A75B2A;
+  color: #374635;
   width: 100%;
   transition: all 0.3s ease;
 }
 
 .header-search-input:focus {
-  border-color: #A75B2A;
+  border-color: #374635;
   box-shadow: 0 0 0 3px rgba(167, 91, 42, 0.1);
 }
 
 /* Icon animation */
 .search-toggle-button {
-  background: #A75B2A;
+  background: #374635;
   border: none;
   cursor: pointer;
   padding: 4px;

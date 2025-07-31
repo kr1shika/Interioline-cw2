@@ -1,7 +1,7 @@
 /* EditProfileForm.css - Compact Version */
 
 .edit-profile-container {
-    background-color: #FCFCEC;
+    background-color: #FFFFF6;
     border-radius: 0.75rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     width: 100%;
@@ -76,21 +76,21 @@
     width: 5rem;
     height: 5rem;
     object-fit: cover;
-    border: 3px solid #B86A45;
+    border: 3px solid #4D5A4A;
     border-radius: 50%;
 }
 
 .pic-placeholder {
     width: 5rem;
     height: 5rem;
-    border: 2px dashed #B86A45;
+    border: 2px dashed #4D5A4A;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: #fef7f0;
-    color: #B86A45;
+    color: #4D5A4A;
 }
 
 .pic-icon {
@@ -141,7 +141,7 @@
 
 .form-input-compact:focus {
     outline: none;
-    border-color: #B86A45;
+    border-color: #4D5A4A;
     box-shadow: 0 0 0 3px rgba(208, 140, 96, 0.1);
 }
 
@@ -158,7 +158,7 @@
 
 .form-textarea-compact:focus {
     outline: none;
-    border-color: #B86A45;
+    border-color: #4D5A4A;
     box-shadow: 0 0 0 3px rgba(208, 140, 96, 0.1);
 }
 
@@ -210,7 +210,7 @@
 }
 
 .chip {
-    background-color: #B86A45;
+    background-color: #4D5A4A;
     color: white;
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
@@ -220,8 +220,8 @@
 
 .btn-edit-preferences {
     background: none;
-    border: 1px solid #B86A45;
-    color: #B86A45;
+    border: 1px solid #4D5A4A;
+    color: #4D5A4A;
     padding: 0.25rem 0.75rem;
     border-radius: 0.375rem;
     font-size: 0.75rem;
@@ -230,7 +230,7 @@
 }
 
 .btn-edit-preferences:hover {
-    background-color: #B86A45;
+    background-color: #4D5A4A;
     color: white;
 }
 
@@ -292,7 +292,7 @@
 }
 
 .btn-submit-compact {
-    background-color: #B86A45;
+    background-color: #4D5A4A;
     color: white;
 }
 

@@ -9,6 +9,9 @@ import LandingHeader from "../../components/landingHeader.jsx";
 import ThreeCanvas from "../../components/room.jsx";
 import "../style/LandingPage.css";
 import AuthPopup from "./authComponent.jsx";
+
+import promoVideo from "../../assets/images/room-editor.mp4";
+
 function LandingPage() {
     const [showAuth, setShowAuth] = useState(false);
     const [activeStep, setActiveStep] = useState(null);
@@ -66,9 +69,9 @@ function LandingPage() {
                 <AutoCarousel />
             </div>
 
-            {/* How Interioline Works Section */}
+            {/* How Spacio Works Section */}
             <div className="how-it-works-section">
-                <h2 className="how-it-works-title">How Interioline Works</h2>
+                <h2 className="how-it-works-title">How Spacio Works</h2>
 
                 <div className="steps-container">
                     {/* Central dotted line */}
@@ -78,8 +81,8 @@ function LandingPage() {
                     <div className={`step-wrapper step-1 ${activeStep === '1' ? 'active' : ''}`} data-step="1">
                         <div className="step-content-side left-side">
                             <div className={`step-number ${activeStep === '1' ? 'animate' : ''}`}>1</div>
-                            <div className={`text-content ${activeStep === '1' ? 'animate' : ''}`}>
-                                <h3>FIND YOUR IDEAL DESIGNER</h3>
+                            <div style={{ color: "#374635" }} className={`text-content ${activeStep === '1' ? 'animate' : ''}`}>
+                                <h3 style={{ color: "#374635" }}>FIND YOUR IDEAL DESIGNER</h3>
                                 <div className="description-box">
                                     <p>Get paired with the ideal designer based on your style and needs, and browse profiles to choose the perfect fit.</p>
                                 </div>
@@ -106,7 +109,7 @@ function LandingPage() {
                         <div className="step-content-side right-side">
                             <div className={`step-number ${activeStep === '2' ? 'animate' : ''}`}>2</div>
                             <div className={`text-content ${activeStep === '2' ? 'animate' : ''}`}>
-                                <h3>INSPIRE & SHARE YOUR VISION</h3>
+                                <h3 style={{ color: "#374635" }}>INSPIRE & SHARE YOUR VISION</h3>
                                 <div className="description-box">
                                     <p>Upload room details and inspirations, then discuss your ideas directly with your designer to shape the vision.</p>
                                 </div>
@@ -119,7 +122,7 @@ function LandingPage() {
                         <div className="step-content-side left-side">
                             <div className={`step-number ${activeStep === '3' ? 'animate' : ''}`}>3</div>
                             <div className={`text-content ${activeStep === '3' ? 'animate' : ''}`}>
-                                <h3>COLLABORATION AND COMMITMENT</h3>
+                                <h3 style={{ color: "#374635" }}>COLLABORATION AND COMMITMENT</h3>
                                 <div className="description-box">
                                     <p>Receive design updates along the way and give instant feedback to refine every detail together.</p>
                                 </div>
@@ -147,15 +150,24 @@ function LandingPage() {
                         </div>
                     </div>
 
-                    {/* Final showcase image */}
-                    <div className="final-showcase">
-                        {/* <div className="showcase-image">
-                            <div className="room-showcase">
-                                <div className="showcase-placeholder">
-                                    <p>image placeholder for now</p>
-                                </div>
-                            </div>
-                        </div> */}
+                    <div className="video-section">
+                        <div className="video-wrapper">
+                            <video
+                                className="landing-video"
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                            >
+                                <source src={promoVideo} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+
+                            {/* Button Below Video */}
+                            <button className="edit-room-btn" onClick={() => navigate("/room-edit")}>
+                                Go to Editing Room
+                            </button>
+                        </div>
                     </div>
                 </div>
 

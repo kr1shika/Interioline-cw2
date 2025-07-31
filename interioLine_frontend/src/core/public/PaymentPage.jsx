@@ -541,7 +541,7 @@ const PaymentPage = ({
                                 disabled={loading}
                                 style={{
                                     ...styles.payButton,
-                                    backgroundColor: loading ? '#ccc' : '#A75B2A',
+                                    backgroundColor: loading ? '#ccc' : '#4D5A4A',
                                     cursor: loading ? 'not-allowed' : 'pointer'
                                 }}
                             >
@@ -597,7 +597,7 @@ const styles = {
     invoiceTitle: {
         fontSize: '28px',
         fontWeight: '700',
-        color: '#A75B2A',
+        color: '#4D5A4A',
         margin: 0
     },
     invoiceNumber: {
@@ -794,7 +794,7 @@ const styles = {
     stripeLogo: {
         fontSize: '24px',
         fontWeight: 'bold',
-        color: '#A75B2A',
+        color: '#4D5A4A',
         fontFamily: 'arial, sans-serif'
     },
     paymentAmount: {
@@ -856,7 +856,7 @@ const styles = {
         padding: '12px 16px'
     },
     payButton: {
-        backgroundColor: '#A75B2A',
+        backgroundColor: '#4D5A4A',
         color: 'white',
         border: 'none',
         borderRadius: '6px',

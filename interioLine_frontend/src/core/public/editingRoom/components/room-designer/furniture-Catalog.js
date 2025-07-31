@@ -196,7 +196,7 @@ export const furnitureCatalog = [
         name: 'Modern Platform Bed',
         type: 'bed',
         category: 'bedroom',
-        dimensions: { width: 4, height: 1.9, depth: 3.4 },
+        dimensions: { width: 4.5, height: 2.9, depth: 3.4 },
         color: '#8B4513',
         description: 'Contemporary platform bed with stylish headboard',
         material: 'Wood',
@@ -569,7 +569,6 @@ export const addPlacementToExistingItems = () => {
     return placementMap;
 };
 
-// Enhanced helper functions with proper filtering
 export const getFurnitureByCategory = (category) => {
     console.log(`Filtering by category: ${category}`);
     const filtered = furnitureCatalog.filter(item => item.category === category);

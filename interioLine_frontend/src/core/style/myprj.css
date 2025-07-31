@@ -1,6 +1,6 @@
 .my-projects-page {
-    background-color: #FCFCEC;
-    color: #BE7B5D;
+    background-color: #FFFFF6;
+    color: #4D5A4A;
     font-family: 'Arial', sans-serif;
     min-height: 100vh;
 }
@@ -24,7 +24,7 @@
 .designer-welcome h2 {
     font-size: 32px;
     font-weight: bold;
-    color: #BE7B5D;
+    color: #4D5A4A;
     margin-bottom: 8px;
 }
 
@@ -138,7 +138,7 @@
     font-size: 20px;
     font-weight: bold;
     margin: 0 0 2px 0;
-    color: #BE7B5D;
+    color: #4D5A4A;
 }
 
 .profile-email {
@@ -153,8 +153,8 @@
 
 .edit-profile-btn {
     background-color: transparent;
-    border: 1px solid #BE7B5D;
-    color: #BE7B5D;
+    border: 1px solid #4D5A4A;
+    color: #4D5A4A;
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
@@ -164,7 +164,7 @@
 }
 
 .edit-profile-btn:hover {
-    background-color: #BE7B5D;
+    background-color: #4D5A4A;
     color: white;
 }
 
@@ -189,7 +189,7 @@
 .banner-text h3 {
     font-size: 22px;
     font-weight: bold;
-    color: #a4502fdc;
+    color: #374635dc;
     margin-bottom: 0px;
 }
 
@@ -201,7 +201,7 @@
 }
 
 .start-btn {
-    background-color: #B86A45;
+    background-color: #4D5A4A;
     color: white;
     border: none;
     font-weight: 580;
@@ -260,11 +260,11 @@
 
 .status-dropdown {
     background-color: #F1D5BC;
-    border: 1px solid #BE7B5D;
+    border: 1px solid #4D5A4A;
     border-radius: 4px;
     padding: 4px 8px;
     font-size: 14px;
-    color: #BE7B5D;
+    color: #4D5A4A;
     cursor: pointer;
 }
 
@@ -289,7 +289,7 @@
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #BE7B5D, #9d6a52);
+    background: linear-gradient(90deg, #4D5A4A, #9d6a52);
     border-radius: 4px;
     transition: width 0.3s ease;
 }
@@ -618,7 +618,7 @@
 .active-project-title {
     font-size: 18px;
     font-weight: bold;
-    color: #BE7B5D;
+    color: #4D5A4A;
     margin: 0 0 4px 0;
 }
 
@@ -685,7 +685,7 @@
 
 .active-project-progress .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #BE7B5D, #9d6a52);
+    background: linear-gradient(90deg, #4D5A4A, #9d6a52);
     border-radius: 3px;
     transition: width 0.3s ease;
 }
@@ -693,7 +693,7 @@
 .active-project-progress .progress-text {
     font-size: 14px;
     font-weight: bold;
-    color: #BE7B5D;
+    color: #4D5A4A;
     min-width: 40px;
 }
 
@@ -720,7 +720,7 @@
 
 .active-project-date span:last-child {
     font-size: 14px;
-    color: #BE7B5D;
+    color: #4D5A4A;
     font-weight: 600;
 }
 
@@ -741,12 +741,12 @@
 
 .view-btn {
     background: #FFFFF6;
-    border: 1px solid #BE7B5D !important;
-    color: #BE7B5D;
+    border: 1px solid #4D5A4A !important;
+    color: #4D5A4A;
 }
 
 .view-btn:hover {
-    background-color: #BE7B5D;
+    background-color: #4D5A4A;
     color: white;
 }
 
@@ -770,7 +770,7 @@
 
 /* Past Projects Heading */
 .past-projects-heading {
-    color: #BE7B5D;
+    color: #4D5A4A;
     font-size: 20px;
     font-weight: 500;
     margin: 40px 0 20px 0;
@@ -832,7 +832,7 @@
 .past-project-title {
     font-size: 16px;
     font-weight: bold;
-    color: #BE7B5D;
+    color: #4D5A4A;
     margin: 0 0 4px 0;
 }
 
@@ -843,7 +843,7 @@
 }
 
 .past-project-menu {
-    color: #BE7B5D;
+    color: #4D5A4A;
     cursor: pointer;
     padding: 4px;
     border-radius: 4px;
@@ -897,7 +897,7 @@
 
 .past-project-date span:last-child {
     font-size: 14px;
-    color: #BE7B5D;
+    color: #4D5A4A;
     font-weight: 600;
 }
 
@@ -909,8 +909,8 @@
 .past-project-view-btn,
 .past-project-history-btn {
     background: transparent;
-    border: 1px solid #BE7B5D;
-    color: #BE7B5D;
+    border: 1px solid #4D5A4A;
+    color: #4D5A4A;
     padding: 8px 10px;
     border-radius: 6px;
     cursor: pointer;
@@ -925,7 +925,7 @@
 
 .past-project-view-btn:hover,
 .past-project-history-btn:hover {
-    background-color: #BE7B5D;
+    background-color: #4D5A4A;
     color: white;
 }
 
