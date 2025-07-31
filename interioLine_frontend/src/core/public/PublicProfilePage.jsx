@@ -69,7 +69,7 @@ export default function PublicProfilePage() {
                     alignItems: 'center',
                     height: '400px',
                     fontSize: '16px',
-                    color: '#C2805A'
+                    color: '#4D5A4A'
                 }}>
                     Loading profile...
                 </div>

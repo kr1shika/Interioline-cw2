@@ -3,7 +3,7 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from 'react-icons/f
 const Footer = () => {
     return (
         <footer style={{
-            backgroundColor: '#EEE2D0',
+            backgroundColor: '#C3C7B7',
             padding: '60px 20px 30px 20px',
             textAlign: 'center',
             borderTop: '1px solid #E8E0D4',
@@ -19,7 +19,7 @@ const Footer = () => {
                 <h2 style={{
                     fontSize: '28px',
                     fontWeight: '600',
-                    color: '#C2805A',
+                    color: '#374635',
                     marginBottom: '15px',
                     letterSpacing: '1px',
                     fontFamily: 'Arial, sans-serif'
@@ -30,7 +30,7 @@ const Footer = () => {
                 {/* Tagline */}
                 <p style={{
                     fontSize: '16px',
-                    color: '#8B6F47',
+                    color: '#374635',
                     marginBottom: '40px',
                     maxWidth: '600px',
                     margin: '0 auto 40px auto',
@@ -54,20 +54,20 @@ const Footer = () => {
                             justifyContent: 'center',
                             width: '45px',
                             height: '45px',
-                            border: '2px solid #C2805A',
+                            border: '2px solid #374635',
                             borderRadius: '8px',
-                            color: '#C2805A',
+                            color: '#374635',
                             textDecoration: 'none',
                             transition: 'all 0.3s ease',
                             backgroundColor: 'transparent'
                         }}
                         onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = '#C2805A';
+                            e.target.style.backgroundColor = '#374635';
                             e.target.style.color = 'white';
                         }}
                         onMouseLeave={(e) => {
                             e.target.style.backgroundColor = 'transparent';
-                            e.target.style.color = '#C2805A';
+                            e.target.style.color = '#374635';
                         }}
                     >
                         <FaFacebookF style={{ fontSize: '18px' }} />
@@ -81,20 +81,20 @@ const Footer = () => {
                             justifyContent: 'center',
                             width: '45px',
                             height: '45px',
-                            border: '2px solid #C2805A',
+                            border: '2px solid #374635',
                             borderRadius: '8px',
-                            color: '#C2805A',
+                            color: '#374635',
                             textDecoration: 'none',
                             transition: 'all 0.3s ease',
                             backgroundColor: 'transparent'
                         }}
                         onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = '#C2805A';
+                            e.target.style.backgroundColor = '#374635';
                             e.target.style.color = 'white';
                         }}
                         onMouseLeave={(e) => {
                             e.target.style.backgroundColor = 'transparent';
-                            e.target.style.color = '#C2805A';
+                            e.target.style.color = '#374635';
                         }}
                     >
                         <FaInstagram style={{ fontSize: '18px' }} />
@@ -108,20 +108,20 @@ const Footer = () => {
                             justifyContent: 'center',
                             width: '45px',
                             height: '45px',
-                            border: '2px solid #C2805A',
+                            border: '2px solid #374635',
                             borderRadius: '8px',
-                            color: '#C2805A',
+                            color: '#374635',
                             textDecoration: 'none',
                             transition: 'all 0.3s ease',
                             backgroundColor: 'transparent'
                         }}
                         onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = '#C2805A';
+                            e.target.style.backgroundColor = '#374635';
                             e.target.style.color = 'white';
                         }}
                         onMouseLeave={(e) => {
                             e.target.style.backgroundColor = 'transparent';
-                            e.target.style.color = '#C2805A';
+                            e.target.style.color = '#374635';
                         }}
                     >
                         <FaYoutube style={{ fontSize: '18px' }} />
@@ -135,20 +135,20 @@ const Footer = () => {
                             justifyContent: 'center',
                             width: '45px',
                             height: '45px',
-                            border: '2px solid #C2805A',
+                            border: '2px solid #374635',
                             borderRadius: '8px',
-                            color: '#C2805A',
+                            color: '#374635',
                             textDecoration: 'none',
                             transition: 'all 0.3s ease',
                             backgroundColor: 'transparent'
                         }}
                         onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = '#C2805A';
+                            e.target.style.backgroundColor = '#374635';
                             e.target.style.color = 'white';
                         }}
                         onMouseLeave={(e) => {
                             e.target.style.backgroundColor = 'transparent';
-                            e.target.style.color = '#C2805A';
+                            e.target.style.color = '#374635';
                         }}
                     >
                         <FaLinkedinIn style={{ fontSize: '18px' }} />
@@ -157,12 +157,12 @@ const Footer = () => {
 
                 {/* Copyright */}
                 <div style={{
-                    borderTop: '1px solid #D4C4B0',
+                    borderTop: '1px solid #374635',
                     paddingTop: '20px'
                 }}>
                     <p style={{
                         fontSize: '14px',
-                        color: '#8B6F47',
+                        color: '#374635',
                         margin: '0'
                     }}>
                         © 2025 All Rights Reserved

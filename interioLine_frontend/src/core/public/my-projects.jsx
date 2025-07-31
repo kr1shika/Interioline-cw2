@@ -375,7 +375,7 @@ export default function MyProjectsPage() {
                     alignItems: 'center',
                     height: '400px',
                     fontSize: '16px',
-                    color: '#C2805A'
+                    color: '#4D5A4A'
                 }}>
                     🔐 Verifying authentication...
                 </div>
@@ -396,7 +396,7 @@ export default function MyProjectsPage() {
                     <button
                         onClick={() => navigate('/')}
                         style={{
-                            background: '#C2805A',
+                            background: '#4D5A4A',
                             color: 'white',
                             border: 'none',
                             padding: '8px 16px',
@@ -513,7 +513,7 @@ export default function MyProjectsPage() {
                             <div style={{
                                 textAlign: 'center',
                                 padding: '40px',
-                                color: '#C2805A'
+                                color: '#4D5A4A'
                             }}>
                                 Loading projects...
                             </div>

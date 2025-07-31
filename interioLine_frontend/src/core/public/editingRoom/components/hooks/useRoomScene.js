@@ -158,7 +158,7 @@ export const useRoomScene = (mountRef) => {
         const frameThickness = 0.06;
         const frameDepth = 0.2;
         const frameMaterial = new THREE.MeshStandardMaterial({
-            color: '#8B4513',
+            color: '#374635',
             roughness: 0.8,
             metalness: 0.1
         });

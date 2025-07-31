@@ -185,7 +185,7 @@ export default function ChatWidget() {
       {!selectedRoomId ? (
         <div className="chat-room-list">
           {loading ? (
-            <p style={{ textAlign: 'center', padding: '20px', color: '#C2805A' }}>
+            <p style={{ textAlign: 'center', padding: '20px', color: '#4D5A4A' }}>
               Loading chat rooms...
             </p>
           ) : chatRooms.length === 0 ? (
@@ -234,7 +234,7 @@ export default function ChatWidget() {
                 <div style={{
                   textAlign: 'center',
                   padding: '20px',
-                  color: '#C2805A'
+                  color: '#4D5A4A'
                 }}>
                   Loading messages...
                 </div>

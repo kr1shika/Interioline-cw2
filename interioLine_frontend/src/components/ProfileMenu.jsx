@@ -74,7 +74,7 @@ const ProfileMenu = () => {
                     height: "32px",
                     borderRadius: "50%",
                     objectFit: "cover",
-                    border: "2px solid #C2805A"
+                    border: "2px solid #4D5A4A"
                 }}
                 onError={(e) => {
                     e.target.src = defaultProfile;

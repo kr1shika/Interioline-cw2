@@ -133,7 +133,7 @@ export default function ProfilePage() {
         return (
             <div className="profile-page">
                 <Header />
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px', fontSize: '16px', color: '#C2805A' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px', fontSize: '16px', color: '#4D5A4A' }}>
                     🔐 Verifying authentication...
                 </div>
             </div>
@@ -149,7 +149,7 @@ export default function ProfilePage() {
                     <p>{error}</p>
                     <button
                         onClick={() => navigate('/')}
-                        style={{ background: '#C2805A', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', marginTop: '16px' }}
+                        style={{ background: '#4D5A4A', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', marginTop: '16px' }}
                     >
                         Go Home
                     </button>
@@ -162,7 +162,7 @@ export default function ProfilePage() {
         return (
             <div className="profile-page">
                 <Header />
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px', fontSize: '16px', color: '#C2805A' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px', fontSize: '16px', color: '#4D5A4A' }}>
                     Loading profile...
                 </div>
             </div>

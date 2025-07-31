@@ -45,7 +45,7 @@ const LandingHeader = ({ onGetStartedClick }) => {
 
                 <div className="landnavbar-right">
                     <div style={{
-                        color: '#C2805A',
+                        color: '#4D5A4A',
                         fontSize: '14px',
                         display: 'flex',
                         alignItems: 'center',

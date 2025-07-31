@@ -59,11 +59,11 @@ body {
   font-size: 2rem;
   font-weight: 600;
   margin: 0 0 0rem 0;
-  color: #8B4513;
+  color: #374635;
 }
 
 .profile-info .location {
-  color: #D08C60;
+  color: #4D5A4A;
   font-weight: 500;
   margin: 0 0 0.6rem 0;
 }
@@ -77,7 +77,7 @@ body {
 }
 
 .edit-button {
-  background-color: #D08C60;
+  background-color: #4D5A4A;
   color: white;
   padding: 0.55rem 1.4rem;
   border: none;
@@ -91,7 +91,7 @@ body {
 }
 
 .edit-button:hover {
-  background-color: #B86F47;
+  background-color: #4D5A4A;
 }
 
 /* Section styling */
@@ -110,12 +110,12 @@ body {
 .section-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #8B4513;
+  color: #374635;
   margin: 0;
 }
 
 .add-post-button {
-  background-color: #D08C60;
+  background-color: #4D5A4A;
   color: white;
   padding: 0.75rem 1.25rem;
   border: none;
@@ -126,7 +126,7 @@ body {
 }
 
 .add-post-button:hover {
-  background-color: #B86F47;
+  background-color: #4D5A4A;
 }
 
 /* Portfolio Grid */

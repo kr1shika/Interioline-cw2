@@ -50,7 +50,7 @@ export const floorColors = [
     { name: "Bamboo", value: "#d4b896", category: "wood", texture: "bamboo" },
 
     { name: "Cherry", value: "#a0522d", category: "wood", texture: "cherry" },
-    { name: "Walnut", value: "#8b4513", category: "wood", texture: "walnut" },
+    { name: "Walnut", value: "#374635", category: "wood", texture: "walnut" },
     { name: "Teak", value: "#b8860b", category: "wood", texture: "teak" },
     { name: "Mahogany", value: "#c04000", category: "wood", texture: "mahogany" },
 
@@ -245,7 +245,7 @@ export const carpets = [
     {
         id: "round_mandala",
         name: "Mandala Round Rug",
-        color: "#8b4513",
+        color: "#374635",
         texture:
             "https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=400&h=400&fit=crop",
         pattern: "mandala",

@@ -46,7 +46,7 @@
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #D08C60;
+    border: 3px solid #4D5A4A;
 }
 
 .profile-info {
@@ -57,11 +57,11 @@
     font-size: 2rem;
     font-weight: 600;
     margin: 0 0 0.5rem 0;
-    color: #8B4513;
+    color: #374635;
 }
 
 .profile-info .location {
-    color: #D08C60;
+    color: #4D5A4A;
     font-weight: 500;
     margin: 0 0 1rem 0;
 }
@@ -82,7 +82,7 @@
 .review-section h3 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #8B4513;
+    color: #374635;
     margin: 0 0 1.5rem 0;
 }
 
@@ -156,7 +156,7 @@
 }
 
 .review-card strong {
-    color: #8B4513;
+    color: #374635;
     font-weight: 600;
     display: block;
     margin-bottom: 0.5rem;

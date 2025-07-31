@@ -71,7 +71,7 @@
 
 .progress-fill {
     height: 100%;
-    background-color: #D08C60;
+    background-color: #4D5A4A;
     transition: width 0.3s ease-in-out;
 }
 
@@ -115,7 +115,7 @@
 
 .quiz-select:focus {
     outline: none;
-    border-color: #D08C60;
+    border-color: #4D5A4A;
     box-shadow: 0 0 0 3px rgba(208, 140, 96, 0.1);
 }
 
@@ -141,7 +141,7 @@
 
 .radio-option:hover,
 .checkbox-option:hover {
-    border-color: #D08C60;
+    border-color: #4D5A4A;
     background-color: #fef7f0;
 }
 
@@ -150,18 +150,18 @@
     margin-top: 0.125rem;
     width: 1rem;
     height: 1rem;
-    accent-color: #D08C60;
+    accent-color: #4D5A4A;
     cursor: pointer;
 }
 
 .radio-option input[type="radio"]:checked~.radio-content,
 .checkbox-option input[type="checkbox"]:checked~.checkbox-content {
-    color: #D08C60;
+    color: #4D5A4A;
 }
 
 .radio-option:has(input:checked),
 .checkbox-option:has(input:checked) {
-    border-color: #D08C60;
+    border-color: #4D5A4A;
     background-color: #fef7f0;
 }
 
@@ -216,7 +216,7 @@
 }
 
 .btn-primary {
-    background-color: #D08C60;
+    background-color: #4D5A4A;
     color: white;
 }
 

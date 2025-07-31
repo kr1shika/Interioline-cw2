@@ -87,14 +87,14 @@ export default function InitialProjectPage() {
     // 🚀 Show fallback if data missing
     if (!designerId) {
         return (
-            <div style={{ padding: "2rem", textAlign: "center", color: "#C2805A" }}>
+            <div style={{ padding: "2rem", textAlign: "center", color: "#4D5A4A" }}>
                 <Header />
                 <h3>⚠️ Cannot initialize project</h3>
                 <p>Missing user or designer information. Please go back and start from your profile or quiz page.</p>
                 <button
                     style={{
                         marginTop: "1rem",
-                        background: "#C2805A",
+                        background: "#4D5A4A",
                         color: "white",
                         padding: "0.75rem 1.5rem",
                         border: "none",
@@ -112,7 +112,7 @@ export default function InitialProjectPage() {
     // 🚀 Show loading state until designer data fetched
     if (!designer) {
         return (
-            <div style={{ padding: "2rem", textAlign: "center", color: "#C2805A" }}>
+            <div style={{ padding: "2rem", textAlign: "center", color: "#4D5A4A" }}>
                 <Header />
                 <h3>Loading project setup...</h3>
             </div>

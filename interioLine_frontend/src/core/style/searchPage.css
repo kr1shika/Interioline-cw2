@@ -36,10 +36,10 @@ main {
     align-items: center;
     gap: 2rem;
     flex-wrap: wrap;
-    border: 1px solid #B87E68;
+    border: 1px solid #C3C7B7;
     border-radius: 1rem;
     padding: 1.3rem 2.7rem;
-    background: linear-gradient(to bottom, rgba(252, 252, 236, 0.6), rgba(184, 126, 104, 0.3));
+    background: linear-gradient(to bottom, #f8fdf0, rgba(185, 192, 165, 0.798));
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -151,7 +151,7 @@ main {
 /* === Style Filter Banner === */
 .style-filter-banner {
     background: linear-gradient(to bottom, rgba(252, 252, 236, 0.6), rgba(184, 126, 104, 0.3));
-    border: 1px solid #B87E68;
+    border: 1px solid #C3C7B7;
     border-radius: 1rem;
     padding: 1.5rem;
     margin-bottom: 2rem;
