@@ -7,6 +7,35 @@ const requestLimits = new Map();
 const blacklistedTokens = new Set();
 const Session = require("../model/Session");
 
+// const authenticateToken = async (req, res, next) => {
+//     try {
+//         let token = req.cookies?.interio_token;
+
+//         if (!token && req.headers.authorization?.startsWith("Bearer ")) {
+//             token = req.headers.authorization.split(" ")[1];
+//         }
+
+//         if (!token) {
+//             return res.status(401).json({ errors: ["Access denied. No token provided."] });
+//         }
+
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+//         const session = await Session.findOne({ sessionId: decoded.sessionId, valid: true });
+//         if (!session) {
+//             return res.status(401).json({ errors: ["Session invalid or expired."] });
+//         }
+//         const user = await User.findById(decoded.userId).select("-password -passwordHistory");
+//         req.user = user;
+//         req.userId = user._id.toString();
+//         req.token = token;
+//         req.sessionId = decoded.sessionId;
+//         next();
+//     } catch (err) {
+//         return res.status(401).json({ errors: ["Invalid or expired token"] });
+//     }
+// };
+
 const authenticateToken = async (req, res, next) => {
     try {
         let token = req.cookies?.interio_token;
@@ -21,23 +50,32 @@ const authenticateToken = async (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+        //  Only sessionId is included in token now
         const session = await Session.findOne({ sessionId: decoded.sessionId, valid: true });
         if (!session) {
             return res.status(401).json({ errors: ["Session invalid or expired."] });
         }
-        const user = await User.findById(decoded.userId).select("-password -passwordHistory");
+
+        const user = await User.findById(session.userId).select("-password -passwordHistory");
+        if (!user) {
+            return res.status(401).json({ errors: ["User not found."] });
+        }
+
+        // Attach user details to req object
         req.user = user;
-        req.userId = user._id.toString();
+        req.userId = session.userId.toString(); // 🔐 No longer from decoded.token
         req.token = token;
         req.sessionId = decoded.sessionId;
-        // console.log("🔍 Session validated:", session);
+
         next();
     } catch (err) {
         return res.status(401).json({ errors: ["Invalid or expired token"] });
     }
 };
 
-// 🔐 Role-based authorization middleware
+
+
+//  Role-based authorization middleware
 const authorizeRole = (allowedRoles) => {
     return (req, res, next) => {
         if (!req.user) {
@@ -114,7 +152,6 @@ const trackLoginAttempt = (email, success = false) => {
 
     const attempts = loginAttempts.get(email);
 
-    // Reset if window expired
     if (now - attempts.firstAttempt > windowMs) {
         attempts.count = 0;
         attempts.firstAttempt = now;
@@ -122,7 +159,6 @@ const trackLoginAttempt = (email, success = false) => {
     }
 
     if (success) {
-        // Reset on successful login
         loginAttempts.delete(email);
     } else {
         attempts.count++;
@@ -219,6 +255,6 @@ module.exports = {
     bruteForceProtection,
     trackLoginAttempt,
     checkAccountLock,
-    checkPasswordExpiry, 
+    checkPasswordExpiry,
     checkGlobalLocks
 };

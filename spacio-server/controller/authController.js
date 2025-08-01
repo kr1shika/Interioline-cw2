@@ -18,7 +18,6 @@ let pendingSignups = {};
 
 const signup = async (req, res) => {
     const { full_name, email, password, role } = req.body;
-
     try {
         const errors = [];
         if (!full_name || !email || !password || !role) {
@@ -33,7 +32,7 @@ const signup = async (req, res) => {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
 
-        // Save signup data temporarily (in production, use Redis or DB)
+        // Save signup data temporarily 
         pendingSignups[email.toLowerCase()] = {
             full_name,
             email: email.toLowerCase(),
@@ -42,7 +41,6 @@ const signup = async (req, res) => {
             otp: hashedOtp,
             otpExpiry: Date.now() + 10 * 60 * 1000
         };
-
         await transporter.sendMail({
             from: `"InterioLine" <${process.env.EMAIL_USER}>`,
             to: email,
@@ -54,10 +52,7 @@ const signup = async (req, res) => {
         if (!strongPassword.test(password)) {
             return res.status(400).json({ errors: ["Password must include upper, lower, number, and special character. Min 8 chars."] });
         }
-
-
         res.status(200).json({ message: "OTP sent. Please verify." });
-
     } catch (err) {
         console.error("Signup OTP error:", err);
         res.status(500).json({ errors: ["Internal error during signup."] });
@@ -110,10 +105,7 @@ const loginRequest = async (req, res) => {
 const verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
     const user = await User.findOne({ email });
-
     if (!user) return res.status(400).json({ error: "User not found" });
-
-    // 🔐 Init lock if missing
     if (!user.lock || !user.lock.otp) {
         user.lock = {
             ...(user.lock || {}),
@@ -124,13 +116,11 @@ const verifyOtp = async (req, res) => {
         };
     }
 
-    // 🔐 Check OTP lock
     if (user.lock.otp.lockedUntil && Date.now() < new Date(user.lock.otp.lockedUntil)) {
         const mins = Math.ceil((new Date(user.lock.otp.lockedUntil) - Date.now()) / 60000);
         return res.status(429).json({ error: `Too many OTP attempts. Try again in ${mins} minutes.` });
     }
 
-    // 🔐 Verify OTP
     const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
     if (user.otp !== hashedOtp || user.otpExpiry < Date.now()) {
         user.lock.otp.attempts += 1;
@@ -140,8 +130,7 @@ const verifyOtp = async (req, res) => {
         await user.save();
         return res.status(400).json({ error: "Invalid or expired OTP" });
     }
-
-    // ✅ Check password expiry (2 months = 60 days)
+    // Check password expiry (2 months = 60 days)
     const expiryDays = 60;
     const changedAt = user.passwordChangedAt || user.lastPasswordChange;
     if (changedAt) {
@@ -152,7 +141,7 @@ const verifyOtp = async (req, res) => {
         }
     }
 
-    // ✅ Reset OTP and lock
+    // Reset OTP and lock
     user.otpVerified = true;
     user.otp = undefined;
     user.otpExpiry = undefined;

@@ -15,7 +15,6 @@ const calculatePasswordStrength = (password) => {
 
     if (!password) return { score: 0, strength: 'Very Weak', feedback: ['Enter a password'] };
 
-    // Length scoring
     if (password.length >= 12) score += 25;
     else if (password.length >= 8) score += 15;
     else if (password.length >= 6) score += 10;
@@ -38,25 +37,24 @@ const calculatePasswordStrength = (password) => {
     const uniqueChars = new Set(password).size;
     if (uniqueChars >= password.length * 0.7) score += 10;
 
-    // Common pattern penalties
     if (/(.)\1{2,}/.test(password)) score -= 10; // repeated characters
     if (/123456|abcdef|qwerty|password/i.test(password)) score -= 15; // common patterns
 
     let strength = 'Very Weak';
-    let color = '#ef4444'; // red
+    let color = '#ef4444'; 
 
     if (score >= 85) {
         strength = 'Very Strong';
-        color = '#22c55e'; // green
+        color = '#22c55e'; 
     } else if (score >= 70) {
         strength = 'Strong';
-        color = '#84cc16'; // lime
+        color = '#84cc16'; 
     } else if (score >= 50) {
         strength = 'Medium';
-        color = '#eab308'; // yellow
+        color = '#eab308';
     } else if (score >= 30) {
         strength = 'Weak';
-        color = '#f97316'; // orange
+        color = '#f97316'; 
     }
 
     return { score: Math.max(0, Math.min(100, score)), strength, feedback, color };

@@ -195,43 +195,32 @@ const verifyOTPOnly = async (req, res) => {
     }
 };
 
-// UPDATED: Change password only (after OTP verification)
+// : Change password only (after OTP verification)
 const changePasswordAfterVerification = async (req, res) => {
     const { email, otp, newPassword } = req.body;
-    const clientIP = req.ip || req.connection.remoteAddress;
-
     try {
-        // Input validation
         if (!email || !otp || !newPassword) {
             return res.status(400).json({ message: "All fields are required" });
         }
-
         if (!/^\d{6}$/.test(otp)) {
             return res.status(400).json({ message: "OTP must be 6 digits" });
         }
-
-        // Strong password validation
         if (newPassword.length < 8) {
             return res.status(400).json({ message: "Password must be at least 8 characters long" });
         }
-
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
         if (!passwordRegex.test(newPassword)) {
             return res.status(400).json({
                 message: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
             });
         }
-
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: "Invalid request" });
         }
-
-        // Check if OTP was previously verified
         if (!user.otpVerified || !user.otp || !user.otpExpiry) {
             return res.status(400).json({ message: "Please verify your OTP first." });
         }
-
         // Check if OTP session hasn't expired
         if (Date.now() > user.otpExpiry) {
             user.otp = null;
@@ -241,18 +230,15 @@ const changePasswordAfterVerification = async (req, res) => {
             await user.save();
             return res.status(400).json({ message: "OTP session has expired. Please request a new one." });
         }
-
         // Verify OTP one more time for security
         const hashedInputOTP = hashOTP(otp);
         const isValidOTP = crypto.timingSafeEqual(
             Buffer.from(hashedInputOTP, 'hex'),
             Buffer.from(user.otp, 'hex')
         );
-
         if (!isValidOTP) {
             return res.status(400).json({ message: "Invalid OTP." });
         }
-
         // Check if new password is same as current password
         const isSamePassword = await bcrypt.compare(newPassword, user.password);
         if (isSamePassword) {
@@ -260,12 +246,8 @@ const changePasswordAfterVerification = async (req, res) => {
                 message: "New password must be different from your current password"
             });
         }
-
-        // Hash the new password with higher salt rounds
         const salt = await bcrypt.genSalt(12);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        // Update user password and clear OTP data
         user.password = hashedPassword;
         user.otp = null;
         user.otpExpiry = null;
@@ -273,11 +255,8 @@ const changePasswordAfterVerification = async (req, res) => {
         user.otpVerified = false;
         user.lastPasswordChange = new Date();
         await user.save();
-
-        // console.log(` Password changed successfully for ${email} from IP: ${clientIP}`);
         res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
-        // console.error("❌ Error changing password:", error);
         res.status(500).json({ error: "Failed to change password. Please try again." });
     }
 };

@@ -32,7 +32,7 @@ const getDesignersByStyle = async (req, res) => {
 
         // Log what specializations we found
         designers.forEach(designer => {
-            // console.log(`👤 ${designer.full_name}: specialization = "${designer.specialization}"`);
+            // console.log(` ${designer.full_name}: specialization = "${designer.specialization}"`);
         });
 
         res.status(200).json({
@@ -107,7 +107,7 @@ const searchDesigners = async (req, res) => {
             ]
         }).select("-password");
 
-        // console.log(`✅ Found ${designers.length} designers matching query: "${query}"`);
+        // console.log(` Found ${designers.length} designers matching query: "${query}"`);
 
         res.status(200).json({
             query: query,

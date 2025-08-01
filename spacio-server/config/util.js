@@ -37,7 +37,7 @@ const generateToken = async (userId, res, req) => {
     userAgent: req.headers["user-agent"],
   });
 
-  const token = jwt.sign({ userId, sessionId }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ sessionId }, process.env.JWT_SECRET, {
     expiresIn: "15d",
   });
 

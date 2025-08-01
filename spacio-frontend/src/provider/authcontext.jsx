@@ -24,10 +24,10 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             // console.error("Logout API call failed:", error);
         } finally {
-            setIsLoggedIn(true);
+            setIsLoggedIn(false);
             setUserRole("");
             setUser(null);
-            // console.log("✅ Logout complete");
+            // console.log(" Logout complete");
         }
     }, []);
 
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
             setUserRole(userData.role?.toLowerCase() || "");
             setUser(userData);
 
-            // console.log("✅ Session restored via cookie");
+            // console.log(" Session restored via cookie");
         } catch (err) {
             // console.log("❌ No valid session:", err.message);
             logout();
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
         const updatedUser = { ...user, ...updatedData };
         setUser(updatedUser);
         // localStorage.setItem("user", JSON.stringify(updatedUser));
-        // console.log("✅ User profile updated");
+        // console.log(" User profile updated");
     }, [user]);
 
     const contextValue = {
@@ -100,22 +100,6 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-// export const useAuth = () => {
-//     const { setUser } = useContext(AuthContext);
 
-//     const login = (email, role) => {
-//         if (!email || !role) {
-            console.error("Missing email or role in login()");
-//             return;
-//         }
-
-//         setUser({
-//             email: email.toLowerCase(),
-//             role,
-//         });
-//     };
-
-//     return { login };
-// };
 
 export const useAuth = () => useContext(AuthContext);
