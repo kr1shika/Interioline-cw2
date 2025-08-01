@@ -70,7 +70,7 @@ const createProject = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("❌ Error creating project:", err);
+    console.error(" Error creating project:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -120,7 +120,7 @@ const getMyProjects = async (req, res) => {
 
     res.status(200).json(enrichedProjects);
   } catch (err) {
-    console.error("❌ Error fetching projects:", err);
+    console.error(" Error fetching projects:", err);
     res.status(500).json({ message: "Failed to fetch projects" });
   }
 };
@@ -138,7 +138,7 @@ const updateProjectStatus = async (req, res) => {
     if (!project) return res.status(404).json({ message: "Project not found" });
     res.status(200).json(project);
   } catch (err) {
-    console.error("❌ Error updating status:", err);
+    console.error(" Error updating status:", err);
     res.status(500).json({ message: "Failed to update status" });
   }
 };
@@ -157,7 +157,7 @@ const updateProjectRoomDetails = async (req, res) => {
     if (!project) return res.status(404).json({ message: "Project not found" });
     res.status(200).json(project);
   } catch (err) {
-    console.error("❌ Error updating room details:", err);
+    console.error(" Error updating room details:", err);
     res.status(500).json({ message: "Failed to update room details" });
   }
 };
@@ -178,7 +178,7 @@ const getDesignerStats = async (req, res) => {
       totalReviews: 0
     });
   } catch (err) {
-    console.error("❌ Error fetching designer stats:", err);
+    console.error(" Error fetching designer stats:", err);
     res.status(500).json({ message: "Failed to get designer stats" });
   }
 };
@@ -193,7 +193,7 @@ const getDesignerPerformance = async (req, res) => {
       completionRate: total ? ((completed / total) * 100).toFixed(2) : 0
     });
   } catch (err) {
-    console.error("❌ Error fetching performance:", err);
+    console.error(" Error fetching performance:", err);
     res.status(500).json({ message: "Failed to get performance" });
   }
 };
@@ -207,7 +207,7 @@ const getProjectRevenue = async (req, res) => {
     const totalRevenue = projects.reduce((sum, p) => sum + (p.payment || 0), 0);
     res.status(200).json({ totalRevenue });
   } catch (err) {
-    console.error("❌ Error calculating revenue:", err);
+    console.error(" Error calculating revenue:", err);
     res.status(500).json({ message: "Failed to calculate revenue" });
   }
 };

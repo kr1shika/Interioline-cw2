@@ -43,7 +43,7 @@ export default function ChatWidget() {
       setChatRooms(Array.isArray(res.data) ? res.data : []);
       setError("");
     } catch (err) {
-      console.error("❌ Error fetching chat rooms:", err);
+      console.error(" Error fetching chat rooms:", err);
       setError("Failed to load chat rooms.");
       setChatRooms([]);
     } finally {
@@ -60,7 +60,7 @@ export default function ChatWidget() {
       const res = await axios.get(`/api/chat/${roomId}`, { withCredentials: true });
       setMessages(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      console.error("❌ Error fetching messages:", err);
+      console.error(" Error fetching messages:", err);
       setError("Failed to load messages.");
     } finally {
       setLoading(false);
@@ -100,7 +100,7 @@ export default function ChatWidget() {
       setText("");
       setImages([]);
     } catch (err) {
-      console.error("❌ Error sending message:", err);
+      console.error(" Error sending message:", err);
       setError("Failed to send message.");
     } finally {
       setLoading(false);

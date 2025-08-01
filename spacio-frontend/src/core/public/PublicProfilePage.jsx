@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // ✅ useLocation instead of useParams
+import { useLocation, useNavigate } from "react-router-dom"; //  useLocation instead of useParams
 import AuthPromptModal from "../../components/AuthPromptModal";
 import Footer from "../../components/footer.jsx";
 import Header from "../../components/header.jsx";

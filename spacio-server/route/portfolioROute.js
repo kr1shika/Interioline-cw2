@@ -10,6 +10,12 @@ const { logActivity, authenticateToken, authorizeRole } = require("../middleware
 const uploadDir = "portfolio_uploads";
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
+const imageFileFilter = (req, file, cb) => {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error("Only image files are allowed!"), false);
+    }
+    cb(null, true);
+};
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadDir),
     filename: (req, file, cb) => {
@@ -17,8 +23,11 @@ const storage = multer.diskStorage({
         cb(null, uniqueName + path.extname(file.originalname));
     },
 });
-const upload = multer({ storage });
-router.post(
+const upload = multer({
+    storage,
+    fileFilter: imageFileFilter,
+    limits: { fileSize: 2 * 1024 * 1024 }, // Limit 2MB per image
+});router.post(
     "/create",
     authenticateToken,
     authorizeRole(["designer"]),

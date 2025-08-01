@@ -126,7 +126,7 @@ const getCurrentUserProfile = async (req, res) => {
         if (!user) return res.status(404).json({ message: "User not found" });
         res.status(200).json(user);
     } catch (err) {
-        // console.error("❌ Error fetching user profile:", err);
+        // console.error(" Error fetching user profile:", err);
         res.status(500).json({ message: "Failed to load profile" });
     }
 };
@@ -143,7 +143,7 @@ const updateDesignerProfile = async (req, res) => {
 
         res.status(200).json(updated);
     } catch (err) {
-        // console.error("❌ Error updating profile:", err);
+        // console.error(" Error updating profile:", err);
         res.status(500).json({ message: "Failed to update profile" });
     }
 };

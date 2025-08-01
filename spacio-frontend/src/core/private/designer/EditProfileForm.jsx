@@ -72,13 +72,13 @@ export default function EditProfileForm({ designer, onClose }) {
 
       const response = await axios.put("/api/user/update", data, {
         withCredentials: true,
-        headers: { "Content-Type": "application/json", "CSRF-Token": csrfToken },
+        headers: { "CSRF-Token": csrfToken },
       });
 
       updateUserProfile(response.data.user); // context update
       onClose();
     } catch (err) {
-      console.error("❌ Profile update failed:", err);
+      console.error(" Profile update failed:", err);
       const code = err.response?.status;
       if (code === 401) setError("Session expired. Please log in again.");
       else if (code === 403) setError("Access denied.");

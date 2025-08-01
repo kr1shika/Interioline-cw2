@@ -31,7 +31,7 @@ const createPortfolioPost = async (req, res) => {
         await post.save();
         res.status(201).json({ message: "Portfolio post created" });
     } catch (error) {
-        console.error("❌ Error creating portfolio post:", error);
+        console.error("Error creating portfolio post:", error);
         res.status(500).json({ message: "Failed to create portfolio post", error: error.message });
     }
 };
@@ -66,7 +66,7 @@ const deletePortfolioPost = async (req, res) => {
 
         res.status(200).json({ message: "Post deleted successfully" });
     } catch (err) {
-        console.error("❌ Error deleting portfolio post:", err);
+        console.error("Error deleting portfolio post:", err);
         res.status(500).json({ message: "Failed to delete post" });
     }
 };
@@ -78,7 +78,7 @@ const getMyPortfolioPosts = async (req, res) => {
 
         res.status(200).json(posts);
     } catch (err) {
-        console.error("❌ Error fetching portfolio posts:", err);
+        console.error("Error fetching portfolio posts:", err);
         res.status(500).json({ message: "Failed to fetch portfolio posts" });
     }
 };

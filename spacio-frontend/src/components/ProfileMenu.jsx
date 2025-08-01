@@ -51,9 +51,9 @@ const ProfileMenu = () => {
 
     // Get profile picture from user data or use default
     const profilePicture = user?.profile_picture
-        ? `https://localhost:2005{user.profile_picture}`
+        ? `{user.profile_picture}`
         : user?.profilepic
-            ? `https://localhost:2005${user.profilepic}`
+            ? `${user.profilepic}`
             : defaultProfile;
 
     return (

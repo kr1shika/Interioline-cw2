@@ -43,6 +43,8 @@ app.use(cors({
 //   credentials: true
 // }));
 
+// 192.168.1.71
+
 app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
 app.use(express.json());
@@ -84,6 +86,20 @@ app.use("/api/auth", authRouter);
 app.use("/api/project", projectRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/quiz", quizRouter);
+
+
+app.use((err, req, res, next) => {
+    if (err.message === "Only image files are allowed!") {
+        return res.status(400).json({ message: err.message });
+    }
+
+    if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({ message: "Image size must be under 2MB." });
+    }
+
+    // Catch-all fallback
+    return res.status(500).json({ message: "Something went wrong on the server." });
+});
 
 //  CSRF Error Handler
 app.use((err, req, res, next) => {

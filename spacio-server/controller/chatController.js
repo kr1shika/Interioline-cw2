@@ -26,7 +26,7 @@ exports.sendMessageToRoom = async (req, res) => {
 
     const project = await Project.findById(projectId);
     if (!project) {
-      console.error("❌ Project not found:", projectId);
+      console.error(" Project not found:", projectId);
       return res.status(404).json({ error: "Project not found" });
     }
 
@@ -37,7 +37,7 @@ exports.sendMessageToRoom = async (req, res) => {
     } else if (project.designer.toString() === senderId.toString()) {
       receiverId = project.client;
     } else {
-      console.error("❌ Sender not part of this project.");
+      console.error(" Sender not part of this project.");
       return res.status(400).json({ error: "Sender not part of this project" });
     }
 
@@ -50,7 +50,7 @@ exports.sendMessageToRoom = async (req, res) => {
 
     return res.status(201).json(populatedMessage);
   } catch (err) {
-    console.error("❌ Error sending message:", err);
+    console.error(" Error sending message:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 };

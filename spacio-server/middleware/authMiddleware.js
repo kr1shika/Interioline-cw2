@@ -195,7 +195,7 @@ const logActivity = (action) => {
                 }
             }
 
-            if (!userId) return next(); // Skip if still not available
+            if (!userId) return next();
 
             const logEntry = new ActivityLog({
                 userId,

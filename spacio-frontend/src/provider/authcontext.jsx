@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [userRole, setUserRole] = useState("");
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const [skipInit, setSkipInit] = useState(false); // 🔁 controls re-fetching after logout
 
     const logout = useCallback(async () => {
         try {
@@ -19,15 +19,16 @@ export const AuthProvider = ({ children }) => {
                 headers: {
                     "Content-Type": "application/json",
                     "CSRF-Token": csrfToken
-                }, withCredentials: true
+                },
+                withCredentials: true
             });
         } catch (error) {
-            // console.error("Logout API call failed:", error);
+            // silent fail
         } finally {
             setIsLoggedIn(false);
             setUserRole("");
             setUser(null);
-            // console.log(" Logout complete");
+            setSkipInit(true); // 🚫 skip session recheck on mount
         }
     }, []);
 
@@ -41,30 +42,33 @@ export const AuthProvider = ({ children }) => {
     const initializeAuth = useCallback(async () => {
         try {
             const csrfToken = await getCsrfToken();
-
             const res = await axios.get("/api/auth/me", {
                 headers: {
                     "Content-Type": "application/json",
                     "CSRF-Token": csrfToken
-                }, withCredentials: true
+                },
+                withCredentials: true
             });
+
             const userData = res.data;
 
             setIsLoggedIn(true);
             setUserRole(userData.role?.toLowerCase() || "");
             setUser(userData);
-
-            // console.log(" Session restored via cookie");
         } catch (err) {
-            // console.log("❌ No valid session:", err.message);
-            logout();
+            logout(); // clean up invalid session
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, [logout]);
 
     useEffect(() => {
-        initializeAuth();
-    }, [initializeAuth]);
+        if (!skipInit) {
+            initializeAuth();
+        } else {
+            setLoading(false); // prevent hanging UI
+        }
+    }, [initializeAuth, skipInit]);
 
     const hasRole = useCallback((role) => {
         return userRole === role.toLowerCase();
@@ -77,8 +81,6 @@ export const AuthProvider = ({ children }) => {
     const updateUserProfile = useCallback((updatedData) => {
         const updatedUser = { ...user, ...updatedData };
         setUser(updatedUser);
-        // localStorage.setItem("user", JSON.stringify(updatedUser));
-        // console.log(" User profile updated");
     }, [user]);
 
     const contextValue = {
@@ -99,7 +101,5 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
-
-
 
 export const useAuth = () => useContext(AuthContext);

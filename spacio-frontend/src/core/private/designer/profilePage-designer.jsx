@@ -43,24 +43,24 @@ export default function ProfilePage() {
 
         const fetchProfile = async () => {
             try {
-                const res = await axios.get("https://localhost:2005/api/user/me", {
+                const res = await axios.get("/api/user/me", {
                     withCredentials: true,
                 });
                 setDesigner(res.data);
             } catch (err) {
-                console.error("❌ Error fetching profile:", err);
+                console.error(" Error fetching profile:", err);
                 setError("Failed to load profile.");
             }
         };
 
         const fetchPortfolioPosts = async () => {
             try {
-                const res = await axios.get("https://localhost:2005/api/portfolio/my", {
+                const res = await axios.get("/api/portfolio/my", {
                     withCredentials: true,
                 });
                 setPortfolioPosts(res.data || []);
             } catch (err) {
-                console.error("❌ Error fetching portfolio posts:", err);
+                console.error(" Error fetching portfolio posts:", err);
             }
         };
 
@@ -78,14 +78,14 @@ export default function ProfilePage() {
 
     const handleProfileUpdate = async () => {
         try {
-            const res = await axios.get("https://localhost:2005/api/user/me", {
+            const res = await axios.get("/api/user/me", {
                 withCredentials: true,
             });
             setDesigner(res.data);
             setIsEditing(false);
             // console.log(" Profile updated");
         } catch (err) {
-            console.error("❌ Error refreshing profile:", err);
+            console.error(" Error refreshing profile:", err);
         }
     };
 
@@ -101,7 +101,7 @@ export default function ProfilePage() {
         try {
             const csrfToken = await getCsrfToken();
 
-            await axios.delete(`https://localhost:2005/api/portfolio/posts/${postToDelete}`, {
+            await axios.delete(`/api/portfolio/posts/${postToDelete}`, {
                 withCredentials: true,
 
                 headers: {
@@ -116,7 +116,7 @@ export default function ProfilePage() {
             setShowDeleteModal(false);
             setPostToDelete(null);
         } catch (err) {
-            console.error("❌ Error deleting post:", err);
+            console.error(" Error deleting post:", err);
             setError("Failed to delete post.");
         } finally {
             setIsDeleting(false);

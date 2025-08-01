@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import img3 from "../../assets/images/contact.png";
 import match from "../../assets/images/MATCH.png";
 import img2 from "../../assets/images/project.png";
+import room from "../../assets/images/room-101.png";
+
 import AutoCarousel from "../../components/autocarousel.jsx";
 import Footer from "../../components/footer.jsx";
 import LandingHeader from "../../components/landingHeader.jsx";
@@ -20,7 +22,7 @@ function LandingPage() {
     useEffect(() => {
         const observerOptions = {
             root: null,
-            rootMargin: '-30% 0px -30% 0px', // Trigger when element is in center 40% of viewport
+            rootMargin: '-30% 0px -30% 0px', 
             threshold: 0.5
         };
 
@@ -61,7 +63,8 @@ function LandingPage() {
                 </div>
 
                 <div className="canvas-section">
-                    <ThreeCanvas />
+                    {/* <ThreeCanvas /> */}
+                                                        <img src={room}  />
                 </div>
             </div>
 

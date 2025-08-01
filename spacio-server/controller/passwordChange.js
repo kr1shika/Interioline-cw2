@@ -115,7 +115,7 @@ const requestPasswordChange = async (req, res) => {
 
         res.status(200).json({ message: "If this email exists, an OTP has been sent" });
     } catch (error) {
-        // console.error("❌ Error sending OTP:", error);
+        // console.error(" Error sending OTP:", error);
         res.status(500).json({ error: "Failed to send OTP. Please try again." });
     }
 };
@@ -190,7 +190,7 @@ const verifyOTPOnly = async (req, res) => {
         // console.log(` OTP verified successfully for ${email} from IP: ${clientIP}`);
         res.status(200).json({ message: "OTP verified successfully" });
     } catch (error) {
-        // console.error("❌ Error verifying OTP:", error);
+        // console.error(" Error verifying OTP:", error);
         res.status(500).json({ error: "Failed to verify OTP. Please try again." });
     }
 };
@@ -304,7 +304,7 @@ const resendOTP = async (req, res) => {
         // console.log(` OTP resent to ${email} from IP: ${clientIP}`);
         res.status(200).json({ message: "If this email exists, an OTP has been sent" });
     } catch (error) {
-        // console.error("❌ Error resending OTP:", error);
+        // console.error(" Error resending OTP:", error);
         res.status(500).json({ error: "Failed to resend OTP. Please try again." });
     }
 };

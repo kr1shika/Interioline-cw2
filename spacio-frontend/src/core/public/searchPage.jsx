@@ -108,7 +108,7 @@ export default function SearchDesignersPage() {
 
             // console.log(`Filtering designers by style: ${styleName}`);
 
-            const res = await axios.get(`https://localhost:2005/api/user/style/${styleName}`);
+            const res = await axios.get(`/api/user/style/${styleName}`);
             const filteredDesigners = res.data.designers;
 
             // console.log(`Found ${filteredDesigners.length} designers for ${styleName} style`);
@@ -116,7 +116,7 @@ export default function SearchDesignersPage() {
             const designersWithPrimaryImage = await Promise.all(
                 filteredDesigners.map(async (designer) => {
                     try {
-                        const postRes = await axios.get(`https://localhost:2005/api/portfolio/posts/${designer._id}`);
+                        const postRes = await axios.get(`/api/portfolio/posts/${designer._id}`);
                         const posts = postRes.data.posts;
 
                         const firstPost = posts[0];
@@ -154,13 +154,13 @@ export default function SearchDesignersPage() {
         try {
             setLoading(true);
 
-            const res = await axios.get("https://localhost:2005/api/user/getAllDesigners");
+            const res = await axios.get("/api/user/getAllDesigners");
             const designersData = res.data;
 
             const designersWithPrimaryImage = await Promise.all(
                 designersData.map(async (designer) => {
                     try {
-                        const postRes = await axios.get(`https://localhost:2005/api/portfolio/posts/${designer._id}`);
+                        const postRes = await axios.get(`/api/portfolio/posts/${designer._id}`);
                         const posts = postRes.data.posts;
 
                         const firstPost = posts[0];
@@ -181,7 +181,7 @@ export default function SearchDesignersPage() {
 
             if (isLoggedIn && userId && userRole === "client") {
                 try {
-                    const userRes = await axios.get(`https://localhost:2005/api/user/${userId}`);
+                    const userRes = await axios.get(`/api/user/${userId}`);
                     const userData = userRes.data;
 
                     if (userData.style_quiz && Object.keys(userData.style_quiz).length > 0) {
@@ -255,13 +255,13 @@ export default function SearchDesignersPage() {
         try {
             setLoading(true);
             // console.log(`Searching designers for query: ${query}`);
-            const res = await axios.get(`https://localhost:2005/api/user/search/${query}`);
+            const res = await axios.get(`/api/user/search/${query}`);
             const searchedDesigners = res.data.designers;
 
             const designersWithPrimaryImage = await Promise.all(
                 searchedDesigners.map(async (designer) => {
                     try {
-                        const postRes = await axios.get(`https://localhost:2005/api/portfolio/posts/${designer._id}`);
+                        const postRes = await axios.get(`/api/portfolio/posts/${designer._id}`);
                         const posts = postRes.data.posts;
 
                         const firstPost = posts[0];
@@ -379,7 +379,7 @@ export default function SearchDesignersPage() {
                                         <img
                                             src={
                                                 designer.profilepic
-                                                    ? `https://localhost:2005${designer.profilepic}`
+                                                    ? `${designer.profilepic}`
                                                     : "/assets/default-avatar.png"
                                             }
                                             alt={designer.full_name}
@@ -399,7 +399,7 @@ export default function SearchDesignersPage() {
                                     <img
                                         src={
                                             designer.primaryImage
-                                                ? `https://localhost:2005${designer.primaryImage}`
+                                                ? `${designer.primaryImage}`
                                                 : "/assets/rooms/sample1.jpg"
                                         }
                                         alt="room"
@@ -453,7 +453,7 @@ export default function SearchDesignersPage() {
                                                 <img
                                                     src={
                                                         designer.profilepic
-                                                            ? `https://localhost:2005${designer.profilepic}`
+                                                            ? `${designer.profilepic}`
                                                             : "/assets/default-avatar.png"
                                                     }
                                                     alt={designer.full_name}
@@ -473,7 +473,7 @@ export default function SearchDesignersPage() {
                                             <img
                                                 src={
                                                     designer.primaryImage
-                                                        ? `https://localhost:2005${designer.primaryImage}`
+                                                        ? `${designer.primaryImage}`
                                                         : "/assets/rooms/sample1.jpg"
                                                 }
                                                 alt="room"

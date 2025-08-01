@@ -41,20 +41,20 @@ const calculatePasswordStrength = (password) => {
     if (/123456|abcdef|qwerty|password/i.test(password)) score -= 15; // common patterns
 
     let strength = 'Very Weak';
-    let color = '#ef4444'; 
+    let color = '#ef4444';
 
     if (score >= 85) {
         strength = 'Very Strong';
-        color = '#22c55e'; 
+        color = '#22c55e';
     } else if (score >= 70) {
         strength = 'Strong';
-        color = '#84cc16'; 
+        color = '#84cc16';
     } else if (score >= 50) {
         strength = 'Medium';
         color = '#eab308';
     } else if (score >= 30) {
         strength = 'Weak';
-        color = '#f97316'; 
+        color = '#f97316';
     }
 
     return { score: Math.max(0, Math.min(100, score)), strength, feedback, color };
@@ -106,7 +106,7 @@ export default function AuthPopup({ onClose }) {
 
             setLoading(true);
             const csrfToken = await getCsrfToken();
-            const res = await fetch("https://localhost:2005/api/auth/login", {
+            const res = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "CSRF-Token": csrfToken },
                 credentials: "include",
@@ -138,7 +138,7 @@ export default function AuthPopup({ onClose }) {
         try {
             const csrfToken = await getCsrfToken();
 
-            const res = await fetch("https://localhost:2005/api/auth/verify-otp", {
+            const res = await fetch("/api/auth/verify-otp", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -184,7 +184,7 @@ export default function AuthPopup({ onClose }) {
         try {
             const csrfToken = await getCsrfToken();
 
-            const res = await fetch("https://localhost:2005/api/auth/signup", {
+            const res = await fetch("/api/auth/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -291,7 +291,7 @@ export default function AuthPopup({ onClose }) {
                                                 className="forgot-password-link"
                                                 disabled={loading || otpSent}
                                             >
-                                                Forgot your password?
+                                                Reset Password
                                             </button>
 
                                             {/* OTP + Buttons */}
@@ -413,7 +413,7 @@ export default function AuthPopup({ onClose }) {
                                                     try {
                                                         const csrfToken = await getCsrfToken();
 
-                                                        const res = await fetch("https://localhost:2005/api/auth/verify-registration-otp", {
+                                                        const res = await fetch("/api/auth/verify-registration-otp", {
                                                             method: "POST",
                                                             headers: {
                                                                 "Content-Type": "application/json",
@@ -470,7 +470,6 @@ export default function AuthPopup({ onClose }) {
                     )}
                 </AnimatePresence>
             </div>
-
             {/* Change Password Modal */}
             <ChangePasswordModal
                 isOpen={showChangePassword}

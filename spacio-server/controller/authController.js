@@ -95,7 +95,7 @@ const loginRequest = async (req, res) => {
             text: `Your OTP is: ${otp}`,
         });
     } catch (mailErr) {
-        console.error("❌ Failed to send OTP email:", mailErr);
+        console.error(" Failed to send OTP email:", mailErr);
         return res.status(500).json({ errors: ["Failed to send OTP. Try again later."] });
     }
 

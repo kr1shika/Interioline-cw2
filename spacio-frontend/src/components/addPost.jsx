@@ -89,58 +89,72 @@ export default function AddPortfolioModal({ onClose }) {
         }));
     };
 
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
 
-    if (!isLoggedIn) {
-        setError("Please log in first.");
-        return;
-    }
+        if (!isLoggedIn) {
+            setError("Please log in first.");
+            return;
+        }
 
-    if (selectedImages.length === 0) {
-        setError("Please select at least one image.");
-        return;
-    }
+        if (selectedImages.length === 0) {
+            setError("Please select at least one image.");
+            return;
+        }
 
-    setLoading(true);
-    const formData = new FormData();
+        setLoading(true);
+        const formData = new FormData();
 
-    try {
-        formData.append("title", sanitizeUserInput(newPost.title));
-        formData.append("room_type", sanitizeUserInput(newPost.room_type));
-        formData.append("tags", sanitizeUserInput(newPost.tags));
-        newPost.captions.forEach((caption, idx) => {
-            formData.append(`captions[${idx}]`, sanitizeUserInput(caption));
-        });
-    } catch (err) {
-        console.error("Sanitization error:", err.message);
-        setToast({ message: err.message || "Suspicious input blocked", type: "error" });
-        setLoading(false);
-        return;
-    }
+        try {
+            formData.append("title", sanitizeUserInput(newPost.title));
+            formData.append("room_type", sanitizeUserInput(newPost.room_type));
+            formData.append("tags", sanitizeUserInput(newPost.tags));
+            newPost.captions.forEach((caption, idx) => {
+                formData.append(`captions[${idx}]`, sanitizeUserInput(caption));
+            });
+        } catch (err) {
+            console.error("Sanitization error:", err.message);
+            setToast({ message: err.message || "Suspicious input blocked", type: "error" });
+            setLoading(false);
+            return;
+        }
 
-    selectedImages.forEach((img) => formData.append("images", img));
+        selectedImages.forEach((img) => formData.append("images", img));
 
-    try {
-        const csrfToken = await getCsrfToken();
-        await axios.post("https://localhost:2005/api/portfolio/create", formData, {
-            withCredentials: true,
-            headers: {
-                "Content-Type": "multipart/form-data",
-                "CSRF-Token": csrfToken
-            },
-        });
+        try {
+            const csrfToken = await getCsrfToken();
+            await axios.post("/api/portfolio/create", formData, {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "CSRF-Token": csrfToken
+                },
+            });
 
-        setToast({ message: "Post uploaded successfully!", type: "success" });
-        onClose();
-    } catch (err) {
-        console.error("❌ Upload failed:", err);
-        setError(err?.response?.data?.message || "Upload failed. Please try again.");
-    } finally {
-        setLoading(false);
-    }
-};
+            setToast({ message: "Post uploaded successfully!", type: "success" });
+
+            setTimeout(() => {
+                onClose();
+            }, 2000); // show toast for 2 seconds before closing
+
+        } catch (err) {
+            const raw = err?.response?.data;
+            const isHTML = typeof raw === "string" && raw.startsWith("<!DOCTYPE");
+
+            const errorMsg =
+                !isHTML && raw?.message
+                    ? raw.message
+                    : "Upload failed. Only image files under 2MB are allowed.";
+
+            setToast({ message: errorMsg, type: "error" });
+            setError(errorMsg); // optional
+        }
+
+        finally {
+            setLoading(false);
+        }
+    };
 
 
     if (!isLoggedIn) {

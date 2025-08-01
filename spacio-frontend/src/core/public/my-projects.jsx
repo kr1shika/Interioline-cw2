@@ -48,7 +48,7 @@ export default function MyProjectsPage() {
         }
         const fetchProjects = async () => {
             try {
-                const res = await axios.get("https://localhost:2005/api/project/my", {
+                const res = await axios.get("/api/project/my", {
                     withCredentials: true
                 });
 
@@ -60,7 +60,7 @@ export default function MyProjectsPage() {
 
                 return fetched;
             } catch (err) {
-                console.error("❌ Error fetching projects:", err);
+                console.error(" Error fetching projects:", err);
                 setError("Failed to load projects.");
                 return [];
             }
@@ -68,14 +68,14 @@ export default function MyProjectsPage() {
 
         const fetchUserProfile = async () => {
             try {
-                const res = await axios.get("https://localhost:2005/api/user/me", {
+                const res = await axios.get("/api/user/me", {
                     withCredentials: true
                 });
 
                 setUserProfile(res.data);
                 // console.log(" User profile loaded:", res.data.full_name);
             } catch (err) {
-                console.error("❌ Error fetching user profile:", err);
+                console.error(" Error fetching user profile:", err);
                 if (err.response?.status === 401) {
                     //console.log(" Unauthorized access to profile");
                 }
@@ -84,7 +84,7 @@ export default function MyProjectsPage() {
 
         const fetchDesignerStats = async () => {
             try {
-                const res = await axios.get("https://localhost:2005/api/project/designer/stats", { withCredentials: true });
+                const res = await axios.get("/api/project/designer/stats", { withCredentials: true });
                 setDashboardStats(prev => ({
                     ...prev,
                     totalClients: res.data.totalClients || 0,
@@ -93,7 +93,7 @@ export default function MyProjectsPage() {
                     totalReviews: res.data.totalReviews || 0
                 }));
             } catch (err) {
-                console.error("❌ Error fetching designer stats:", err);
+                console.error(" Error fetching designer stats:", err);
             }
         };
 
@@ -142,7 +142,7 @@ export default function MyProjectsPage() {
     const updateProjectStatus = async (projectId, newStatus) => {
         try {
             await axios.patch(
-                `https://localhost:2005/api/project/${projectId}/status`,
+                `/api/project/${projectId}/status`,
                 { status: newStatus },
                 { withCredentials: true } //  secure cookie-based auth
             );
@@ -162,7 +162,7 @@ export default function MyProjectsPage() {
 
             // console.log(" Project status updated:", newStatus);
         } catch (err) {
-            console.error("❌ Error updating project status:", err);
+            console.error(" Error updating project status:", err);
 
             if (err.response?.status === 401) {
                 setError("Session expired. Please log in again.");
@@ -205,12 +205,12 @@ export default function MyProjectsPage() {
     };
     const fetchUserProfile = async () => {
         try {
-            const res = await axios.get("https://localhost:2005/api/user/me", {
+            const res = await axios.get("/api/user/me", {
                 withCredentials: true,
             });
             setUserProfile(res.data);
         } catch (err) {
-            console.error("❌ Error fetching user profile:", err);
+            console.error(" Error fetching user profile:", err);
         }
     };
 
@@ -470,7 +470,7 @@ export default function MyProjectsPage() {
                         <div className="profile-content">
                             <div className="profile-avatar">
                                 <img
-                                    src={userProfile.profilepic ? `https://localhost:2005${userProfile.profilepic}` : profile}
+                                    src={userProfile.profilepic ? `${userProfile.profilepic}` : profile}
                                     alt="Profile"
                                     className="profile-image"
                                 />

@@ -98,7 +98,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
             const csrfToken = await getCsrfToken();
 
             await axios.post(
-                'https://localhost:2005/api/password-change/request-otp',
+                '/api/password-change/request-otp',
                 { email: formData.email },
                 {
                     headers: {
@@ -130,7 +130,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
             const csrfToken = await getCsrfToken();
 
             await axios.post(
-                'https://localhost:2005/api/password-change/resend-otp',
+                '/api/password-change/resend-otp',
                 { email: formData.email },
                 {
                     headers: {
@@ -171,7 +171,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
             const csrfToken = await getCsrfToken();
 
             await axios.post(
-                'https://localhost:2005/api/password-change/verify-otp-only',
+                '/api/password-change/verify-otp-only',
                 {
                     email: formData.email,
                     otp: formData.otp
@@ -244,7 +244,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
             const csrfToken = await getCsrfToken();
 
             await axios.post(
-                'https://localhost:2005/api/password-change/change-password',
+                '/api/password-change/change-password',
                 {
                     email: formData.email,
                     otp: formData.otp,

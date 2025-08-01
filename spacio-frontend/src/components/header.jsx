@@ -49,7 +49,7 @@ const Header = ({ onGetStartedClick }) => {
                 const projects = res.data || [];
                 setHasProjects(projects.length > 0);
             } catch (err) {
-                console.error("❌ Failed to fetch projects:", err);
+                console.error(" Failed to fetch projects:", err);
             }
         };
 

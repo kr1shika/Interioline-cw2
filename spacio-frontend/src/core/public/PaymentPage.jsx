@@ -50,7 +50,7 @@ const PaymentPage = ({
         try {
             if (currentProject?.designer) {
                 try {
-                    const designerRes = await axios.get(`https://localhost:2005/api/user/${currentProject.designer}`);
+                    const designerRes = await axios.get(`/api/user/${currentProject.designer}`);
                     setDesignerData(designerRes.data);
                 } catch (err) {
                     console.log('Designer data not found');
@@ -60,7 +60,7 @@ const PaymentPage = ({
             // Fetch client details
             if (currentProject?.client) {
                 try {
-                    const clientRes = await axios.get(`https://localhost:2005/api/user/${currentProject.client}`);
+                    const clientRes = await axios.get(`/api/user/${currentProject.client}`);
                     setClientData(clientRes.data);
                 } catch (err) {
                     console.log('Client data not found');
@@ -167,7 +167,7 @@ const PaymentPage = ({
         setTimeout(async () => {
             try {
                 const response = await axios.post(
-                    `https://localhost:2005/api/payment/create`,
+                    `/api/payment/create`,
                     {
                         amount: finalAmount,
                         projectId: projectId,
@@ -188,7 +188,7 @@ const PaymentPage = ({
 
                     setTimeout(async () => {
                         if (onSuccess) {
-                            const updatedProject = await axios.get(`https://localhost:2005/api/project/${projectId}`);
+                            const updatedProject = await axios.get(`/api/project/${projectId}`);
                             onSuccess({
                                 ...response.data.payment,
                                 amount: finalAmount,
@@ -261,7 +261,7 @@ const PaymentPage = ({
                                 <div style={styles.avatar}>
                                     {designerData?.profilepic ? (
                                         <img
-                                            src={`https://localhost:2005${designerData.profilepic}`}
+                                            src={`${designerData.profilepic}`}
                                             alt="Designer"
                                             style={styles.avatarImg}
                                         />
@@ -290,7 +290,7 @@ const PaymentPage = ({
                                 <div style={styles.avatar}>
                                     {clientData?.profilepic ? (
                                         <img
-                                            src={`https://localhost:2005${clientData.profilepic}`}
+                                            src={`${clientData.profilepic}`}
                                             alt="Client"
                                             style={styles.avatarImg}
                                         />

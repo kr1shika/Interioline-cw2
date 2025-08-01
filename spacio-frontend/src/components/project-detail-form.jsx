@@ -125,7 +125,7 @@ export default function UploadRoomDataModal({ onClose, projectId }) {
             const csrfToken = await getCsrfToken();
 
             await axios.patch(
-                `https://localhost:2005/api/project/${projectId}/room-details`,
+                `/api/project/${projectId}/room-details`,
                 formData,
                 {
                     headers: {
