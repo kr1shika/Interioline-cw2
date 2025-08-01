@@ -63,7 +63,7 @@ const authenticateToken = async (req, res, next) => {
 
         // Attach user details to req object
         req.user = user;
-        req.userId = session.userId.toString(); // 🔐 No longer from decoded.token
+        req.userId = session.userId.toString(); //  No longer from decoded.token
         req.token = token;
         req.sessionId = decoded.sessionId;
 

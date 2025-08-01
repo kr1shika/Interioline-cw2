@@ -2,7 +2,7 @@ import { Star, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../provider/authcontext";
 import "./AddReviewModal.css";
-import { getCsrfToken } from "../../provider/csrf";
+import { getCsrfToken } from "../provider/csrf";
 
 const AddReviewModal = ({ isOpen, onClose, projectInfo, onSubmitSuccess }) => {
     const { userId } = useAuth();

@@ -41,6 +41,7 @@ const signup = async (req, res) => {
             otp: hashedOtp,
             otpExpiry: Date.now() + 10 * 60 * 1000
         };
+        
         await transporter.sendMail({
             from: `"InterioLine" <${process.env.EMAIL_USER}>`,
             to: email,

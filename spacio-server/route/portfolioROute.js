@@ -33,7 +33,7 @@ router.delete(
     deletePortfolioPost
 );
 
-router.get("/my", authenticateToken, logActivity("Get My Portfolio Posts"), getMyPortfolioPosts);
+router.get("/my", authenticateToken, authorizeRole(["designer"]), logActivity("Get My Portfolio Posts"), getMyPortfolioPosts);
 router.delete("/:id", authenticateToken, authorizeRole(["designer"]), logActivity("Delete Portfolio"), deletePortfolioPost);
 
 module.exports = router;
