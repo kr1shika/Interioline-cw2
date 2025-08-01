@@ -43,7 +43,6 @@ export default function MyProjectsPage() {
     useEffect(() => {
         if (authLoading) return;
         if (!isLoggedIn) {
-            console.log("🔒 Not authenticated, redirecting to home");
             navigate('/');
             return;
         }
@@ -74,11 +73,11 @@ export default function MyProjectsPage() {
                 });
 
                 setUserProfile(res.data);
-                console.log("✅ User profile loaded:", res.data.full_name);
+                // console.log(" User profile loaded:", res.data.full_name);
             } catch (err) {
                 console.error("❌ Error fetching user profile:", err);
                 if (err.response?.status === 401) {
-                    console.log("🔒 Unauthorized access to profile");
+                    //console.log(" Unauthorized access to profile");
                 }
             }
         };
@@ -145,7 +144,7 @@ export default function MyProjectsPage() {
             await axios.patch(
                 `https://localhost:2005/api/project/${projectId}/status`,
                 { status: newStatus },
-                { withCredentials: true } // ✅ secure cookie-based auth
+                { withCredentials: true } //  secure cookie-based auth
             );
 
             // Update local state
@@ -161,7 +160,7 @@ export default function MyProjectsPage() {
                 calculateDashboardStats(updatedProjects);
             }
 
-            console.log("✅ Project status updated:", newStatus);
+            // console.log(" Project status updated:", newStatus);
         } catch (err) {
             console.error("❌ Error updating project status:", err);
 
@@ -245,7 +244,7 @@ export default function MyProjectsPage() {
 
 
     const handlePaymentSuccess = async (paymentData) => {
-        console.log('💳 Payment successful:', paymentData);
+        // console.log('💳 Payment successful:', paymentData);
 
         const updatedProjects = await fetchProjects();
         setProjects(updatedProjects);
@@ -295,9 +294,9 @@ export default function MyProjectsPage() {
         const payments = project.payments || [];
 
         const hasFullPayment = payments.some(p => p.payment_type === 'full');
-        if (hasFullPayment) return '✅ Paid (Full)';
+        if (hasFullPayment) return ' Paid (Full)';
 
-        if (payments.length >= 2) return '✅ Paid (Installments)';
+        if (payments.length >= 2) return ' Paid (Installments)';
 
         if (payments.length === 1 && payments[0].payment_type === 'half') {
             return '🔄 50% Paid';
@@ -319,7 +318,7 @@ export default function MyProjectsPage() {
 
     // Modified function to handle edit/view button click
     const handleProjectAction = async (project) => {
-        console.log("Project action clicked for:", project.title, "Status:", project.status);
+        // console.log("Project action clicked for:", project.title, "Status:", project.status);
 
         if (userRole === 'designer') {
             // Navigate to room editor with project data including status
@@ -333,15 +332,15 @@ export default function MyProjectsPage() {
             });
         } else {
             try {
-                console.log("Checking for room configuration for project:", project._id);
+                // console.log("Checking for room configuration for project:", project._id);
 
                 // Use the same function that CustomRoomDesigner uses
                 const projectRoom = getRoomConfigurationByProjectId(project._id);
 
-                console.log("Found project room:", projectRoom);
+                // console.log("Found project room:", projectRoom);
 
                 if (projectRoom) {
-                    console.log("Room found, navigating to view-only mode with status:", project.status);
+                    // console.log("Room found, navigating to view-only mode with status:", project.status);
                     navigate('/room-view', {
                         state: {
                             projectId: project._id,
@@ -351,7 +350,7 @@ export default function MyProjectsPage() {
                         }
                     });
                 } else {
-                    console.log("No room found for project");
+                    // console.log("No room found for project");
                     // Show toast if no room design is available
                     showToast("Room design is not available yet. Please wait for the designer to create it.", "warning");
                 }

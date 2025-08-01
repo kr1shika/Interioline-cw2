@@ -71,25 +71,19 @@ const PaymentPage = ({
         }
     };
     const calculateAmount = () => {
-        console.log(" Calculating Amount...");
-        console.log("Selected Payment Type:", selectedPaymentType);
-        console.log("Project Amount:", amount);
-        console.log("Total Already Paid:", totalPaid);
+
 
         if (selectedPaymentType === "final") {
             const remaining = amount - totalPaid;
-            console.log("💰 Final Payment Remaining:", remaining);
             return remaining > 0 ? remaining : 0;
         }
 
         if (selectedPaymentType === "full") {
             const discounted = Math.round(amount * 0.95);
-            console.log("💰 Full Payment (95%):", discounted);
             return discounted;
         }
 
         const half = Math.round(amount * 0.5);
-        console.log("💰 Half Payment:", half);
         return half;
     };
 
@@ -324,12 +318,7 @@ const PaymentPage = ({
                         <div style={styles.paymentOptions}>
                             {/* Decide what to show based on existing payments */}
                             {(() => {
-                                console.log("📦 Payment Conditions");
-                                console.log("✅ isFullyPaid:", isFullyPaid);
-                                console.log("🧾 hasPaidHalf:", hasPaidHalf);
-                                console.log("💯 hasPaidFull:", hasPaidFull);
-                                console.log("🏷️ Total Paid:", totalPaid);
-                                console.log("🏷️ Project Amount:", amount);
+
                                 if (isFullyPaid) {
                                     return (
                                         <div style={{ padding: "1rem", color: "#4caf50", fontWeight: "600" }}>

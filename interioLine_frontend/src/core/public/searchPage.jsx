@@ -106,12 +106,12 @@ export default function SearchDesignersPage() {
             setIsStyleFiltered(true);
             setIsQuizBased(false);
 
-            console.log(`Filtering designers by style: ${styleName}`);
+            // console.log(`Filtering designers by style: ${styleName}`);
 
             const res = await axios.get(`https://localhost:2005/api/user/style/${styleName}`);
             const filteredDesigners = res.data.designers;
 
-            console.log(`Found ${filteredDesigners.length} designers for ${styleName} style`);
+            // console.log(`Found ${filteredDesigners.length} designers for ${styleName} style`);
 
             const designersWithPrimaryImage = await Promise.all(
                 filteredDesigners.map(async (designer) => {
@@ -129,7 +129,7 @@ export default function SearchDesignersPage() {
 
                         return { ...designer, primaryImage };
                     } catch (err) {
-                        console.error(`Error fetching portfolio for ${designer.full_name}:`, err);
+                        // console.error(`Error fetching portfolio for ${designer.full_name}:`, err);
                         return { ...designer, primaryImage: null };
                     }
                 })
@@ -137,7 +137,7 @@ export default function SearchDesignersPage() {
 
             setDesigners(designersWithPrimaryImage);
         } catch (error) {
-            console.error("Error filtering designers by style:", error);
+            // console.error("Error filtering designers by style:", error);
             setDesigners([]);
         } finally {
             setLoading(false);
@@ -173,7 +173,7 @@ export default function SearchDesignersPage() {
 
                         return { ...designer, primaryImage };
                     } catch (err) {
-                        console.error(`Error fetching portfolio for ${designer.full_name}:`, err);
+                        // console.error(`Error fetching portfolio for ${designer.full_name}:`, err);
                         return { ...designer, primaryImage: null };
                     }
                 })
@@ -185,7 +185,7 @@ export default function SearchDesignersPage() {
                     const userData = userRes.data;
 
                     if (userData.style_quiz && Object.keys(userData.style_quiz).length > 0) {
-                        console.log("✅ User has quiz data, splitting designers by compatibility");
+                        // console.log(" User has quiz data, splitting designers by compatibility");
 
                         const designersWithScores = designersWithPrimaryImage.map(designer => ({
                             ...designer,
@@ -204,7 +204,7 @@ export default function SearchDesignersPage() {
                         setIsQuizBased(false);
                     }
                 } catch (error) {
-                    console.error("Error fetching user quiz data:", error);
+                    // console.error("Error fetching user quiz data:", error);
                     setDesigners(designersWithPrimaryImage);
                     setIsQuizBased(false);
                 }
@@ -214,7 +214,7 @@ export default function SearchDesignersPage() {
             }
 
         } catch (err) {
-            console.error("Failed to fetch designers:", err);
+            // console.error("Failed to fetch designers:", err);
             setDesigners([]);
         } finally {
             setLoading(false);
@@ -254,7 +254,7 @@ export default function SearchDesignersPage() {
     const handleSearchQuery = async (query) => {
         try {
             setLoading(true);
-            console.log(`Searching designers for query: ${query}`);
+            // console.log(`Searching designers for query: ${query}`);
             const res = await axios.get(`https://localhost:2005/api/user/search/${query}`);
             const searchedDesigners = res.data.designers;
 
@@ -274,7 +274,7 @@ export default function SearchDesignersPage() {
 
                         return { ...designer, primaryImage };
                     } catch (err) {
-                        console.error(`Error fetching portfolio for ${designer.full_name}:`, err);
+                        // console.error(`Error fetching portfolio for ${designer.full_name}:`, err);
                         return { ...designer, primaryImage: null };
                     }
                 })
@@ -284,7 +284,7 @@ export default function SearchDesignersPage() {
             setIsQuizBased(false);
             setIsStyleFiltered(false);
         } catch (error) {
-            console.error("Error searching designers:", error);
+            // console.error("Error searching designers:", error);
             setDesigners([]);
         } finally {
             setLoading(false);

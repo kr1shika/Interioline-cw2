@@ -364,7 +364,7 @@ export const useRoomScene = (mountRef) => {
     const updateDoors = useCallback((doors) => {
         if (!scene || !roomObject) return;
 
-        console.log('Updating doors:', doors);
+        // console.log('Updating doors:', doors);
 
         doorsRef.current.forEach(door => {
             roomObject.remove(door);
@@ -378,13 +378,13 @@ export const useRoomScene = (mountRef) => {
         });
 
         doorsRef.current = newDoors;
-        console.log('Doors updated:', newDoors.length);
+        // console.log('Doors updated:', newDoors.length);
     }, [scene, roomObject, currentRoomDimensions, createDoor]);
 
     const updateWindows = useCallback((windows) => {
         if (!scene || !roomObject) return;
 
-        console.log('Updating windows:', windows);
+        // console.log('Updating windows:', windows);
 
         // Remove existing windows
         windowsRef.current.forEach(window => {
@@ -400,7 +400,7 @@ export const useRoomScene = (mountRef) => {
         });
 
         windowsRef.current = newWindows;
-        console.log('Windows updated:', newWindows.length);
+        // console.log('Windows updated:', newWindows.length);
     }, [scene, roomObject, currentRoomDimensions, createWindow]);
 
     const updateWallColor = useCallback((color) => {

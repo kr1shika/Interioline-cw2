@@ -172,7 +172,7 @@ const CustomRoomDesigner = () => {
   // Process project information from location state - ONCE ONLY
   useEffect(() => {
     if (location.state?.projectId && !projectProcessed) {
-      console.log("Processing project info:", location.state);
+      // console.log("Processing project info:", location.state);
 
       const projectData = {
         id: location.state.projectId,
@@ -216,7 +216,7 @@ const CustomRoomDesigner = () => {
     try {
       setIsLoading(true);
       setLoadingProgress(10);
-      console.log("Loading project room:", existingRoom.name);
+      // console.log("Loading project room:", existingRoom.name);
 
       // Clear existing furniture
       clearAllFurniture();
@@ -248,7 +248,7 @@ const CustomRoomDesigner = () => {
 
       // Load regular furniture immediately
       if (regularFurniture.length > 0) {
-        console.log("Loading regular furniture immediately...");
+        // console.log("Loading regular furniture immediately...");
         await loadFurnitureFromConfig(regularFurniture);
         setLoadingProgress(80);
       }
@@ -257,7 +257,7 @@ const CustomRoomDesigner = () => {
       if (hasGLBModels) {
         const glbModels = existingRoom.placedFurniture.filter(item => item.isGLB);
         setPendingGLBLoad(glbModels);
-        console.log(`Project room loaded successfully! ${glbModels.length} GLB models pending.`);
+        // console.log(`Project room loaded successfully! ${glbModels.length} GLB models pending.`);
       }
 
       setLoadingProgress(100);
@@ -271,7 +271,7 @@ const CustomRoomDesigner = () => {
       }, 500);
 
     } catch (error) {
-      console.error("Error loading project room:", error);
+      // console.error("Error loading project room:", error);
       setIsLoading(false);
       setLoadingProgress(0);
       alert("Error occurred while loading project room.");
@@ -355,14 +355,14 @@ const CustomRoomDesigner = () => {
   // Load room configuration for non-project rooms
   const loadRoom = useCallback(async (config) => {
     if (isLoading) {
-      console.log("Room loading already in progress, skipping...");
+      // console.log("Room loading already in progress, skipping...");
       return;
     }
 
     try {
       setIsLoading(true);
       setLoadingProgress(10);
-      console.log("Loading room configuration:", config.name);
+      // console.log("Loading room configuration:", config.name);
 
       // Clear existing furniture
       clearAllFurniture();
@@ -394,7 +394,7 @@ const CustomRoomDesigner = () => {
 
       // Load regular furniture immediately
       if (regularFurniture.length > 0) {
-        console.log("Loading regular furniture immediately...");
+        // console.log("Loading regular furniture immediately...");
         await loadFurnitureFromConfig(regularFurniture);
         setLoadingProgress(80);
       }
@@ -403,7 +403,7 @@ const CustomRoomDesigner = () => {
       if (hasGLBModels) {
         const glbModels = config.placedFurniture.filter(item => item.isGLB);
         setPendingGLBLoad(glbModels);
-        console.log(`Room loaded successfully! ${glbModels.length} GLB models pending.`);
+        // console.log(`Room loaded successfully! ${glbModels.length} GLB models pending.`);
       }
 
       setLoadingProgress(100);
@@ -418,7 +418,7 @@ const CustomRoomDesigner = () => {
       }, 500);
 
     } catch (error) {
-      console.error("Error loading room:", error);
+      // console.error("Error loading room:", error);
       setIsLoading(false);
       setLoadingProgress(0);
       alert("Error occurred while loading room.");
@@ -430,22 +430,22 @@ const CustomRoomDesigner = () => {
     if (!pendingGLBLoad || pendingGLBLoad.length === 0) return;
 
     try {
-      console.log("Loading pending GLB models...");
+      // console.log("Loading pending GLB models...");
       setIsLoading(true);
       setLoadingProgress(0);
 
       const result = await loadFurnitureFromConfig(pendingGLBLoad);
 
       if (result.errors && result.errors.length > 0) {
-        console.warn("Some GLB models failed to load:", result.errors);
-        alert(`3D Models loaded with ${result.errors.length} warnings. Check console for details.`);
+        // console.warn("Some GLB models failed to load:", result.errors);
+        // alert(`3D Models loaded with ${result.errors.length} warnings. Check console for details.`);
       } else {
         alert("3D Models loaded successfully!");
       }
 
       setPendingGLBLoad(null);
     } catch (error) {
-      console.error("Error loading GLB models:", error);
+      // console.error("Error loading GLB models:", error);
       alert("Error occurred while loading 3D models.");
     } finally {
       setIsLoading(false);
@@ -469,7 +469,7 @@ const CustomRoomDesigner = () => {
           await sendRoomToBackend(config);
           alert("Room saved successfully!");
         } catch (backendError) {
-          console.warn("Failed to send to backend:", backendError);
+          // console.warn("Failed to send to backend:", backendError);
           alert("Room saved locally successfully!");
         }
 
@@ -485,7 +485,7 @@ const CustomRoomDesigner = () => {
         alert("Failed to save room configuration.");
       }
     } catch (error) {
-      console.error("Error saving room:", error);
+      // console.error("Error saving room:", error);
       alert("Error occurred while saving room.");
     }
   };
@@ -542,7 +542,7 @@ const CustomRoomDesigner = () => {
   };
 
   const handleAddFurnitureError = useCallback((error) => {
-    console.error("Error adding 3D furniture:", error);
+    // console.error("Error adding 3D furniture:", error);
 
     let errorMessage = "Failed to load 3D model";
     if (error.message.includes("timeout")) {
@@ -559,9 +559,9 @@ const CustomRoomDesigner = () => {
   // Enhanced furniture addition with better error handling
   const handleAddFurnitureToRoom = useCallback(async (furnitureItem) => {
     try {
-      console.log("Adding furniture to room:", furnitureItem.name);
-      console.log("Current scene state:", !!scene);
-      console.log("Current placedFurniture count:", placedFurniture?.length || 0);
+      // console.log("Adding furniture to room:", furnitureItem.name);
+      // console.log("Current scene state:", !!scene);
+      // console.log("Current placedFurniture count:", placedFurniture?.length || 0);
 
       const result = await addFurnitureToRoom(furnitureItem);
 

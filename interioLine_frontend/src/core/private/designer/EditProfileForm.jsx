@@ -76,7 +76,6 @@ export default function EditProfileForm({ designer, onClose }) {
       });
 
       updateUserProfile(response.data.user); // context update
-      console.log("✅ Profile updated");
       onClose();
     } catch (err) {
       console.error("❌ Profile update failed:", err);

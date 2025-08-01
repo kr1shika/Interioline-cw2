@@ -74,7 +74,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
         canvas.addEventListener("mouseup", onMouseUp, false);
         canvas.addEventListener("contextmenu", onContextMenu, false);
 
-        console.log("Drag controls setup completed for", placedFurniture.length, "3D furniture items");
+        // console.log("Drag controls setup completed for", placedFurniture.length, "3D furniture items");
     };
 
     const cleanupDragControls = () => {
@@ -133,7 +133,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
                 event.preventDefault();
                 event.stopPropagation();
 
-                console.log("Started dragging 3D furniture:", furnitureObject.name);
+                // console.log("Started dragging 3D furniture:", furnitureObject.name);
             }
         }
     };
@@ -221,14 +221,14 @@ export const useFurniturePlacement = (scene, roomArea) => {
                 scene.orbitControls.enabled = true;
             }
 
-            console.log("Finished dragging 3D furniture");
+            // console.log("Finished dragging 3D furniture");
         }
     };
 
     // Enhanced GLB loading with comprehensive error handling and optimization
     const loadGLBModel = useCallback(async (modelPath, itemName = "Unknown") => {
         if (modelCacheRef.current.has(modelPath)) {
-            console.log(`Using cached 3D model: ${modelPath}`);
+            // console.log(`Using cached 3D model: ${modelPath}`);
             return modelCacheRef.current.get(modelPath).clone();
         }
 
@@ -237,7 +237,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
         }
 
         return new Promise((resolve, reject) => {
-            console.log(`Loading 3D model: ${modelPath} for ${itemName}`);
+            // console.log(`Loading 3D model: ${modelPath} for ${itemName}`);
 
             const timeout = setTimeout(() => {
                 reject(new Error(`Timeout loading 3D model ${modelPath} for ${itemName}`));
@@ -283,7 +283,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
                                 if (child.geometry) {
                                     child.geometry.computeVertexNormals();
                                     if (!child.geometry.attributes.uv) {
-                                        console.warn(`Missing UV coordinates for mesh in ${itemName}`);
+                                        // console.warn(`Missing UV coordinates for mesh in ${itemName}`);
                                     }
                                 }
                             }
@@ -301,11 +301,11 @@ export const useFurniturePlacement = (scene, roomArea) => {
                         loadingStateRef.current.loadedItems.add(modelPath);
                         loadingStateRef.current.progress = 100;
 
-                        console.log(`Successfully loaded and cached 3D model: ${modelPath} for ${itemName}`);
+                        // console.log(`Successfully loaded and cached 3D model: ${modelPath} for ${itemName}`);
                         resolve(model.clone());
                     } catch (error) {
                         clearTimeout(timeout);
-                        console.error(`Error processing 3D model ${modelPath} for ${itemName}:`, error);
+                        // console.error(`Error processing 3D model ${modelPath} for ${itemName}:`, error);
                         loadingStateRef.current.failedItems.add(modelPath);
                         reject(error);
                     }
@@ -314,12 +314,12 @@ export const useFurniturePlacement = (scene, roomArea) => {
                     if (progress.total > 0) {
                         const percentage = (progress.loaded / progress.total * 100);
                         loadingStateRef.current.progress = percentage;
-                        console.log(`3D model loading progress for ${itemName}: ${percentage.toFixed(1)}%`);
+                        // console.log(`3D model loading progress for ${itemName}: ${percentage.toFixed(1)}%`);
                     }
                 },
                 (error) => {
                     clearTimeout(timeout);
-                    console.error(`Error loading 3D model ${modelPath} for ${itemName}:`, error);
+                    // console.error(`Error loading 3D model ${modelPath} for ${itemName}:`, error);
                     loadingStateRef.current.failedItems.add(modelPath);
                     loadingStateRef.current.currentItem = null;
                     reject(error);
@@ -342,7 +342,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
             throw new Error("Only 3D GLB models are supported");
         }
 
-        console.log("Adding 3D furniture to room:", item.name);
+        // console.log("Adding 3D furniture to room:", item.name);
         loadingStateRef.current.isLoading = true;
         loadingStateRef.current.currentItem = item.name;
 
@@ -350,15 +350,15 @@ export const useFurniturePlacement = (scene, roomArea) => {
             const id = uuidv4();
             const { width, height, depth } = item.dimensions;
 
-            console.log("Loading 3D model:", item.modelPath);
+            // console.log("Loading 3D model:", item.modelPath);
             const furnitureObject = await loadGLBModel(item.modelPath, item.name);
 
             // Calculate and apply proper scaling
             const boundingBox = new THREE.Box3().setFromObject(furnitureObject);
             const size = boundingBox.getSize(new THREE.Vector3());
 
-            console.log("Original 3D model size:", size);
-            console.log("Target dimensions:", { width, height, depth });
+            // console.log("Original 3D model size:", size);
+            // console.log("Target dimensions:", { width, height, depth });
 
             // Use the largest dimension for uniform scaling
             const scaleX = width / size.x;
@@ -367,7 +367,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
             const scale = Math.min(scaleX, scaleY, scaleZ) * 1; // Slightly smaller to fit better
 
             furnitureObject.scale.setScalar(scale);
-            console.log("Applied scale:", scale);
+            // console.log("Applied scale:", scale);
 
             // Position at room center initially
             furnitureObject.position.set(0, 0, 0);
@@ -381,7 +381,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
             furnitureObject.position.y = -bottomY + floorThickness + 0.001;
 
 
-            console.log("3D model positioned at:", furnitureObject.position);
+            // console.log("3D model positioned at:", furnitureObject.position);
 
             furnitureObject.name = `furniture-${id}`;
             scene.add(furnitureObject);
@@ -407,13 +407,13 @@ export const useFurniturePlacement = (scene, roomArea) => {
 
             setPlacedFurniture((prev) => {
                 const newFurniture = [...prev, placedItem];
-                console.log("3D furniture added. Total items:", newFurniture.length);
+                // console.log("3D furniture added. Total items:", newFurniture.length);
                 return newFurniture;
             });
 
             return placedItem;
         } catch (error) {
-            console.error("Error adding 3D furniture:", error);
+            // console.error("Error adding 3D furniture:", error);
             throw error;
         } finally {
             loadingStateRef.current.isLoading = false;
@@ -449,7 +449,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
                     return updated;
                 });
 
-                console.log("Rotated 3D furniture:", item.name);
+                // console.log("Rotated 3D furniture:", item.name);
             }
         }
     }, [scene, placedFurniture]);
@@ -493,18 +493,18 @@ export const useFurniturePlacement = (scene, roomArea) => {
 
             setPlacedFurniture((prev) => {
                 const newFurniture = prev.filter((item) => item && item.id !== id);
-                console.log("3D furniture removed. Remaining items:", newFurniture.length);
+                // console.log("3D furniture removed. Remaining items:", newFurniture.length);
                 return newFurniture;
             });
 
-            console.log("Removed 3D furniture:", itemToRemove.name);
+            // console.log("Removed 3D furniture:", itemToRemove.name);
         }
     }, [scene, placedFurniture]);
 
     const clearAllFurniture = useCallback(() => {
         if (!scene) return;
 
-        console.log("Clearing all 3D furniture...");
+        // console.log("Clearing all 3D furniture...");
 
         placedFurniture.forEach((item) => {
             if (item && item.object) {
@@ -553,18 +553,18 @@ export const useFurniturePlacement = (scene, roomArea) => {
             completedItems: 0
         };
 
-        console.log("All 3D furniture cleared");
+        // console.log("All 3D furniture cleared");
     }, [scene, placedFurniture]);
 
     // Enhanced furniture loading from configuration with better GLB handling
     const loadFurnitureFromConfig = useCallback(async (furnitureList) => {
         if (!scene || !Array.isArray(furnitureList)) {
-            console.warn("Scene not ready or invalid furniture list");
+            // console.warn("Scene not ready or invalid furniture list");
             return { loaded: [], errors: ["Scene not ready or invalid furniture list"] };
         }
 
         if (furnitureList.length === 0) {
-            console.log("No 3D furniture to load");
+            // console.log("No 3D furniture to load");
             return { loaded: [], errors: [] };
         }
 
@@ -572,10 +572,10 @@ export const useFurniturePlacement = (scene, roomArea) => {
         const glbFurniture = furnitureList.filter(item => item.isGLB && item.modelPath);
 
         if (glbFurniture.length !== furnitureList.length) {
-            console.warn(`Filtered out ${furnitureList.length - glbFurniture.length} non-GLB items`);
+            // console.warn(`Filtered out ${furnitureList.length - glbFurniture.length} non-GLB items`);
         }
 
-        console.log("Loading 3D furniture from configuration:", glbFurniture.length, "GLB models");
+        // console.log("Loading 3D furniture from configuration:", glbFurniture.length, "GLB models");
 
         const loadedItems = [];
         const errors = [];
@@ -587,21 +587,21 @@ export const useFurniturePlacement = (scene, roomArea) => {
         // Load furniture items sequentially for better stability
         for (const savedItem of glbFurniture) {
             try {
-                console.log(`Loading 3D furniture ${loadedCount + 1}/${glbFurniture.length}: ${savedItem.name}`);
+                // console.log(`Loading 3D furniture ${loadedCount + 1}/${glbFurniture.length}: ${savedItem.name}`);
                 loadingStateRef.current.currentItem = savedItem.name;
 
                 const furnitureObject = await loadGLBModel(savedItem.modelPath, savedItem.name);
 
                 // Apply saved scale if available
                 if (savedItem.glbData && savedItem.glbData.appliedScale) {
-                    console.log(`Applying saved scale: ${savedItem.glbData.appliedScale}`);
+                    // console.log(`Applying saved scale: ${savedItem.glbData.appliedScale}`);
                     furnitureObject.scale.setScalar(savedItem.glbData.appliedScale);
                 } else if (savedItem.appliedScale) {
-                    console.log(`Applying saved scale from item: ${savedItem.appliedScale}`);
+                    // console.log(`Applying saved scale from item: ${savedItem.appliedScale}`);
                     furnitureObject.scale.setScalar(savedItem.appliedScale);
                 } else {
                     // Calculate new scale based on dimensions
-                    console.log("No saved scale data, calculating new scale");
+                    // console.log("No saved scale data, calculating new scale");
                     const boundingBox = new THREE.Box3().setFromObject(furnitureObject);
                     const size = boundingBox.getSize(new THREE.Vector3());
                     const scaleX = savedItem.dimensions.width / size.x;
@@ -615,14 +615,14 @@ export const useFurniturePlacement = (scene, roomArea) => {
 
                 // Apply saved position
                 if (savedItem.glbData && savedItem.glbData.floorOffset !== undefined) {
-                    console.log(`Applying saved floor offset: ${savedItem.glbData.floorOffset}`);
+                    // console.log(`Applying saved floor offset: ${savedItem.glbData.floorOffset}`);
                     furnitureObject.position.set(
                         savedItem.position.x,
                         savedItem.glbData.floorOffset,
                         savedItem.position.z
                     );
                 } else {
-                    console.log("No saved floor offset, calculating new position");
+                    // console.log("No saved floor offset, calculating new position");
                     const scaledBox = new THREE.Box3().setFromObject(furnitureObject);
                     const bottomY = scaledBox.min.y;
                     furnitureObject.position.set(
@@ -667,13 +667,13 @@ export const useFurniturePlacement = (scene, roomArea) => {
                 loadedCount++;
                 loadingStateRef.current.completedItems = loadedCount;
 
-                console.log(`Successfully loaded 3D furniture: ${savedItem.name} (${loadedCount}/${glbFurniture.length})`);
+                // console.log(`Successfully loaded 3D furniture: ${savedItem.name} (${loadedCount}/${glbFurniture.length})`);
 
                 // Small delay between items to prevent conflicts
                 await new Promise(resolve => setTimeout(resolve, 200));
 
             } catch (error) {
-                console.error("Error loading 3D furniture item:", error);
+                // console.error("Error loading 3D furniture item:", error);
                 errors.push(`Failed to load 3D model ${savedItem.name}: ${error.message}`);
                 loadingStateRef.current.completedItems++;
             }
@@ -682,7 +682,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
         // Update state with loaded furniture
         setPlacedFurniture(prevFurniture => {
             const newFurniture = [...prevFurniture, ...loadedItems];
-            console.log(`3D furniture loading complete. Total items: ${newFurniture.length}`);
+            // console.log(`3D furniture loading complete. Total items: ${newFurniture.length}`);
             return newFurniture;
         });
 
@@ -698,9 +698,9 @@ export const useFurniturePlacement = (scene, roomArea) => {
         };
 
         if (errors.length > 0) {
-            console.warn("Some 3D furniture items failed to load:", errors);
+            // console.warn("Some 3D furniture items failed to load:", errors);
         } else {
-            console.log("All 3D furniture loaded successfully");
+            // console.log("All 3D furniture loaded successfully");
         }
 
         return { loaded: loadedItems, errors };
@@ -709,7 +709,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
     // Clear model cache when component unmounts or scene changes
     useEffect(() => {
         return () => {
-            console.log("Clearing 3D model cache...");
+            // console.log("Clearing 3D model cache...");
             modelCacheRef.current.clear();
             loadingStateRef.current = {
                 isLoading: false,
@@ -739,7 +739,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
 
     // Function to clear model cache manually
     const clearModelCache = useCallback(() => {
-        console.log("Manually clearing 3D model cache...");
+        // console.log("Manually clearing 3D model cache...");
         modelCacheRef.current.clear();
         loadingStateRef.current.loadedItems.clear();
         loadingStateRef.current.failedItems.clear();
@@ -749,7 +749,7 @@ export const useFurniturePlacement = (scene, roomArea) => {
     const preloadModels = useCallback(async (modelPaths) => {
         if (!Array.isArray(modelPaths)) return;
 
-        console.log(`Preloading ${modelPaths.length} 3D models...`);
+        // console.log(`Preloading ${modelPaths.length} 3D models...`);
         const results = [];
 
         for (const modelPath of modelPaths) {

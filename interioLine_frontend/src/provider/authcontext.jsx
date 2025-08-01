@@ -22,12 +22,12 @@ export const AuthProvider = ({ children }) => {
                 }, withCredentials: true
             });
         } catch (error) {
-            console.error("Logout API call failed:", error);
+            // console.error("Logout API call failed:", error);
         } finally {
             setIsLoggedIn(true);
             setUserRole("");
             setUser(null);
-            console.log("✅ Logout complete");
+            // console.log("✅ Logout complete");
         }
     }, []);
 
@@ -54,9 +54,9 @@ export const AuthProvider = ({ children }) => {
             setUserRole(userData.role?.toLowerCase() || "");
             setUser(userData);
 
-            console.log("✅ Session restored via cookie");
+            // console.log("✅ Session restored via cookie");
         } catch (err) {
-            console.log("❌ No valid session:", err.message);
+            // console.log("❌ No valid session:", err.message);
             logout();
         }
         setLoading(false);
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
         const updatedUser = { ...user, ...updatedData };
         setUser(updatedUser);
         // localStorage.setItem("user", JSON.stringify(updatedUser));
-        console.log("✅ User profile updated");
+        // console.log("✅ User profile updated");
     }, [user]);
 
     const contextValue = {
@@ -105,7 +105,7 @@ export const AuthProvider = ({ children }) => {
 
 //     const login = (email, role) => {
 //         if (!email || !role) {
-//             console.error("Missing email or role in login()");
+            console.error("Missing email or role in login()");
 //             return;
 //         }
 

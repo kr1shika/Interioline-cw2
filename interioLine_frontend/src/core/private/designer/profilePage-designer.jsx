@@ -31,7 +31,6 @@ export default function ProfilePage() {
         if (authLoading) return;
 
         if (!isLoggedIn) {
-            console.log("Not logged in, redirecting to home");
             navigate('/');
             return;
         }
@@ -84,7 +83,7 @@ export default function ProfilePage() {
             });
             setDesigner(res.data);
             setIsEditing(false);
-            console.log("✅ Profile updated");
+            // console.log(" Profile updated");
         } catch (err) {
             console.error("❌ Error refreshing profile:", err);
         }
@@ -113,7 +112,7 @@ export default function ProfilePage() {
             });
 
             setPortfolioPosts(prev => prev.filter(p => p._id !== postToDelete));
-            console.log("✅ Portfolio post deleted");
+            // console.log(" Portfolio post deleted");
             setShowDeleteModal(false);
             setPostToDelete(null);
         } catch (err) {
