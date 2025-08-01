@@ -54,7 +54,7 @@ const createReview = async (req, res) => {
             .populate('client', 'full_name profilepic')
             .populate('designer', 'full_name');
 
-        // 🔔 Create notification for the designer
+        //  Create notification for the designer
         const notification = new Notification({
             user: project.designer,
             title: "New Review Received",
@@ -68,8 +68,8 @@ const createReview = async (req, res) => {
 
         await notification.save();
 
-        console.log("✅ Review created successfully for project:", project.title);
-        console.log("🔔 Designer notification sent for review");
+        // console.log(" Review created successfully for project:", project.title);
+        // console.log(" Designer notification sent for review");
 
         res.status(201).json({
             message: "Review submitted successfully!",
@@ -77,7 +77,7 @@ const createReview = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Error creating review:", error);
+        // console.error("❌ Error creating review:", error);
 
         if (error.code === 11000) {
             return res.status(400).json({
@@ -101,7 +101,7 @@ const getMyReviews = async (req, res) => {
 
         res.status(200).json(reviews);
     } catch (err) {
-        console.error("❌ Error fetching reviews:", err);
+        // console.error("❌ Error fetching reviews:", err);
         res.status(500).json({ message: "Failed to fetch reviews" });
     }
 };
@@ -123,7 +123,7 @@ const getProjectReview = async (req, res) => {
         res.status(200).json({ review });
 
     } catch (error) {
-        console.error("❌ Error fetching project review:", error);
+        // console.error("❌ Error fetching project review:", error);
         res.status(500).json({
             message: "Failed to fetch review.",
             error: error.message
@@ -261,7 +261,7 @@ const getDesignerRatingAnalytics = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Error fetching rating analytics:", error);
+        // console.error("❌ Error fetching rating analytics:", error);
         res.status(500).json({
             message: "Failed to fetch rating analytics.",
             error: error.message
@@ -301,7 +301,7 @@ const getReviewableProjects = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Error fetching reviewable projects:", error);
+        // console.error("❌ Error fetching reviewable projects:", error);
         res.status(500).json({
             message: "Failed to fetch reviewable projects.",
             error: error.message
@@ -365,7 +365,7 @@ const updateReview = async (req, res) => {
 
         await notification.save();
 
-        console.log("✅ Review updated successfully:", reviewId);
+        // console.log(" Review updated successfully:", reviewId);
 
         res.status(200).json({
             message: "Review updated successfully!",
@@ -373,7 +373,7 @@ const updateReview = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Error updating review:", error);
+        // console.error("❌ Error updating review:", error);
         res.status(500).json({
             message: "Failed to update review.",
             error: error.message

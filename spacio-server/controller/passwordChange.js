@@ -99,7 +99,7 @@ const requestPasswordChange = async (req, res) => {
 
         // Always return success to prevent email enumeration
         if (!user) {
-            console.log(`⚠️ Password reset attempted for non-existent email: ${email}`);
+            // console.log(` Password reset attempted for non-existent email: ${email}`);
             return res.status(200).json({ message: "If this email exists, an OTP has been sent" });
         }
 
@@ -113,10 +113,9 @@ const requestPasswordChange = async (req, res) => {
 
         await sendOTP(email, otp);
 
-        console.log(`✅ OTP sent to ${email} from IP: ${clientIP}`);
         res.status(200).json({ message: "If this email exists, an OTP has been sent" });
     } catch (error) {
-        console.error("❌ Error sending OTP:", error);
+        // console.error("❌ Error sending OTP:", error);
         res.status(500).json({ error: "Failed to send OTP. Please try again." });
     }
 };
@@ -188,10 +187,10 @@ const verifyOTPOnly = async (req, res) => {
         user.otpAttempts = 0; // Reset attempts since OTP is correct
         await user.save();
 
-        console.log(`✅ OTP verified successfully for ${email} from IP: ${clientIP}`);
+        // console.log(` OTP verified successfully for ${email} from IP: ${clientIP}`);
         res.status(200).json({ message: "OTP verified successfully" });
     } catch (error) {
-        console.error("❌ Error verifying OTP:", error);
+        // console.error("❌ Error verifying OTP:", error);
         res.status(500).json({ error: "Failed to verify OTP. Please try again." });
     }
 };
@@ -275,10 +274,10 @@ const changePasswordAfterVerification = async (req, res) => {
         user.lastPasswordChange = new Date();
         await user.save();
 
-        console.log(`✅ Password changed successfully for ${email} from IP: ${clientIP}`);
+        // console.log(` Password changed successfully for ${email} from IP: ${clientIP}`);
         res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
-        console.error("❌ Error changing password:", error);
+        // console.error("❌ Error changing password:", error);
         res.status(500).json({ error: "Failed to change password. Please try again." });
     }
 };
@@ -301,7 +300,7 @@ const resendOTP = async (req, res) => {
 
         // Always return success to prevent email enumeration
         if (!user) {
-            console.log(`⚠️ OTP resend attempted for non-existent email: ${email}`);
+            // console.log(` OTP resend attempted for non-existent email: ${email}`);
             return res.status(200).json({ message: "If this email exists, an OTP has been sent" });
         }
 
@@ -323,10 +322,10 @@ const resendOTP = async (req, res) => {
 
         await sendOTP(email, otp);
 
-        console.log(`✅ OTP resent to ${email} from IP: ${clientIP}`);
+        // console.log(` OTP resent to ${email} from IP: ${clientIP}`);
         res.status(200).json({ message: "If this email exists, an OTP has been sent" });
     } catch (error) {
-        console.error("❌ Error resending OTP:", error);
+        // console.error("❌ Error resending OTP:", error);
         res.status(500).json({ error: "Failed to resend OTP. Please try again." });
     }
 };

@@ -8,7 +8,7 @@ const getAllDesigners = async (req, res) => {
         const designers = await User.find({ role: "designer" }).select("-password");
         res.status(200).json(designers);
     } catch (error) {
-        console.error("Error fetching designers:", error);
+        // console.error("Error fetching designers:", error);
         res.status(500).json({ message: "Failed to fetch designers" });
     }
 };
@@ -18,7 +18,7 @@ const getDesignersByStyle = async (req, res) => {
     try {
         const { style } = req.params;
 
-        console.log(`🔍 Searching for designers with style: ${style}`);
+        console.log(` Searching for designers with style: ${style}`);
 
         // Create a case-insensitive regex pattern for the style
         const styleRegex = new RegExp(style, 'i');
@@ -29,11 +29,10 @@ const getDesignersByStyle = async (req, res) => {
             specialization: { $regex: styleRegex }
         }).select("-password");
 
-        console.log(`✅ Found ${designers.length} designers for style: ${style}`);
 
         // Log what specializations we found
         designers.forEach(designer => {
-            console.log(`👤 ${designer.full_name}: specialization = "${designer.specialization}"`);
+            // console.log(`👤 ${designer.full_name}: specialization = "${designer.specialization}"`);
         });
 
         res.status(200).json({
@@ -42,7 +41,7 @@ const getDesignersByStyle = async (req, res) => {
             designers: designers
         });
     } catch (error) {
-        console.error("Error fetching designers by style:", error);
+        // console.error("Error fetching designers by style:", error);
         res.status(500).json({ message: "Failed to fetch designers by style" });
     }
 };
@@ -56,7 +55,7 @@ const getUserById = async (req, res) => {
         }
         res.status(200).json(user);
     } catch (error) {
-        console.error("Error fetching user:", error);
+        // console.error("Error fetching user:", error);
         res.status(500).json({ message: "Failed to fetch user" });
     }
 };
@@ -84,7 +83,7 @@ const updateUserProfile = async (req, res) => {
 
         return res.status(200).json({ message: "Profile updated", user });
     } catch (error) {
-        console.error("Update error:", error);
+        // console.error("Update error:", error);
         res.status(500).json({ message: "Failed to update profile" });
     }
 };
@@ -95,7 +94,7 @@ const searchDesigners = async (req, res) => {
     try {
         const { query } = req.params;
 
-        console.log(`🔍 Searching designers with query: ${query}`);
+        // console.log(` Searching designers with query: ${query}`);
 
         // Case-insensitive regex for both full_name and specialization
         const regex = new RegExp(query, 'i');
@@ -108,7 +107,7 @@ const searchDesigners = async (req, res) => {
             ]
         }).select("-password");
 
-        console.log(`✅ Found ${designers.length} designers matching query: "${query}"`);
+        // console.log(`✅ Found ${designers.length} designers matching query: "${query}"`);
 
         res.status(200).json({
             query: query,
@@ -116,7 +115,7 @@ const searchDesigners = async (req, res) => {
             designers: designers
         });
     } catch (error) {
-        console.error("Error searching designers:", error);
+        // console.error("Error searching designers:", error);
         res.status(500).json({ message: "Failed to search designers" });
     }
 };
@@ -127,7 +126,7 @@ const getCurrentUserProfile = async (req, res) => {
         if (!user) return res.status(404).json({ message: "User not found" });
         res.status(200).json(user);
     } catch (err) {
-        console.error("❌ Error fetching user profile:", err);
+        // console.error("❌ Error fetching user profile:", err);
         res.status(500).json({ message: "Failed to load profile" });
     }
 };
@@ -144,7 +143,7 @@ const updateDesignerProfile = async (req, res) => {
 
         res.status(200).json(updated);
     } catch (err) {
-        console.error("❌ Error updating profile:", err);
+        // console.error("❌ Error updating profile:", err);
         res.status(500).json({ message: "Failed to update profile" });
     }
 };

@@ -244,7 +244,7 @@ export default function MyProjectsPage() {
 
 
     const handlePaymentSuccess = async (paymentData) => {
-        // console.log('💳 Payment successful:', paymentData);
+        // console.log(' Payment successful:', paymentData);
 
         const updatedProjects = await fetchProjects();
         setProjects(updatedProjects);
