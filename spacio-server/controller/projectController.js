@@ -20,7 +20,6 @@ const createProject = async (req, res) => {
       is_public
     } = req.body;
 
-    // ✅ Set a fixed amount for all designer projects
     const FIXED_PROJECT_PRICE = 10000; // Change this value as needed
 
     const newProject = new Project({

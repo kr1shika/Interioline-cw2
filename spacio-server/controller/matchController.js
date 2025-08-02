@@ -92,7 +92,7 @@ const submitStyleQuiz = async (req, res) => {
       user,
       match: best?.designer || null,
       matchPercentage: best ? best.score : 0,
-      styleAnalysis, // ✅ include this
+      styleAnalysis, // include this
     });
 
 

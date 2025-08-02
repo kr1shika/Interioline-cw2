@@ -1,8 +1,4 @@
-// ✅ FIXED: NotificationComponent.jsx
-// - Uses relative `/api/...` URLs to support cookies via Vite proxy
-// - Removed hardcoded full URLs
-// - Credentials: 'include' used for all requests
-// - Secure fetch with cookie-auth-based backend auth
+
 
 import { useEffect, useRef, useState } from 'react';
 import {

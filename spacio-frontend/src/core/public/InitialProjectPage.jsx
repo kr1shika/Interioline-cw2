@@ -60,9 +60,9 @@ export default function InitialProjectPage() {
                     payment: "pending",
                 },
                 {
-                    withCredentials: true, // ✅ Include session cookie
+                    withCredentials: true, //  Include session cookie
                     headers: {
-                        "CSRF-Token": csrfToken, // ✅ Attach CSRF token here
+                        "CSRF-Token": csrfToken, //  Attach CSRF token here
                         "Content-Type": "application/json"
                     }
                 }

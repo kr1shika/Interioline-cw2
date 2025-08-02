@@ -41,7 +41,7 @@ const signup = async (req, res) => {
             otp: hashedOtp,
             otpExpiry: Date.now() + 10 * 60 * 1000
         };
-        
+
         await transporter.sendMail({
             from: `"InterioLine" <${process.env.EMAIL_USER}>`,
             to: email,
@@ -99,7 +99,7 @@ const loginRequest = async (req, res) => {
         return res.status(500).json({ errors: ["Failed to send OTP. Try again later."] });
     }
 
-    console.log("✅ OTP email sent and user updated:", email);
+    console.log(" OTP email sent and user updated:", email);
     res.json({ message: "OTP sent to your email" });
 };
 
@@ -271,7 +271,7 @@ const verifyRegistrationOtp = async (req, res) => {
             return res.status(400).json({ error: "Invalid or expired OTP" });
         }
 
-        // ✅ Create the user now
+        //  Create the user now
         const newUser = new User({
             full_name: signupData.full_name,
             email: signupData.email,

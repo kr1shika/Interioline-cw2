@@ -322,7 +322,7 @@ const PaymentPage = ({
                                 if (isFullyPaid) {
                                     return (
                                         <div style={{ padding: "1rem", color: "#4caf50", fontWeight: "600" }}>
-                                            ✅ You have fully paid for this project.
+                                            You have fully paid for this project.
                                         </div>
                                     );
                                 }

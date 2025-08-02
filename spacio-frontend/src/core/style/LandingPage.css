@@ -5,7 +5,6 @@
     background-color: #FFFFF6;
     overflow-y: auto;
     overflow-x: hidden;
-    /* ✅ This disables sideways scroll */
 }
 
 .main-content {
